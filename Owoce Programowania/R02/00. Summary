@@ -30,7 +30,7 @@ print(format(num6, '7.2f'))
 
 03. Comment1.py
   
-  # Ten program wyświetla imię
+# Ten program wyświetla imię
 # i nazwisko osoby oraz jej adres.
 print('Jan Kowalski')
 print('ul. Ogrodowa 123')
