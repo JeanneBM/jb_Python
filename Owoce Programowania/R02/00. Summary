@@ -1,1 +1,40 @@
+01. Apostrophe.py
+
+print("Nie obawiaj się użycia znaku ' w tekście.")
+print("Apostrof ' w tekście.")
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+02. Columns.py
+
+# Ten program wyświetla poniższe liczby
+# zmiennoprzecinkowe w kolumnie wyrównane
+# według położenia przecinka dziesiętnego.
+num1 = 127.899
+num2 = 3465.148
+num3 = 3.776
+num4 = 264.821
+num5 = 88.081
+num6 = 799.999
+
+# Wyświetlenie w polu o szerokości siedmiu znaków
+# wszystkich liczb wraz z dwoma cyframi po przecinku dziesiętnym.
+print(format(num1, '7.2f'))
+print(format(num2, '7.2f'))
+print(format(num3, '7.2f'))
+print(format(num4, '7.2f'))
+print(format(num5, '7.2f'))
+print(format(num6, '7.2f'))
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+03. Comment1.py
+  
+  # Ten program wyświetla imię
+# i nazwisko osoby oraz jej adres.
+print('Jan Kowalski')
+print('ul. Ogrodowa 123')
+print('44-100 Gliwice')
+
+------------------------------------------------------------------------------------------------------------------------------------------
 
