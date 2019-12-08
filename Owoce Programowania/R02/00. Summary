@@ -276,6 +276,7 @@ pay = salary + bonus
 print('Twoje wynagrodzenie wynosi', pay)
 
 ------------------------------------------------------------------------------------------------------------------------------------------
+
 16. String_input.py 	
 
 # Pobranie imienia użytkownika.
@@ -288,30 +289,98 @@ last_name = input('Podaj nazwisko: ')
 print('Witaj,', first_name, last_name)
 
 ------------------------------------------------------------------------------------------------------------------------------------------
+
 17. String_Variable.py 	
 
+# Utworzenie dwóch zmiennych przechowujących ciągi tekstowe.
+first_name = 'Jan'
+last_name = 'Kowalski'
+
+# Wyświetlenie wartości obu zmiennych.
+print(first_name, last_name)
 
 ------------------------------------------------------------------------------------------------------------------------------------------
+
 18. Test_score_average.py 	
 
+# Pobranie wyników trzech sprawdzanów i umieszczenie
+# ich w zmiennych o nazwach test1, test2 i test3.
+test1 = float(input('Podaj wynik z pierwszego sprawdzianu: '))
+test2 = float(input('Podaj wynik z drugiego sprawdzianu: '))
+test3 = float(input('Podaj wynik z trzeciego sprawdzianu: '))
+
+# Obliczenie średniej trzech wyników i przypisanie
+# wartości średniej do zmiennej average.
+average = (test1 + test2 + test3) / 3.0
+
+# Wyświetlenie wartości średniej.
+print('Twój średni wynik wynosi', average)
 
 ------------------------------------------------------------------------------------------------------------------------------------------
+
 19. Time_converter.py 	
 
+# Pobranie od użytkownika całkowitej liczby sekund.
+total_seconds = float(input('Podaj liczbę sekund: '))
+
+# Obliczenie liczby godzin.
+hours = total_seconds // 3600.
+
+# Obliczenie liczby pozostałych minut.
+minutes = (total_seconds // 60) % 60
+
+# Obliczenie liczby pozostałych sekund.
+seconds = total_seconds % 60
+
+# Wyświetlenie wyniku.
+print('Podana liczba sekund wyrażona w godzinach, minutach i sekundach:')
+print('Godziny:', hours)
+print('Minuty:', minutes)
+print('Sekundy:', seconds)
 
 ------------------------------------------------------------------------------------------------------------------------------------------
+
 20. Variable_demo.py 	
 
+# Ten program pokazuje przykład zmiennej.
+room = 503
+print('Zatrzymam się w pokoju numer')
+print(room)
 
 ------------------------------------------------------------------------------------------------------------------------------------------
+
 21. Variable_demo2.py 	
 
+# Utworzenie dwóch zmiennych: top_speed i distance.
+top_speed = 160
+distance = 300
+
+# Wyświetlenie wartości przechowywanych przez te zmienne.
+print('Szybkość maksymalna wynosi')
+print(top_speed)
+print('Pokonana odległość to')
+print(distance)
 
 ------------------------------------------------------------------------------------------------------------------------------------------
+
 22. Variable_demo3.py 	
 
+# Ten program pokazuje przykład zmiennej.
+room = 503
+print('Zatrzymam się w pokoju numer', room)
 
 ------------------------------------------------------------------------------------------------------------------------------------------
+
 23. Variable_demo4.py
+
+# Ten program pokazuje ponowne przypisanie zmiennej.
+# Wartość jest przypisywana zmiennej dollars.
+dollars = 2.75
+print('Mam na koncie', dollars, 'dolarów.')
+
+# Ponowne przypisanie zmiennej, która
+# teraz odwołuje się do innej wartości.
+dollars = 99.95
+print('A teraz mam na koncie', dollars, 'dolarów.')
 
 ------------------------------------------------------------------------------------------------------------------------------------------
