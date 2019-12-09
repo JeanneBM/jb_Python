@@ -1,4 +1,3 @@
-
 01. Auto_repair_payroll.py 
   
 # Stałe nazwane przedstawiające zwykłą stawkę
