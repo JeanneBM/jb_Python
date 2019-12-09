@@ -232,52 +232,270 @@ for num in [1, 3, 5, 7, 9]:
 
 11. Simple_loop3.py 	
 
+# Ten program również przedstawia prostą pętlę for,
+# która wykorzystuje listę ciągów tekstowych.
+
+for name in ['Winken', 'Blinken', 'Nod']:
+    print(name)
+		 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 12. Simple_loop4.py 	
+		 
+# Ten program pokazuje przykład użycia
+# funkcji range() w pętli for.
+
+# Pięciokrotne wyświetlenie komunikatu.
+for x in range(5):
+    print('Witaj, świecie!')
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 13. Speed_converter.py 	
+		 
+# Ten program konwertuje szybkości w km/h
+# (od 60 do 130 w krokach co 10)
+# na wyrażone w milach na godzinę.
+
+START_SPEED = 60            # Pierwsza wartość na liście.
+END_SPEED = 131             # Górna granica listy.
+INCREMENT = 10              # Wielkość kroku.
+CONVERSION_FACTOR = 0.6214  # Współczynnik konwersji.
+
+# Wyświetlenie nagłówków tabeli.
+print('KPH\tMPH')
+print('--------------')
+
+# Wyświetlenie wyniku.
+for kph in range(START_SPEED, END_SPEED, INCREMENT):
+    mph = kph * CONVERSION_FACTOR
+    print(kph, '\t', format(mph, '.1f'))
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 14. Spiral_circles.py 	
+		 
+# Ten program rysuje wzór składający się z powtarzających się okręgów.
+import turtle
+
+# Stałe nazwane.
+NUM_CIRCLES = 36     # Liczba okręgów do narysowania.
+RADIUS = 100         # Promień każdego okręgu.
+ANGLE = 10           # Kąt obrotu okręgu.
+ANIMATION_SPEED = 0  # Szybkość animacji.
+
+# Określenie szybkości animacji.
+turtle.speed(ANIMATION_SPEED)
+
+# Narysowanie 36 okręgów, w trakcie każdej
+# żółw będzie obrócony o 10 stopni.
+for x in range(NUM_CIRCLES):
+    turtle.circle(RADIUS)
+    turtle.left(ANGLE)
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 15. Spiral_lines.py 	
+		 
+# Ten program rysuje wzór za pomocą powtarzających się linii prostych.
+import turtle
+
+# Stałe nazwane.
+START_X = -200       # Współrzędna X punktu początkowego.
+START_Y = 0          # Współrzędna Y punktu początkowego.
+NUM_LINES = 36       # Liczba linii do narysowania.
+LINE_LENGTH = 400    # Długość każdej linii.
+ANGLE = 170          # Kąt obrotu linii.
+ANIMATION_SPEED = 0  # Szybkość animacji.
+
+# Umieszczenie żółwia w położeniu początkowym.
+turtle.hideturtle()
+turtle.penup()
+turtle.goto(START_X, START_Y)
+turtle.pendown()
+
+# Określenie szybkości animacji.
+turtle.speed(ANIMATION_SPEED)
+
+# Narysowanie 36 linii, w trakcie każdej
+# żółw będzie obrócony o 170 stopni.
+for x in range(NUM_LINES):
+    turtle.forward(LINE_LENGTH)
+    turtle.left(ANGLE)
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 16. Squares.py 	
+		 
+# Ten program używa pętli do wyświetlenia
+# tabeli zawierającej liczby od 1 do 10
+# i ich kwadraty.
 
+# Wyświetlenie nagłówków tabeli.
+print('Liczba\tKwadrat')
+print('--------------')
+
+# Wyświetlenie liczb od 1 do 10
+# i ich kwadratów.
+for number in range(1, 11):
+    square = number**2
+    print(number, '\t', square)
+		 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 17. Stair_step_pattern.py 	
+		 
+# Ten program wyświetla kształt przypominający schody.
+NUM_STEPS = 6
 
+for r in range(NUM_STEPS):
+    for c in range(r):
+        print(' ', end='')
+    print('#')
+		 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 18. Sum_numbers.py 	
+		 
+# Ten program oblicza sumę serii
+# liczb podanych przez użytkownika.
+
+MAX = 5  # Wartość maksymalna.
+
+# Inicjalizacja zmiennej akumulatora.
+total = 0.0
+
+# Wyjaśnienie sposobu działania programu..
+print('Ten program oblicza sumę')
+print(MAX, 'podanych liczb.')
+
+# Pobieranie liczb i ich sumowanie.
+for counter in range(MAX):
+    number = int(input('Podaj liczbę: '))
+    total = total + number
+
+# Wyświetlenie sumy bieżącej.
+print('Suma wynosi', total)
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 19. Temperature.py 	
 
+# Ten program pomaga pracownikowi w procesie
+# sprawdzania temperatury substancji.
+
+# Stała nazwana przedstawiająca
+# temperaturę maksymalną.
+MAX_TEMP = 102.5
+
+# Pobranie temperatury substancji.
+temperature = float(input("Podaj w Celsjuszach temperaturę substancji: "))
+
+# Dopóki to konieczne, trzeba nakazać
+# użytkownikowi dostosowanie termostatu.
+while temperature > MAX_TEMP:
+    print('Temperatura jest zbyt wysoka.')
+    print('Wyłącz termostat i odczekaj')
+    print('5 minut. Następnie ponownie sprawdź')
+    print('temperaturę i wpisz ją tutaj.')
+    temperature = float(input('Ponownie podaj w Celsjuszach temperaturę substancji: '))
+
+# Przypomnienie użytkownikowi o konieczności
+# ponownego sprawdzenia temperatury w ciągu 15 minut.
+print('Temperatura jest do zaakceptowania.')
+print('Sprawdź ją ponownie w ciągu 15 minut.')
+
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 20. Test_score_averages.py 	
+		 
+# Ten program oblicza średni wynik z kilku sprawdzianów. Prosi użytkownika
+# o podanie liczby uczniów i sprawdzianów.
+
+# Pobranie liczby uczniów.
+num_students = int(input('Podaj liczbę uczniów: '))
+
+# Pobranie liczby sprawdzianów.
+num_test_scores = int(input('Podaj liczbę sprawdzianów: '))
+
+# Obliczenie średniego wyniku ze sprawdzianów uczniów.
+for student in range(num_students):
+    # Inicjalizacja akumulatora wyników sprawdzianów.
+    total = 0.0
+    # Pobranie wyników sprawdzianów danego ucznia.
+    print('Uczeń numer', student + 1)
+    print('–––––––––––––––––')
+    for test_num in range(num_test_scores):
+        print('Podaj wynik ze sprawdzianu numer', test_num + 1, end='')
+        score = float(input(': '))
+        # Dodanie wyniku do akumulatora.
+        total += score
+
+    # Obliczenie średniego wyniku ze sprawdzianów danego ucznia.
+    average = total / num_test_scores
+
+    # Wyświetlenie obliczonej wartości.
+    print('Średni wynik ucznia', student + 1,
+          'to', average)
+    print()
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 21. Triangle_pattern.py 	
+		 
+# Ten program wyświetla kształt przypominający trójkąt.
+BASE_SIZE = 8
 
+for r in range(BASE_SIZE):
+    for c in range(r + 1):
+        print('*', end='')
+    print()
+ 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 22. User_squares1.py 	
+		 
+# Ten program używa pętli do wyświetlenia
+# tabeli liczb i ich kwadratów.
+
+# Pobranie wartości maksymalnej sekwencji liczb.
+print('Ten program wyświetla listę liczb')
+print('(począwszy od 1) i ich kwadraty.')
+end = int(input('Podaj wartość maksymalną: '))
+
+# Wyświetlenie nagłówków tabeli.
+print()
+print('Liczba\tKwadrat')
+print('--------------')
+
+# Wyświetlenie liczb i ich kwadratów.
+for number in range(1, end + 1):
+    square = number**2
+    print(number, '\t', square)
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 23. User_squares2.py
+		 
+# Ten program używa pętli do wyświetlenia
+# tabeli liczb i ich kwadratów.
+
+# Pobranie wartości początkowej sekwencji liczb.
+print('Ten program wyświetla listę liczb')
+print('i ich kwadraty.')
+start = int(input('Podaj wartość początkową: '))
+
+# Pobranie wartości maksymalnej sekwencji liczb.
+end = int(input('Podaj wartość maksymalną: '))
+
+# Wyświetlenie nagłówków tabeli.
+print()
+print('Liczba\tKwadrat')
+print('--------------')
+
+# Wyświetlenie liczb i ich kwadratów.
+for number in range(start, end + 1):
+    square = number**2
+    print(number, '\t', square)
 
 --------------------------------------------------------------------------------------------------------------------------------------------
