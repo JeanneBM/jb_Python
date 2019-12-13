@@ -1,4 +1,3 @@
-
 # Ten program wyświetla instrukcje krok po kroku
 # demontażu suszarki na pranie Acme.
 # Funkcja main() zawiera logikę główną programu.
