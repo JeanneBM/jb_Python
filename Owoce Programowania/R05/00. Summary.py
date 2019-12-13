@@ -474,39 +474,435 @@ def show_value():
 show_value()
 
 ----------------------------------------------------------------------------------------------------------------------------------------------
+
 16. Global2.py 	
+
+# Utworzenie zmiennej globalnej.
+number = 0
+
+def main():
+    global number
+    number = int(input('Podaj liczbę: '))
+    show_number()
+
+def show_number():
+    print('Podana liczba to', number)
+
+# Wywołanie funkcji main().
+main()
+
 ----------------------------------------------------------------------------------------------------------------------------------------------
+
 17. Graphics_mod_demo.py 	
+
+import turtle
+import my_graphics
+
+# Stałe nazwane.
+X1 = 0
+Y1 = 100
+X2 = -100
+Y2 = -100
+X3 = 100
+Y3 = -100
+RADIUS = 50
+
+def main():
+    turtle.hideturtle()
+
+    # Narysowanie kwadratu.
+    my_graphics.square(X2, Y2, (X3 - X2), 'gray')
+
+    # Narysowanie okręgów.
+    my_graphics.circle(X1, Y1, RADIUS, 'blue')
+    my_graphics.circle(X2, Y2, RADIUS, 'red')
+    my_graphics.circle(X3, Y3, RADIUS, 'green')
+
+    # Narysowanie linii.
+    my_graphics.line(X1, Y1, X2, Y2, 'black')
+    my_graphics.line(X1, Y1, X3, Y3, 'black')
+    my_graphics.line(X2, Y2, X3, Y3, 'black')
+
+main()
+
 ----------------------------------------------------------------------------------------------------------------------------------------------
+
 18. Hypotenuse.py 	
+
+# Ten program oblicza długość przeciwprostokątnej
+# trójkąta prostokątnego.
+import math
+
+def main():
+    # Pobranie długości dwóch przyprostokątnych.
+    a = float(input('Podaj długość przyprostokątnej A: '))
+    b = float(input('Podaj długość przyprostokątnej B: '))
+
+    # Obliczenie długości przeciwprostokątnej.
+    c = math.hypot(a, b)
+
+    # Wyświetlenie obliczonej wartości.
+    print('Długość przeciwprostokątnej wynosi', c)
+
+# Wywołanie funkcji main().
+main()
+
 ----------------------------------------------------------------------------------------------------------------------------------------------
+
 19. Keyword_args.py 
+
+# Ten program pokazuje przykład użycia argumentów w postaci słów kluczowych.
+
+def main():
+    # Wyświetlenie wysokości odsetek. Wartość 0.01 określa
+    # stopę procentową, 10 określa przedział czasu,
+    # a 10000 zł to zdeponowana kwota.
+    show_interest(rate=0.01, periods=10, principal=10000.0)
+
+# Funkcja show_interest() wyświetla wysokość odsetek
+# dla zdeponowanej kwoty, uwzględniając podaną
+# stopę procentową i czas trwania lokaty.
+
+def show_interest(principal, rate, periods):
+    interest = principal * rate * periods
+    print('Wysokość odsetek wynosi ',
+          format(interest, '.2f'),
+          sep='')
+
+# Wywołanie funkcji main().
+main()
+
 ----------------------------------------------------------------------------------------------------------------------------------------------
+
 20. Keyword_string_args.py 	
+
+# Ten program pokazuje przekazanie funkcji dwóch
+# argumentów w postaci ciągów tekstowych.
+
+def main():
+    first_name = input('Podaj imię: ')
+    last_name = input('Podaj nazwisko: ')
+    print('Twoje nazwisko i imię to')
+    reverse_name(last=last_name, first=first_name)
+
+def reverse_name(first, last):
+    print(last, first)
+
+# Wywołanie funkcji main().
+main()
+
 ----------------------------------------------------------------------------------------------------------------------------------------------
+
 21. Multiple_args.py 	
+
+# Ten program pokazuje przykład
+# funkcji akceptującej dwa argumenty.
+
+def main():
+    print('Suma liczb 12 i 45 wynosi')
+    show_sum(12, 45)
+
+# Funkcja show_sum() akceptuje dwa
+# argumenty i wyświetla ich sumę.
+def show_sum(num1, num2):
+    result = num1 + num2
+    print(result)
+
+# Wywołanie funkcji main().
+main()
+
 ----------------------------------------------------------------------------------------------------------------------------------------------
+
 22. My_graphics.py 	
+
+# Funkcje grafiki żółwia.
+import turtle
+
+# Funkcja square() rysuje kwadrat. Parametry x i y
+# to współrzędne lewego dolnego wierzchołka. Parametr width
+# określa długość boku kwadratu. Z kolei parametr color
+# to ciąg tekstowy określający kolor wypełnienia kwadratu.
+
+def square(x, y, width, color):
+    turtle.penup()           # Podniesienie pióra.
+    turtle.goto(x, y)        # Umieszczenie żółwia w odpowiednim położeniu.
+    turtle.fillcolor(color)  # Określenie koloru wypełnienia.
+    turtle.pendown()         # Opuszczenie pióra.
+    turtle.begin_fill()      # Rozpoczęcie wypełniania kolorem.
+    for count in range(4):   # Narysowanie kwadratu.
+        turtle.forward(width)
+        turtle.left(90)
+    turtle.end_fill()        # Zakończenie wypełniania kolorem.
+
+# Funkcja circle() rysuje okrąg. Parametry x i y
+# to współrzędne środka okręgu. Parametr radius
+# to promień okręgu. Z kolei parametr color
+# to ciąg tekstowy określający kolor wypełnienia okręgu.
+
+def circle(x, y, radius, color):
+    turtle.penup()              # Podniesienie pióra.
+    turtle.goto(x, y - radius)  # Umieszczenie żółwia w odpowiednim położeniu.
+    turtle.fillcolor(color)     # Określenie koloru wypełnienia.
+    turtle.pendown()            # Opuszczenie pióra.
+    turtle.begin_fill()         # Rozpoczęcie wypełniania kolorem.
+    turtle.circle(radius)       # Narysowanie okręgu.
+    turtle.end_fill()           # Zakończenie wypełniania kolorem.
+
+# Funkcja line() rysuje linię z punktu o współrzędnych (startX, startY)
+# do punktu o współrzędnych (endX, endY). Parametr color określa jej kolor.
+
+def line(startX, startY, endX, endY, color):
+    turtle.penup()               # Podniesienie pióra.
+    turtle.goto(startX, startY)  # Przejście do punktu początkowego.
+    turtle.pendown()             # Opuszczenie pióra.
+    turtle.pencolor(color)       # Określenie koloru pióra.
+    turtle.goto(endX, endY)      # Narysowanie kwadratu.
+
 ----------------------------------------------------------------------------------------------------------------------------------------------
+
 23. Pass_arg.py 	
+
+# Ten program pokazuje przykład
+# przekazania argumentu funkcji.
+
+def main():
+    value = 5
+    show_double(value)
+
+# Funkcja show_double() akceptuje argument
+# i wyświetla jego podwojoną wartość.
+def show_double(number):
+    result = number * 2
+    print(result)
+
+# Wywołanie funkcji main().
+main()
+
 ----------------------------------------------------------------------------------------------------------------------------------------------
+
 24. Random_numbers.py 	
+
+# Ten program wyświetla liczbę losową
+# z przedziału od 1 do 10.
+import random
+
+def main():
+    # Wygenerowanie liczby losowej.
+    number = random.randint(1, 10)
+    # Wyświetlenie wygenerowanej liczby.
+    print('Liczba to', number)
+
+# Wywołanie funkcji main().
+main()
+
 ----------------------------------------------------------------------------------------------------------------------------------------------
+
 25. Random_numbers2.py 
+
+# Ten program wyświetla pięć liczb losowych
+# z przedziału od 1 do 100.
+import random
+
+def main():
+    for count in range(5):
+        # Wygenerowanie liczby losowej.
+        number = random.randint(1, 100)
+        # Wyświetlenie wygenerowanej liczby.
+        print(number)
+
+# Wywołanie funkcji main().
+main()
+
 ----------------------------------------------------------------------------------------------------------------------------------------------
+
 26. Random_numbers3.py 	
+
+# Ten program wyświetla pięć liczb losowych
+# z przedziału od 1 do 100.
+import random
+
+def main():
+    for count in range(5):
+        print(random.randint(1, 100))
+
+# Wywołanie funkcji main().
+main()
+
 ----------------------------------------------------------------------------------------------------------------------------------------------
+
 27. Rectangle.py 	
+
+# Moduł rectangle zawiera funkcje przeprowadzające
+# obliczenia związane z prostokątem.
+
+# Funkcja area() akceptuje argumenty w postaci długości
+# i szerokości prostokąta i zwraca jego pole powierzchni.
+def area(width, length):
+    return width * length
+
+# Funkcja perimeter() akceptuje argumenty w postaci
+# długości i szerokości prostokąta i zwraca jego
+# obwód.
+def perimeter(width, length):
+    return 2 * (width + length)
+
 ----------------------------------------------------------------------------------------------------------------------------------------------
+
 28. Retirement.py 	
+
+# Ta stała globalna przechowuje procent kwoty
+# wynagrodzenia przekazywany na fundusz emerytalny.
+CONTRIBUTION_RATE = 0.05
+
+def main():
+    gross_pay = float(input('Podaj kwotę wynagrodzenia: '))
+    bonus = float(input('Podaj kwotę premii: '))
+    show_pay_contrib(gross_pay)
+    show_bonus_contrib(bonus)
+
+# Funkcja show_pay_contrib() pobiera argument w postaci
+# kwoty wynagrodzenia i wyświetla obliczoną wysokość składki
+# naliczoną dla podanego wynagrodzenia.
+def show_pay_contrib(gross):
+    contrib = gross * CONTRIBUTION_RATE
+    print('Wysokość składki naliczona dla wynagrodzenia wynosi: ',
+          format(contrib, '.2f'),
+          sep='')
+
+# Funkcja show_bonus_contrib() pobiera argument w postaci
+# kwoty premii i wyświetla obliczoną wysokość składki
+# naliczoną dla podanej premii.
+def show_bonus_contrib(bonus):
+    contrib = bonus * CONTRIBUTION_RATE
+    print('Wysokość składki naliczona dla premii wynosi ',
+          format(contrib, '.2f'),
+          sep='')
+
+# Wywołanie funkcji main().
+main()
+
 ----------------------------------------------------------------------------------------------------------------------------------------------
+
 29. Sale_price.py 	
+
+# Ten program oblicza cenę
+# promocyjną produktu.
+
+# DISCOUNT_PERCENTAGE to stała globalna
+# określająca procentową wielkość rabatu.
+DISCOUNT_PERCENTAGE = 0.20
+
+# Funkcja main().
+def main():
+    # Pobranie ceny detalicznej produktu.
+    reg_price = get_regular_price()
+
+    # Obliczenie ceny promocyjnej.
+    sale_price = reg_price - discount(reg_price)
+
+    # Wyświetlenie ceny promocyjnej.
+    print('Cena promocyjna wynosi ', format(sale_price, '.2f'), ' zł.', sep='')
+
+# Funkcja get_regular_price() prosi
+# użytkownika o podanie ceny detalicznej
+# produktu i zwraca tę wartość.
+def get_regular_price():
+    price = float(input("Podaj cenę detaliczną produktu: "))
+    return price
+
+# Funkcja discount() akceptuje argument w postaci
+# ceny produktu i zwraca wysokość rabatu obliczoną
+# na podstawie wartości DISCOUNT_PERCENTAGE.
+def discount(price):
+    return price * DISCOUNT_PERCENTAGE
+
+# Wywołanie funkcji main().
+main()
+
 ----------------------------------------------------------------------------------------------------------------------------------------------
+
 30. Square_root.py 	
+
+# Ten program pokazuje przykład użycia funkcji sqrt().
+import math
+
+def main():
+    # Pobranie liczby.
+    number = float(input('Podaj liczbę: '))
+
+    # Obliczenie pierwiastka kwadratowego tej liczby.
+    square_root = math.sqrt(number)
+
+    # Wyświetlenie obliczonej wartości.
+    print('Pierwiastek kwadratowy liczby', number, 'wynosi', square_root)
+
+# Wywołanie funkcji main().
+main()
+
 ----------------------------------------------------------------------------------------------------------------------------------------------
+
 31. String_args.py 	
+
+# Ten program pokazuje przekazanie funkcji dwóch
+# argumentów w postaci ciągów tekstowych.
+
+def main():
+    first_name = input('Podaj imię: ')
+    last_name = input('Podaj nazwisko: ')
+    print('Twoje nazwisko i imię to')
+    reverse_name(first_name, last_name)
+
+def reverse_name(first, last):
+    print(last, first)
+
+# Wywołanie funkcji main().
+main()
+
 ----------------------------------------------------------------------------------------------------------------------------------------------
+
 32. Total_ages.py 	
+
+# Ten program używa wartości zwrotnej funkcji.
+
+def main():
+    # Pobranie wieku użytkownika.
+    first_age = int(input('Podaj swój wiek: '))
+
+    # Pobranie wieku najlepszego przyjaciela użytkownika.
+    second_age = int(input('Podaj wiek najlepszego przyjaciela: '))
+
+    # Obliczenie sumy obu pobranych wartości.
+    total = sum(first_age, second_age)
+
+    # Wyświetlenie obliczonej wartości.
+    print('Razem macie', total, 'lat.')
+
+# Funkcja sum() akceptuje dwa argumenty
+# liczbowe i zwraca ich sumę.
+def sum(num1, num2):
+    result = num1 + num2
+    return result
+
+# Wywołanie funkcji main().
+main()
+
 ----------------------------------------------------------------------------------------------------------------------------------------------
+
 33. Two_functions.py
+
+# Ten program zawiera dwie funkcje.
+# Najpierw trzeba zdefiniować funkcję main().
+def main():
+    print('Mam dla Ciebie wiadomość.')
+    message()
+    print('Żegnaj!')
+
+# Kolejnym krokiem jest zdefiniowanie funkcji message().
+def message():
+    print('Jestem Artur,')
+    print('król Brytyjczyków.')
+
+# Wywołanie funkcji main().
+main()
+
 ----------------------------------------------------------------------------------------------------------------------------------------------
