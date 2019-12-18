@@ -1,0 +1,14 @@
+Rozdział 1. Wstępne informacje na temat komputerów i programowania 
+Rozdział 2. Dane wejściowe, przetwarzanie i dane wyjściowe 
+Rozdział 3. Struktury warunkowe i logika boolowska ]
+Rozdział 4. Struktury cykliczne     
+Rozdział 5. Funkcje 
+Rozdział 6. Pliki i wyjątki 
+Rozdział 7. Listy i krotki 
+Rozdział 8. Więcej informacji o ciągach tekstowych 
+Rozdział 9. Słownik i zbiór 
+Rozdział 10. Klasy i programowanie zorientowane obiektowo 
+Rozdział 11. Dziedziczenie 
+Rozdział 12. Rekurencja 
+Rozdział 13. Programowanie GUI 
+
