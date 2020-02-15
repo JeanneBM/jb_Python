@@ -2,7 +2,8 @@ imie = "Asia"
 
 if imie == "Asia":
   print ("Czesc Asia!"
-
+elif imie == "Wiola":
+  print (Czesc Wiola!)
 else:
   print ("Czesc Nieznajomy")
   
