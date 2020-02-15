@@ -1,1 +1,9 @@
+imie = "Asia"
 
+if imie == "Asia":
+  print ("Czesc Asia!"
+
+else:
+  print ("Czesc Nieznajomy")
+  
+-----------------------------------------------------------------------------  
