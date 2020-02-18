@@ -20,3 +20,13 @@ for uczniowie in wyniki :
         suma = suma + uczniowie[indeks_ocen]
     srednia = suma / 3
     print(srednia)
+
+wyniki = [['Kowalski', 90, 86, 93],['Nowak', 76, 64, 78],['Kwiatkowski', 82, 82, 87]]
+
+for uczniowie in wyniki :
+    suma = 0
+    for indeks_ocen in range(1, len(uczniowie)) :
+        suma = suma + uczniowie[indeks_ocen]
+    srednia = suma / 3
+    print('Uczeń',uczniowie[0],'uzyskał następującą średnią z testów:',srednia)
+    
