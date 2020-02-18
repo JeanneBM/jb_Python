@@ -1,10 +1,10 @@
-    if warunek :
-         instrukcja1
-         instrukcja2
-         ...
-    else :
-         instrukcja1
-         ...
+ if warunek :
+     instrukcja1
+     instrukcja2
+     ...
+else :
+     instrukcja1
+     ...
 
 -----------------------------------------------------------------------------
 
