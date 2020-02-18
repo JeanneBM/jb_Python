@@ -1,3 +1,13 @@
+    if warunek :
+         instrukcja1
+         instrukcja2
+         ...
+    else :
+         instrukcja1
+         ...
+
+-----------------------------------------------------------------------------
+
 imie = "Asia"
 
 if imie == "Asia":
