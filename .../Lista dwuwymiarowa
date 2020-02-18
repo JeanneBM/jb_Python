@@ -1,8 +1,14 @@
-    wyniki = [['Kowalski', 90, 86, 93],['Nowak', 76, 64, 78],['Kwiatkowski', 82, 82, 87]]
-    print(wyniki)
+wyniki = [['Kowalski', 90, 86, 93],['Nowak', 76, 64, 78],['Kwiatkowski', 82, 82, 87]]
+print(wyniki)
     
-    print(wyniki[0])     # ['Kowalski', 90, 86, 93]
+print(wyniki[0])     # ['Kowalski', 90, 86, 93]
     
-    print(wyniki[0][0])     # Kowalski
+print(wyniki[0][0])     # Kowalski
     
+for uczniowie in wyniki :
+print(uczniowie)
     
+for uczniowie in wyniki :
+    for dane in uczniowie :
+        print(dane)
+
