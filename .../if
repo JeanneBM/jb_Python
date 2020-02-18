@@ -27,3 +27,14 @@ for x in [2,3,4]:
 print(s)
 
 -----------------------------------------------------------------------------
+
+x = int(input("Twoja akutalna prędkość w terenie zabudowanym (km/h): "))
+
+if x>50 :
+  print("Oj nieładnie - łamiesz przepisy!")
+else :
+  print("Brawo!")
+print("Koniec")
+
+-----------------------------------------------------------------------------
+
