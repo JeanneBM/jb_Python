@@ -1,3 +1,5 @@
+continue – przerywa obieg pętli, pętla przechodzi bezpośrednio do kolejnego obiegu
+
 imie = "Asia"
 
 for l in imie:
