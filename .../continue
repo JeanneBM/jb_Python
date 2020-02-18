@@ -21,3 +21,15 @@ for element in lista:
 print(ile)
 
 -----------------------------------------------------------------------------
+
+napis = "technikinformatyk"
+ile = 0
+for litera in napis:
+    if litera == "k":
+        continue
+    else:
+        ile = ile + 1
+print(ile)
+
+-----------------------------------------------------------------------------
+
