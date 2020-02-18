@@ -1,3 +1,5 @@
+break – przerywa działanie pętli, przechodzi od razu do dalszej części programu
+
 imie = "Asia"
 
 for l in imie:
