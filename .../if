@@ -31,7 +31,7 @@ print(s)
 x = int(input("Twoja akutalna prędkość w terenie zabudowanym (km/h): "))
 
 if x>50 :
-  print("Oj nieładnie - łamiesz przepisy!")
+  print("Łamiesz przepisy!")
 else :
   print("Brawo!")
 print("Koniec")
