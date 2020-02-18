@@ -9,6 +9,8 @@ while x > 0 :
     x = x - 1
     
 ------------------------------------------------------------------------------
+while
+
 
     liczba_do_sprawdzenia = 13
     aktualny_dzielnik = 2
@@ -20,6 +22,24 @@ while x > 0 :
         aktualny_dzielnik += 1
     if czy_pierwsza == True :
         print(liczba_do_sprawdzenia,"jest liczbą pierwszą")
+        
+------------------------------------------------------------------------------
+
+    zakres_od = 10
+    zakres_do = 100
+    liczba_do_sprawdzenia = zakres_od
+    while liczba_do_sprawdzenia <= zakres_do :
+        aktualny_dzielnik = 2
+        czy_pierwsza = True
+        
+        while aktualny_dzielnik < liczba_do_sprawdzenia :
+            if liczba_do_sprawdzenia%aktualny_dzielnik == 0 :
+                czy_pierwsza = False
+                break
+            aktualny_dzielnik += 1
+        if czy_pierwsza == True :
+            print(liczba_do_sprawdzenia,"jest liczbą pierwszą")
+        liczba_do_sprawdzenia += 1
         
 ------------------------------------------------------------------------------
 
