@@ -32,3 +32,12 @@ witaj(x)
 
 ---------------------------------------------------------------------------
 
+def witaj(imie, nazwisko) :
+   print("Witaj", imie, nazwisko)
+
+x = input("Podaj swoje imię: ")
+y = input("Podaj swoje nazwisko: ")
+witaj(x,y)
+
+---------------------------------------------------------------------------
+
