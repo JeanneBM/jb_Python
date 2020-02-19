@@ -149,3 +149,13 @@ print("Twój wynik procentowy ze sprawdzianu to:",x,"\nTwoja ocena:",ocena)
 
 -----------------------------------------------------------------------------
 
+lista1=[ 'kot', 7.4, 2, 9, 'pies']
+if 9 in lista1:
+    print('a')
+elif 3 < 10:
+    print('b')
+else:
+    print('c')
+    
+-----------------------------------------------------------------------------
+
