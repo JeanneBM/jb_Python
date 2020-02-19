@@ -132,3 +132,20 @@ else:
     
 -----------------------------------------------------------------------------
 
+x = int(input("Podaj swój procentowy wynik ze sprawdzianu: "))
+
+if x < 50 :
+  ocena = "niedostateczny"
+elif x < 60 :
+  ocena = "dopuszczający"
+elif x < 75 :
+  ocena = "dostateczny"
+elif x < 90 :
+  ocena = "dobry"
+else :
+  ocena = "bardzo dobry"
+  
+print("Twój wynik procentowy ze sprawdzianu to:",x,"\nTwoja ocena:",ocena)
+
+-----------------------------------------------------------------------------
+
