@@ -50,3 +50,13 @@ pole_kwadratu(x)
 
 ---------------------------------------------------------------------------
 
+def pole_kwadratu(dlugosc_boku) :
+   pole = dlugosc_boku**2
+   return pole
+
+x = int(input("Podaj długość boku kwadratu: "))
+pole = pole_kwadratu(x)
+print("Pole kwadratu o długości boku", x, "wynosi:", pole)
+
+---------------------------------------------------------------------------
+
