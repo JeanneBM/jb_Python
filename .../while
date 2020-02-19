@@ -64,3 +64,15 @@ print("Poza pętlą")
 
 -----------------------------------------------------------------------------
 
+x = int(input("Podaj dowolną liczbę naturalną: "))
+suma = 0
+obieg_petli = 0
+
+while obieg_petli < x :
+    obieg_petli += 1
+    suma = suma + obieg_petli
+    print("Obieg pętli nr:",obieg_petli,"- obliczona suma:",suma)
+print("Suma kolejnych liczb składających się na ",x,"wynosi",suma)
+
+-----------------------------------------------------------------------------
+
