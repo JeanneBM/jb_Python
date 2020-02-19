@@ -42,4 +42,19 @@ while
         liczba_do_sprawdzenia += 1
         
 ------------------------------------------------------------------------------
+for
+
+liczba_do_sprawdzenia = 13
+startowy_dzielnik = 2
+czy_pierwsza = True
+
+for aktualny_dzielnik in range(startowy_dzielnik,liczba_do_sprawdzenia) :
+    if liczba_do_sprawdzenia%aktualny_dzielnik == 0 :
+        czy_pierwsza = False
+        break
+if czy_pierwsza == True :
+    print(liczba_do_sprawdzenia,"jest liczbą pierwszą")
+    
+------------------------------------------------------------------------------
+
 
