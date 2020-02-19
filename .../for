@@ -1,3 +1,9 @@
+
+for zmienna in zbiór_danych :
+  instrukcje
+  
+-----------------------------------------------------------------------------  
+
 imie="Asia"
 
 for l in imie:
