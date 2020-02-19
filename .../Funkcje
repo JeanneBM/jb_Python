@@ -41,3 +41,12 @@ witaj(x,y)
 
 ---------------------------------------------------------------------------
 
+def pole_kwadratu(dlugosc_boku) :
+   pole = dlugosc_boku**2
+   print(pole)
+
+x = int(input("Podaj długość boku kwadratu: "))
+pole_kwadratu(x)
+
+---------------------------------------------------------------------------
+
