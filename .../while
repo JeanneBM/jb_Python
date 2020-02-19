@@ -50,3 +50,17 @@ print("Poza pętlą")
 
 -----------------------------------------------------------------------------
 
+x = int(input("Podaj dowolną liczbę naturalną: "))
+obieg_petli = 0
+
+while x > 0 :
+    obieg_petli += 1
+    print("Obieg pętli nr:",obieg_petli)
+    x -= 1
+else :
+    print("Wewnątrz else")
+
+print("Poza pętlą")
+
+-----------------------------------------------------------------------------
+
