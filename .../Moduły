@@ -15,3 +15,11 @@ pole_kwadratu(5)
 
 -----------------------------------------------------------------------
 
+import math
+
+liczba = float(input("Podaj dowolną liczbę: "))
+pierwiastek = math.sqrt(liczba)
+print("Pierwiastek z liczby",liczba,"wynosi:",pierwiastek)
+
+-----------------------------------------------------------------------
+
