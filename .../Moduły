@@ -14,6 +14,7 @@ from pole import *
 pole_kwadratu(5)
 
 -----------------------------------------------------------------------
+Opcja 2: import math
 
 import math
 
@@ -22,4 +23,6 @@ pierwiastek = math.sqrt(liczba)
 print("Pierwiastek z liczby",liczba,"wynosi:",pierwiastek)
 
 -----------------------------------------------------------------------
+Opcja 3: from math import sqrt
+
 
