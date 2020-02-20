@@ -83,3 +83,13 @@ print(mojalista)
 
 -------------------------------------------------------------------------------
 
+kopialisty = mojalista.copy()
+
+print(mojalista)
+['papuga', 9, 'mysz', 'kot', 1, 2.4, 'papuga', 10]
+
+print(kopialisty)
+['papuga', 9, 'mysz', 'kot', 1, 2.4, 'papuga', 10]
+
+-------------------------------------------------------------------------------
+
