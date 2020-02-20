@@ -25,4 +25,12 @@ print("Pierwiastek z liczby",liczba,"wynosi:",pierwiastek)
 -----------------------------------------------------------------------
 Opcja 3: from math import sqrt
 
+from math import sqrt
+
+liczba = float(input("Podaj dowolną liczbę: "))
+pierwiastek = sqrt(liczba)
+print("Pierwiastek z liczby",liczba,"wynosi:",pierwiastek)
+
+-----------------------------------------------------------------------
+
 
