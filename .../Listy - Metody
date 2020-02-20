@@ -26,3 +26,15 @@ print(mojalista)
 
 -------------------------------------------------------------------------------
 
+[10, ‘papuga’, 2.4, ‘chomik’, 1, ‘kot’, 9, ‘pies’, ‘mysz’]
+
+usuniety = mojalista.pop(3)
+
+print(mojalista)
+[10, 'papuga', 2.4, 1, 'kot', 9, 'pies', 'mysz']
+
+print(usuniety)
+chomik
+
+-------------------------------------------------------------------------------
+
