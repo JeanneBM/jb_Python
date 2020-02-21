@@ -1,0 +1,13 @@
+print(mojalista)
+['papuga', 9, 'mysz', 'kot', 1, 2.4, 'papuga', 10]
+
+nowalista = mojalista[0:3]
+
+print(mojalista)
+['papuga', 9, 'mysz', 'kot', 1, 2.4, 'papuga', 10]
+
+print(nowalista)
+['papuga', 9, 'mysz']
+
+-----------------------------------------------------------------------------
+
