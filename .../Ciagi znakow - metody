@@ -65,5 +65,14 @@ Technik informatyk
 
 ----------------------------------------------------------------------------------------------
 
+a = 5        
+b = 10        
+suma = a + b 
+print("Suma liczb a i b wynosi {0}, natomiast ich iloczyn {1}".format(suma, a*b))
+
+Suma liczb a i b wynosi 15, natomiast ich iloczyn 50
+
+----------------------------------------------------------------------------------------------
+
 
 
