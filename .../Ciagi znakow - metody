@@ -1,0 +1,31 @@
+x = "gdyby kózka nie SKAKAŁA, toby nóżki nie ZŁAMAŁA."
+
+print(x.count('nie'))
+print(x.count('nie',16))
+print(x.count('nie',16,23))
+print(x.count('nie',-12))
+
+2
+1
+0
+1
+
+----------------------------------------------------------------------------------------------
+
+string.replace(stary, nowy[, ile])
+
+z = x.replace('nie', 'AAAA')
+print(x)
+print(z)
+
+z = x.replace('nie', 'AAAA',1)
+print(x)
+print(z)
+
+gdyby kózka nie SKAKAŁA, toby nóżki nie ZŁAMAŁA.
+gdyby kózka AAAA SKAKAŁA, toby nóżki AAAA ZŁAMAŁA.
+gdyby kózka nie SKAKAŁA, toby nóżki nie ZŁAMAŁA.
+gdyby kózka AAAA SKAKAŁA, toby nóżki nie ZŁAMAŁA
+
+----------------------------------------------------------------------------------------------
+
