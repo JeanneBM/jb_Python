@@ -29,3 +29,22 @@ gdyby kózka AAAA SKAKAŁA, toby nóżki nie ZŁAMAŁA
 
 ----------------------------------------------------------------------------------------------
 
+string.split(separator=Brak, ilosc_podziałow=-1)
+
+----------------------------------------------------------------------------------------------
+
+x = "gdyby kózka nie SKAKAŁA, toby nóżki nie ZŁAMAŁA."
+
+lista = x.split()
+print(lista)
+
+lista = x.split('nie')
+print(lista)
+
+['gdyby', 'kózka', 'nie', 'SKAKAŁA,', 'toby', 'nóżki', 'nie', 'ZŁAMAŁA.']
+['gdyby kózka ', ' SKAKAŁA, toby nóżki ', ' ZŁAMAŁA.']
+
+----------------------------------------------------------------------------------------------
+
+
+
