@@ -1,0 +1,15 @@
+Każdy symbol, litera, cyfra posiada swój numer – kod. Są różne rodzaje kodowania, między innymi:
+
+    ASCII
+    UTF-8 (system kodowania unicode)
+
+UTF-8 jest głównym standardem kodowania m.in. dla stron internetowych.
+
+W języku Python mamy dostępne funkcje zamieniające znak na jego kod dziesiętny i odwrotnie.
+
+chr(x) – zamienia kod liczbowy na symbol
+
+ord(x) – zamienia symbol na jego kod liczbowy
+
+-------------------------------------------------------------------------------------------------------------
+
