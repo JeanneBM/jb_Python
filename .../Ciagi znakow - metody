@@ -46,5 +46,24 @@ print(lista)
 
 ----------------------------------------------------------------------------------------------
 
+string.strip([znaki])
+
+----------------------------------------------------------------------------------------------
+
+y = "         Technik informatyk      "
+print(y)
+print(y.strip())
+
+y = "_________Technik informatyk______"
+print(y)
+print(y.strip('_'))
+
+         Technik informatyk      
+Technik informatyk
+_________Technik informatyk______
+Technik informatyk
+
+----------------------------------------------------------------------------------------------
+
 
 
