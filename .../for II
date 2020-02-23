@@ -1,0 +1,12 @@
+# Składnia.
+for item in sequence:
+    instrukcje      # tu zwykle używamy item
+    if test1:
+        break       # wyjście z pętli, opcjonalne
+    if test2:
+        continue    # przejście na górę pętli, opcjonalne
+else:               # opcjonalne
+    instrukcje      # jeżeli nie było break, działa nawet przy pustej sekwencji
+
+---------------------------------------------------------------------------------------------------------
+
