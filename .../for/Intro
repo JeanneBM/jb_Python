@@ -1,1 +1,9 @@
+Pętla for jest uniwersalnym iteratorem po sekwencjach.
 
+Jeżeli chcemy wykonać pętlę po ciągu liczb całkowitych, to pomocna jest funkcja range() lub wersja z generatorem xrange(). 
+
+Można stosować break (natychmiastowe wyjście z pętli) i continue (kontynuacja pętli) jak w języku C.
+
+Niebezpiecznie jest modyfikować sekwencję (np. listę) po której biegnie pętla for. Należy raczej zrobić kopię listy do iteracji. 
+
+Bezpieczną operacją jest wydłużenie listy przez L.append(item) lub L.extend(sequence). 
