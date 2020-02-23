@@ -1,0 +1,14 @@
+keys = ["jeden", "dwa", "trzy"]
+values = ["I", "II", "III"]
+D = dict(zip(keys, values))
+# To samo za pomocą pętli for.
+D = {}              # lub D = dict()
+for (k, v) in zip(keys, values):
+    D[k] = v
+
+--------------------------------------------------------------------
+
+D = dict(zip(range(6), "qwerty"))
+
+--------------------------------------------------------------------
+
