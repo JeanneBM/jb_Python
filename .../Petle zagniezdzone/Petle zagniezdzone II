@@ -1,9 +1,20 @@
-Tabliczka mnozenia
-
+#Tabliczka mnozenia
 for wiersz in range(1,11):
     for kolumna in range(1,11):
         print(wiersz*kolumna, end="	")
     print()
     
-    
 --------------------------------------------------------------------
+
+# Wyszukiwanie wspólnych elementów dwóch sekwencji.
+seq1 = "mielonka"
+seq2 = "biedronka"
+alist = []
+for item in seq1:
+    if item in seq2:   # mało wydajne
+        alist.append(item)
+print ( alist )               # ["i","e","o","n","k","a"]
+# Inny sposób polega na zastosowaniu zbiorów.
+
+--------------------------------------------------------------------
+
