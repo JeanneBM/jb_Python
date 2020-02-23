@@ -25,3 +25,19 @@ for i in range(6):            # lista liczb od 0 do 5
 print ( i )                   # wynik to 5
 
 ---------------------------------------------------------------------------------------------------------
+
+# Pętla po liście składającej się z elementów różnych typów.
+for item in [4, "s", [2, 3], 3.14159]:
+    print ( item )
+
+# Pętla po krotce różnych elementów.
+for item in (6, "abc", 1.2):
+    print ( item )
+
+# Pętla po liście składającej się z krotek.
+# Następuje pozycyjne przypisanie zmiennych.
+for (a, b) in [(2, "i"), (3.14, "f"), ("a", "s")]:
+    print ( "{} {} {} {}".format("pierwszy, a, "drugi", b) )
+
+---------------------------------------------------------------------------------------------------------
+
