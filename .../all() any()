@@ -1,0 +1,23 @@
+# Zastosowanie funkcji all() i any().
+
+L = [1, 2, 4, 5]
+#L = [2, 4, 6]
+
+# Sprawdzamy, czy wszystkie liczby są parzyste.
+
+# Zastosowanie klauzuli else w pętli for.
+for x in L:
+    if x % 2 != 0:
+        break
+else:
+    print ( "Wszystkie parzyste" )
+
+# Zastosowanie all().
+if all(x % 2 == 0 for x in L):
+    print ( "Wszystkie parzyste" )
+
+# Sprawdzamy, czy choć jedna liczba jest parzysta.
+
+if any(x % 2 == 0 for x in L):
+    print ( "Jest liczba parzysta na liście" )
+
