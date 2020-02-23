@@ -1,1 +1,20 @@
+Active object – współbieżny wzorzec projektowy, którego celem jest współbieżne wykonywanie metod obiektu. 
+
+We wzorcu oddziela się proces wywołania metody od jej wykonania, które odbywa się we własnym wątku obiektu. 
+Wywołania metod są kolejkowane i wykonywane sekwencyjnie przez planistę. 
+W międzyczasie, wątek wywołujący metodę może zająć się wykonywaniem innych czynności w oczekiwaniu na pojawienie się wyniku. 
+
+Problem
+
+W programowaniu współbieżnym pojawia się problem synchronizacji dostępu do zasobów. 
+Wiele operacji nie może być jednocześnie wykonywanych przez więcej niż jeden wątek, gdyż skutkowałoby to zniszczeniem danych 
+lub przekłamaniami wyników. 
+Programista musi stosować różne techniki synchronizacji, jak monitory czy semafory. 
+Zakładają one, że metody obiektu mogą być wykonywane przez różne wątki, a w sekcjach krytycznych następuje kolejkowanie w oczekiwaniu na dostęp. 
+Nie sprawdzają się one, gdy chcemy, aby wątek w oczekiwaniu na wyniki zajął się wykonywaniem innych zadań.
+
+Rozpatrywany we wzorcu aktywny obiekt posiada swój własny wątek sterujący, który zarządza wykonywaniem metod. 
+Gdy jakiś wątek jest zainteresowany wywołaniem metody, wysyła do obiektu żądanie, po czym powraca do własnych zadań. 
+Obiekt odbiera żądania, wykonuje je, po czym przekazuje wyniki z powrotem do wątku wywołującego. 
+Jeśli dwa wątki chcą wywołać tę samą metodę, żądania są kolejkowane i obsługiwane jedno po drugim, dzięki czemu unikamy uszkodzeń danych. 
 
