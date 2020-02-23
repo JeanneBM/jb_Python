@@ -16,3 +16,4 @@ for (i, item) in enumerate(owoce):
 [c*i for (i, c) in enumerate("abcd")]   # ["", "b", "cc", "ddd"]
 [2**i for i in range(5)]                # [1, 2, 4, 8, 16]
 
+
