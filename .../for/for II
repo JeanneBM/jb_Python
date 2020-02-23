@@ -17,3 +17,11 @@ for char in word:             # pętla po stringu
 print ("")                    # na koniec przechodzimy do nowej linii
 
 ---------------------------------------------------------------------------------------------------------
+
+# Pętla po liście liczb z funkcji range().
+for i in range(6):            # lista liczb od 0 do 5
+    print ( i )
+# Indeks pętli żyje poza nią.
+print ( i )                   # wynik to 5
+
+---------------------------------------------------------------------------------------------------------
