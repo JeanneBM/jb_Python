@@ -10,3 +10,10 @@ else:               # opcjonalne
 
 ---------------------------------------------------------------------------------------------------------
 
+word = "praca"
+for char in word:             # pętla po stringu
+    print char,               # przecinek daje wydruk w jednym wierszu, Python 2
+    print(char, end=" ")      # wydruk w jednym wierszu, Python 3
+print ("")                    # na koniec przechodzimy do nowej linii
+
+---------------------------------------------------------------------------------------------------------
