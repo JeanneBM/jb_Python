@@ -60,3 +60,11 @@ for item in list(L):
     
 ---------------------------------------------------------------------------------------------------------
 
+# Pętla for w konteście słowników.
+D = {"a": 1, "b": 2, "c": 3}
+for key in D:                 # pętla po kluczach
+    print ( "{} {}".format(key, D[key]) )
+for (key, value) in D.items():
+    print ( "{} {}".format(key, value) )
+    
+    
