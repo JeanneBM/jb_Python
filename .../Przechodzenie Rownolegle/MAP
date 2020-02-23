@@ -1,0 +1,24 @@
+# Składnia.
+map(function, sequence[, sequence, ...]) zwraca list
+# W Pythonie 3 map() zwraca generator.
+
+---------------------------------------------------------------------------------------------
+
+# Funkcję map można łatwo zastąpić listą składaną.
+L = [-2, -1, 0, 1, 2]
+map(abs, L)                   # [2, 1, 0, 1, 2]
+[abs(x) for x in L]
+
+map(ord, "qwerty")            # [113, 119, 101, 114, 116, 121]
+[ord(x) for x in "qwerty"]
+
+L = [1, 2, 3, 4]
+M = [1, 1, 2, 2]
+map(pow, L, M)                # [1, 2, 9, 16]
+[pow(x, y) for (x, y) in zip(L, M)]
+
+words = ["jeden", "dwa", "trzy"]
+map(str.upper, words)         # ['JEDEN', 'DWA', 'TRZY']
+[word.upper() for word in words]
+
+
