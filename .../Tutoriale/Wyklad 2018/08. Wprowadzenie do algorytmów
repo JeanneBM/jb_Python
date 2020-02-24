@@ -1,0 +1,551 @@
+Python (8) - wprowadzenie do algorytmów
+
+PLAN
+
+    Algorytmika
+    Metoda dziel i zwyciężaj
+    Algorytmy zachłanne
+    Programowanie dynamiczne
+    Analiza algorytmów
+    Rekurencja 
+    
+
+Algorytmika
+WPROWADZENIE
+
+Algorytmika jest dziedziną wiedzy zajmującą się badaniem algorytmów (konstrukcja, własności). Algorytm to zbiór reguł postępowania umożliwiających rozwiązanie określonego zadania w skończonej liczbie kroków i w skończonym czasie. W informatyce algorytmy są ściśle związane z przetwarzanymi przez nie strukturami danych (algorytmy + struktury danych = programy).
+
+Specyfikacja to ścisła definicja problemu do rozwiązania (zadania do wykonania). Składa się z danych początkowych, warunków jakie mają one spełniać (warunki początkowe) oraz danych wyjściowych i warunków, jakie muszą one spełniać (warunki końcowe). Warunki końcowe określają również związek danych wyjściowych z wejściowymi.
+
+Model algorytmu.
+
+    Dane wejściowe - muszą pochodzić z dobrze zdefiniowanego zbioru. Czasem istotną częścią algorytmu jest weryfikacja danych.
+    Zestaw czynności - musi być precyzyjnie określony.
+    Dane wyjściowe (wynikowe) - wynik może by numeryczny (wartości liczbowe) lub nienumeryczny (odpowiedź TAK/NIE, określony stan, itp.). 
+
+Sposoby zapisu algorytmu.
+
+    Opis słowny
+    Lista kroków
+    Schemat blokowy
+    Drzewo
+    Pseudokod
+    Implementacja w języku wysokiego poziomu [to będzie preferowane na wykładzie] 
+
+Klasyfikacja algorytmów.
+
+    Algorytmy sekwencyjne (kroki algorytmu wykonywane sekwencyjnie) i równolegle (kroki algorytmu wykonywane równolegle).
+    Algorytmy numeryczne (wykonywanie obliczeń) i nienumeryczne (przetwarzanie danych).
+    Algorytmy iteracyjne (algorytm wykonuje obliczenia w pętli dla zmieniającej się wartości parametru) i rekurencyjne (algorytm w kolejnych krokach wywołuje sam siebie dla nowych wartości parametrów wykonania). 
+
+Techniki rozwiązywania problemów.
+
+    Algorytmy siłowe - krokowe przeszukiwanie całej przestrzeni możliwych rozwiązań [wyszukiwanie liniowe].
+    Algorytmy z powrotami (backtracking) - algorytmy rekurencyjne przeszukujące całą przestrzeń rozwiązań, ale z inteligentnym porzucaniem gałęzi nie rokujących nadziei na sukces [droga skoczka szachowego (Wirth)].
+    Algorytmy dziel i zwyciężaj - algorytmy rekurencyjne dzielące problem na rozłączne podproblemy.
+    Programowanie dynamiczne - algorytmy rekurencyjne wykorzystujące pokrywanie się podproblemów [liczby Fibonacciego].
+    Algorytmy zachłane - w każdym kroku dokonuje najlepiej rokującego w danym momencie wyboru rozwiązania częściowego [problem plecakowy ciągły].
+    Programowanie liniowe - oceniamy rozwiązanie problemu przez pewną funkcję jakości i szukamy jej minimum.
+    Algorytmy heurystyczne - rozwiązywanie problemu trudnego przez rozwiązanie problemu łatwego, którego rozwiązanie daje się w prosty sposów przekształcić w rozwiązanie problemu trudnego [Swacha: podanie liczby wyrazów w napisie przez obliczenie liczby spacji].
+    Algorytmy probabilistyczne lub randomizowane - wykorzystanie losowania (losowości) w działaniu algorytmu. W praktyce oznacza to, że implementacja takiego algorytmu korzysta przy obliczeniach z generatora liczb losowych. Wyróżniamy dwa podstawowe rodzaje algorytmów probabilistycznych: algorytmy Las Vegas [zawsze zwraca prawidłową odpowiedź, ale czas jego działania nie jest z góry ustalony], algorytmy Monte Carlo [zawsze kończą się w ustalonym czasie, ale mogą z pewnym prawdopodobieństwem zwrócić zły wynik, bądź zwracają wynik tylko z pewną dokładnością; przykład ze Swachy: obliczanie liczby pi przez losowanie punktów z kwadratu z wpisanym kołem].
+    Metody inteligencji obliczeniowej (algorytmy heurystyczne, stosowane do rozwiązywaniem problemów, które nie są efektywnie algorytmizowalne) - obliczenia ewolucyjne (algorytmy genetyczne), obliczenia rozmyte, oraz sieci neuronowe.
+    Algorytmy kwantowe - algorytmy zaimplementowane na komputerach kwantowych, posługujących się qubitami (a nie bitami), oraz zjawiskiem splątania kwantowego. Dużym problemem komputerów kwantowych jest dekoherencja ich stanów [rozkład liczby na czynniki pierwsze w czasie wielomianowym; kryptografia kwantowa]. 
+
+ALGORYTMY LINIOWE
+
+Algorytm liniowy (sekwencyjny) ma postać listy kroków, które bezwarunkowo mają być wszystkie wykonane zgodnie z kolejnością, w jakiej występują.
+
+SPECYFIKACJA
+Problem: Obliczanie pola trójkąta o danych długościach jego boków.
+
+DANE WEJŚCIOWE
+Trzy liczby a, b i c, będące długościami boków trójkąta.
+
+DANE WYJŚCIOWE
+S - pole trójkąta o bokach długości a, b, c.
+
+LISTA KROKÓW
+
+K01: Obliczyć połowę długości obwodu trójkąta 
+    p = (a + b + c)/2.
+
+K02: Obliczyć pole trójkąta S według wzoru Herona
+    S = sqrt(p * (p-a) * (p-b) * (p-c)).
+
+Sprawdzenie warunku, aby trzy liczby były długościami boków trójkąta.
+Oznaczamy: 2 * p = a + b + c.
+a < b + c,  b < a + c,  c < a + b,
+2 * a < 2 * p,  2 * b < 2 * p,  2 * c < 2 * p,
+p - a > 0,  p - b > 0,  p - c > 0.
+Możemy zmodyfikować specyfikację zadania.
+
+SPECYFIKACJA
+Problem: Obliczanie pola trójkąta.
+
+DANE WEJŚCIOWE
+Trzy dowolne liczby a, b i c.
+
+DANE WYJŚCIOWE
+Jeżeli liczby a, b i c są długościami boków pewnego trójkąta, 
+to oblicz pole S tego trójkąta. W przeciwnym razie wyprowadź komunikat, 
+że dane liczby nie są długościami boków żadnego trójkąta.
+
+ALGORYTMY Z ROZGAŁĘZIENIAMI
+
+Algorytm z warunkami (rozgałęzieniami) zawiera pewną liczbę kroków warunkowych, które są wykonywane wtedy, gdy spełnione są pewne warunki.
+
+Problem: Analiza rozwiązań równania liniowego postaci a * x + b * y = c.
+
+Problem: Analiza rozwiązań równania kwadratowego postaci a * x * x + b * x + c = 0.
+ALGORYTMY ITERACYJNE
+
+W algorytmie iteracyjnym pewna liczba kroków jest wielokrotnie powtarzana z liczbą powtórzeń z góry zadaną lub zależną od wyników obliczeń. Iteracja to powtarzanie pewnych operacji.
+ALGORYTM HORNERA
+
+SPECYFIKACJA
+Problem: Obliczanie wartości wielomianu.
+
+WEJŚCIE
+n - stopień wielomianu, 
+a[] - współczynniki wielomianu (n+1 liczb), 
+x - argument wielomianu.
+
+WYJŚCIE
+Wartość wielomianu dla argumentu x.
+
+w(x) = a[1] * x + a[0]                  # 1 mnożenie, 1 dodawanie
+w(x) = a[2] * x * x + a[1] * x + a[0]   # 3 mnożenia, 2 dodawania
+w(x) = (a[2] * x + a[1]) * x + a[0]     # 2 mnożenia, 2 dodawania
+w(x) = a[3] * x * x * x + a[2] * x * x + a[1] * x + a[0]    # 6 m, 3 d
+w(x) = ((a[3] * x + a[2]) * x + a[1]) * x + a[0]            # 3 m, 3 d
+
+p = a[3]                      # przygotowanie do iteracji
+p = p * x + a[2]              # 3 iteracje
+p = p * x + a[1]
+p = p * x + a[0]
+
+Algorytm: Schemat Hornera (1819 rok).
+Lista kroków.
+
+K01: Przyjmij współczynnik wielomianu przy najwyższej potędze 
+za początkową wartość, czyli podstaw p = a[n] (p jest zmienną pomocniczą).
+
+K02: n razy oblicz wartość wyrażenia p = p * x + a[i] dla kolejnych 
+współczynników wielomianu, czyli dla i = (n-1), (n-2), ..., 1, 0.
+
+Złożoność: dla wielomianu stopnia n należy wykonać n mnożeń i n dodawań.
+
+Schemat Hornera jest optymalny pod względem liczby wykonywanych działań (1971 Borodin).
+
+Zastosowania: zamiana liczb z systemu binarnego na dziesiętny, szybkie podnoszenie do potęgi.
+LICZBY PIERWSZE
+
+Liczba naturalna jest pierwsza, jeśli dzieli się tylko przez 1 i przez siebie. Liczbę naturalną, która nie jest pierwszą, nazywa się liczbą złożoną.
+
+Rozkładem liczby na czynniki pierwsze (faktoryzacją) nazywamy przedstawienie liczby w postaci iloczynu jej czynników pierwszych z uwzględnieniem ich krotności.
+
+Problem: Podać rozkład liczby n na czynniki pierwsze lub sprawdzić, że jest to liczba pierwsza.
+
+Problem: Znaleźć wszystkie liczby pierwsze w wybranym przedziale liczb lub znaleźć dużą liczbę pierwszą.
+
+SPECYFIKACJA
+Problem: Znaleźć wszystkie liczby pierwsze mniejsze od danej liczby.
+
+WEJŚCIE
+Liczba naturalna n.
+
+WYJŚCIE
+Lista liczb pierwszych mniejszych od n.
+
+Algorytm: Sito Eratostenesa.
+
+SPECYFIKACJA
+Problem: Rozkład liczby na czynniki pierwsze.
+
+WEJŚCIE
+Liczba naturalna n.
+
+WYJŚCIE
+Przedstawienie liczby n w postaci
+n = p[1] * p[2] * ... * p[k], 
+p[1] <= p[2] <= ... <= p[k],
+gdzie p[i] to liczby pierwsze.
+
+METODA SIŁOWA
+
+Algorytm siłowy (brute force algorithm) - tak określa się algorytm, który opiera się na sukcesywnym sprawdzeniu wszystkich możliwości w poszukiwaniu rozwiązania problemu, zamiast skupiać się na jego szczegółowej analizie. Jest to zwykle nieoptymalna, ale najprostsza do zaimplementowania i najbardziej skuteczna metoda postępowania (tzn. znajdziemy rozwiązanie, jeżeli istnieje, ale często dużym nakładem pracy). 
+
+
+Metoda dziel i zwyciężaj
+WPROWADZENIE
+
+https://en.wikipedia.org/wiki/Divide_and_conquer_algorithm
+
+[Cormen] Wiele algorytmów ma strukturę rekurencyjną. W celu rozwiązania danego problemu algorytmy wywołują same siebie przy rozwiązywaniu podobnych podproblemów. W podejściu dziel i zwyciężaj (divide-and-conquer) każdy poziom rekurencji składa się z następujących trzech etapów:
+
+    Dziel (Divide): Dzielimy problem na pewną liczbę podproblemów, stanowiących mniejsze egzemplarze tego samego lub zbliżonego problemu.
+    Zwyciężaj (Conquer): Rozwiązujemy podproblemy rekurencyjnie. Jeśli jednak rozmiary podproblemów są dostatecznie małe, to rozwiązujemy podproblemy bezpośrednio.
+    Połącz (Combine): Łączymy rozwiązania podproblemów w rozwiązanie pierwotnego problemu. 
+
+Przykłady zastosowania:
+
+    Jednoczesne znajdowanie minimum i maksimum ciągu.
+    Wyszukiwanie binarne.
+    Sortowanie ciągu metodą quicksort (sortowanie szybkie).
+    Sortowanie przez scalanie (mergesort).
+    Algorytm quickhull znajdowania otoczki wypukłej.
+    Problem wież Hanoi.
+    Algorytm Strassena mnożenia macierzy N x N (Wróblewski s. 214).
+    Algorytm Karacuby (1960) szybkiego mnożenia dużych liczb całkowitych
+    https://en.wikipedia.org/wiki/Karatsuba_algorithm 
+
+
+
+
+Algorytmy zachłanne
+WPROWADZENIE
+
+Algorytm zachłanny lub żarłoczny (greedy) w celu wyznaczenia rozwiązania w każdym kroku dokonuje zachłannego, tj. najlepiej rokującego w danym momencie wyboru rozwiązania częściowego [Wikipedia]. Inaczej mówiąc, algorytm zachłanny nie patrzy, czy w kolejnych krokach jest sens wykonywać dane działanie, ale dokonuje decyzji lokalnie optymalnej, dokonuje on wyboru wydającego się w danej chwili najlepszym, kontynuując rozwiązanie podproblemu wynikającego z podjętej decyzji.
+
+Nie istnieje ogólna metoda dowodzenia, czy dla danego problemu rozwiązanie zachłanne (zawsze) odnajduje poprawny (i optymalny) wynik. Istnieją jednak stosujące się do samego problemu kryteria, pozwalające sądzić, iż dla owego problemu istnieje rozwiązanie zachłane:
+
+    Własność zachłannego wyboru - za pomocą zachłannych wyborów można uzyskać globalnie optymalne rozwiązanie.
+    Własność optymalnej podstruktury - optymalne rozwiązanie problemu zawiera w sobie optymalne rozwiązania podproblemów. 
+
+Przykłady algorytmów zachłannych:
+
+    Algorytm zachłanny rozwiązujący problem plecakowy ciągły. W przypadku problemu plecakowego dyskretnego algorytm zachłanny daje przybliżone rozwiązanie [inne podejście to programowanie dynamiczne].
+    Algorytmy znajdujące najdłuższy wspólny podciąg.
+    Algorytm Kruskala (wyznaczanie minimalnego drzewa rozpinającego dla grafu nieskierowanego ważonego spójnego).
+    Algorytm Prima (wyznaczanie minimalnego drzewa rozpinającego dla grafu nieskierowanego ważonego spójnego).
+    Algorytm szeregowania zadań.
+    Algorytm najbliższych sąsiadów dla problemu komiwojażera. Przechodzimy z bieżącego wierzchołka do jego najbliższego nieodwiedzonego sąsiada. Po odwiedzeniu wszystkich wierzchołków wracamy do wierzchołka startowego. Algorytm zwykle znajduje przybliżone rozwiązanie w czasie O(n^2). Lepsze rozwiązanie otrzymuje się, gdy powtarzamy procedurę startując kolejno z innych wierzchołków [czas O(n^3)].
+    Algorytm znajdowania największej kliki w grafie przez dołączanie do budowanej kliki C kolejnych wierzchołków, które tworzą klikę z wierzchołkami wcześniej zaliczonymi do C. Znalezione rozwiązanie jest zwykle przybliżone (klika maksymalna, ale nie największa). Na jakość znalezionego rozwiązania ma wpływ kolejność przetwarzanych wierzchołków. Dobrą strategią jest przetwarzanie wierzchołków w kolejności malejących stopni, bo można się spodziewać, że wierzchołki z największej kliki będą miały raczej duże stopnie. 
+
+Wikipedia, Greedy algorithm, https://en.wikipedia.org/wiki/Greedy_algorithm 
+
+
+
+Programowanie dynamiczne
+WPROWADZENIE
+
+https://en.wikipedia.org/wiki/Dynamic_programming
+
+https://medium.com/@codingfreak/top-50-dynamic-programming-practice-problems-4208fed71aa3
+
+https://stackoverflow.com/questions/1065433/what-is-dynamic-programming
+
+Programowanie dynamiczne jest techniką lub strategią projektowania algorytmów, stosowaną przeważnie do rozwiązywania zagadnień optymalizacyjnych. Jest alternatywą dla niektórych zagadnień rozwiązywanych za pomocą algorytmów zachłannych. Wynalazcą techniki jest amerykański matematyk Richard Bellman.
+
+Programowanie dynamiczne ma na celu wykorzystanie zalet podejścia rekurencyjnego (prostota, przejrzystość) i eliminację jego wad (zasobożerność). Konstrukcja programu wykorzystującego zasadę programowania dynamicznego może być sformułowana w trzech punktach.
+
+    Koncepcja: Dla danego problemu stwórz rekurencyjny model jego rozwiązania (wraz z jednoznacznym określeniem przypadków elementarnych).
+    Inicjalizacja: Wpisz do tablicy wartości numeryczne, odpowiadające przypadkom elementarnym.
+    Progresja: Na podstawie wartości numerycznych wpisanych do tablicy, używając formuły rekurencyjnej, oblicz rozwiązanie problemu wyższego rzędu i wpisz je do tablicy; postępuj w ten sposób do osiągnięcia podanej wartości. 
+
+Programowanie dynamiczne przypomina metodę dziel i zwyciężaj, ponieważ w obu metodach wykorzystujemy rekurencję. Jednak w metodzie dziel i zwyciężaj podproblemy są rozłączne (np. przy sortowaniu są to różne fragmenty tablicy). W programowaniu dynamicznym wykorzystujemy powtarzanie się podproblemów na kolejnych etapach rekurencji. Liczba istotnie różnych podproblemów jest wielomianowa, co wykorzystuje metoda programowania dynamicznego. W metodzie siłowej wiele razy rozwiązuje się te same problemy, co zwykle prowadzi do ponadwielomianowej złożoności.
+
+Problem można rozwiązać metodą programowania dynamicznego, jeżeli ma dwie kluczowe właściwości.
+
+    Powtarzające się podproblemy (ang. overlapping subproblems). Podproblemy te rozwiązujemy tylko raz i zapamiętujemy ich rozwiązanie (ang. memoization).
+    Optymalna podstruktura (ang. optimal substructure). Problem ma własność optymalnej podstruktury, jeżeli może być rozwiązany z użyciem rozwiązań podproblemów. Inaczej mówiąc: optymalne rozwiązanie problemu zawiera w sobie optymalne rozwiązanie podproblemu. 
+
+CIĄG FIBONACCIEGO
+
+Technika programowania dynamicznego może być zastosowana do problemu obliczania wyrazów ciągu Fibonacciego.
+
+# Programowanie dynamiczne wstępujące, wersja z listą.
+def fibonacci(n):
+    F = [0] + n * [1]   # trzymamy wszystkie wartości
+    for i in range(2, n+1):
+        F[i] = F[i-1] + F[i-2]
+    return F[n]
+
+# Programowanie dynamiczne wstępujące, wersja ze słownikiem.
+def fibonacci(n):
+    F = {0:0, 1:1}   # trzymamy wszystkie wartości
+    for i in range(2, n+1):
+        F[i] = F[i-1] + F[i-2]
+    return F[n]
+
+W technice programowania dynamicznego zstępującego wartości obliczne są tylko wtedy, gdy są potrzebne.
+
+# Programowanie dynamiczne zstępujące.
+FIBONACCI = {0:0, 1:1}   # globalny słownik
+
+def fibonacci(n):
+    global FIBONACCI
+    if n not in FIBONACCI:
+        FIBONACCI[n] = fibonacci(n-1) + fibonacci(n-2)
+    return FIBONACCI[n]
+
+# Programowanie dynamiczne zstępujące.
+# Słownik z wynikami ukryty w instancji klasy.
+# Można wykorzystać wyniki z poprzednich wywołań funkcji.
+class FibonacciClass:
+
+    def __init__(self):
+        self.cache = {0:0, 1:1}
+
+    def __call__(self, n):
+        if n not in self.cache:
+            self.cache[n] = self(n-1) + self(n-2)
+        return self.cache[n]
+
+fibonacci = FibonacciClass()
+print fibonacci(10)
+print fibonacci(20)
+print fibonacci.cache   # podgląd zapamiętanych wyników
+
+PROBLEM PLECAKOWY
+
+Problem plecakowy (ang. knapsack problem) należy do problemów optymalizacyjnych. Wersja decyzyjna problemu plecakowego jest problemem NP-zupełnym i jest jednym z 21 NP-zupełnych problemów Karpa. Problem polega na znalezieniu takiego podzbioru elementów, aby suma wartości była jak największa, a suma wag nie była większa od danej pojemności plecaka. Nie można wybierać ułamkowch części elementów. Metody rozwiązywania problemu plecakowego.
+
+    Przegląd zupełny (metoda siłowa) znajduje najlepsze rozwiązanie, ale ma złożoność wykładniczą O(2^n).
+    Problem plecakowy może być rozwiązany przy użyciu programowania dynamicznego, ale rozwiązanie wielomianowe nie jest znane.
+    Zachłanny algorytm aproksymacyjny sortuje elementy w kolejności malejącej porównując stosunek wartości do wagi elementu. Złożoność obliczeniowa algorytmu zależy od sortowania [zwykle O(n log n)]. 
+
+Wikipedia, Knapsack problem, https://en.wikipedia.org/wiki/Knapsack_problem
+PROBLEM CIĘCIA PRĘTA
+
+Cormen s. 363.
+
+Dynamic Programming — Rod Cutting Problem
+
+http://algorithms.tutorialhorizon.com/dynamic-programming-rod-cutting-problem/
+PROBLEM ŚCIEŻKI O MINIMALNYM KOSZCIE
+
+Dynamic Programming — Minimum Cost Path Problem
+
+http://algorithms.tutorialhorizon.com/dynamic-programming-minimum-cost-path-problem/
+ALGORYTM KADANE'A
+
+Problem znajdowania podmacierzy o maksymalnej sumie elementów. Oryginalna wersja algorytmu dotyczy macierzy jednowymiarowej, ale istnieją uogólnienia na większą liczbę wymiarów.
+
+https://en.wikipedia.org/wiki/Maximum_subarray_problem
+BIOINFORMATYKA
+
+W bioinformatyce programowanie dynamiczne pojawia się w algorytmie Needlemana-Wunscha i innych algorytmach.
+
+https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm
+TEORIA GRAFÓW
+
+Algorytm Dijkstry (najkrótsze ścieżki z jednego źródła, nieujemne wagi krawędzi). Jeżeli R znajduje się na najkrótszej ścieżce od P do Q, to znamy już najkrótsza ścieżkę od R do Q (optymalna podstruktura).
+
+Algorytm Bellmana-Forda (najkrótsze ścieżki z jednego źródła, możliwe ujemne wagi krawędzi, brak ujemnych cykli).
+
+Algorytm Floyda-Warshalla (najkrótsze ścieżki pomiędzy wszystkimi parami wierzchołków, możliwe ujemne wagi krawędzi, brak ujemnych cykli). Złożoność obliczeniowa to O(V^3). Wykorzystuje się relację rekurencyjną na najkrótsze ścieżki.
+
+Algorytmy wykorzystujące drzewo dekompozycji grafu. 
+
+
+Analiza algorytmów
+WPROWADZENIE
+
+Analiza algorytmów jest dziedziną informatyki zajmującą się badaniem algorytmów.
+
+Kryteria analizy algorytmów.
+
+    Poprawność - daje dobry wynik dla każdej możliwej konfiguracji danych wejściowych [debugging, dowody formalne].
+    Złożoność obliczeniowa czasowa i pamięciowa.
+    Optymalność - interesuje nas algorytm najlepszy pod względem złożoności obliczeniowej.
+    Efektywność - użyteczność w praktycznych sytuacjach. 
+
+Złożoność algorytmu (ang. complexity).
+
+    Rozmiar zadania (złożoność pamięciowa) - rozmiar danych wejściowych, roboczych, wyjściowych.
+    Czas działania algorytmu (złożoność czasowa) - liczba kroków przekładająca się na czas pracy maszyny realizującej algorytm. 
+
+Przy badaniu złożoności czasowej często wystarcza zbadanie tzw. operacji dominujących, a nie dokładnie wszystkich operacji. Najbardziej czasochłonne operacje to zwykle instrukcja porównania (if) i instrukcja przypisania. Oznaczamy: Tc - czas wykonania jednej instrukcji porównania (compare), Ta - czas wykonania jednej instrukcji przypisania (assign). Złożoność obliczeniową charakteryzujemy przy pomocy tzw. notacji O.
+
+Przy badaniu złożoności czasem spotykamy sytuację, że złożoność zależy od konfiguracji danych początkowych. Wtedy można przeprowadzić m.in. trzy analizy, dla przypadku najgorszego, średniego i najkorzystniejszego. Korzysta się przy tym zwykle z analizy statystycznej.
+
+W badaniach algorymów czasem wykonuje się analizę empiryczną. Musimy wtedy dysponować poprawną i pełną implementacją algorytmu. Ponadto musimy wybrać zestaw danych wejściowych. Na ogół mamy trzy możliwości: użyć danych rzeczywistych, losowych lub złośliwych (przypadek pesymistyczny).
+ZAPIS Z DUŻYM "O"
+
+Zapis z dużym "O" podaje asymptotyczne ograniczenie górne funkcji.
+
+O(g(n)) = {f(n): istnieją dodatnie stałe c i n_0, takie że 0 <= f(n) <= c g(n) dla wszystkich n >= n_0}.
+
+Podstawowe klasy złożoności algorytmów (od najniższej do najwyższej).
+
+    stała O(1),
+    logarytmiczna O(log N),
+    liniowa O(N),
+    liniowo-logarytmiczna O(N log N),
+    kwadratowa O(N ** 2),
+    sześcienna O(N ** 3),
+    wykładnicza O(a ** N). 
+
+FUNKCJA SILNIA
+
+Zbadamy złożoność czasową algorytmu rekurencyjnego obliczającego funkcję silnia. Zakładamy, że najbardziej czasochłonną operacją jest instrukcja porównania if.
+
+def silnia(n):                # wg Wróblewskiego
+    """Funkcja silnia w wersji rekurencyjnej."""
+    if n == 0:
+        return 1
+    else:
+        return n * silnia(n-1)
+
+T(0) = Tc,
+T(n) = Tc + T(n-1)   dla n >= 1
+
+T(n) = Tc + Tc + T(n-2) = 2*Tc + T(n-2),
+T(n) = n*Tc + T(0) = (n+1)*Tc.          # złożoność praktyczna
+Złożoność klasy O(N).                   # złożoność teoretyczna
+
+def silnia(n):
+    """Funkcja silnia w wersji iteracyjnej."""
+    result = 1                      # Ta
+    while n > 1:                    # Tc
+        result = result * n     # Ta
+        n = n - 1               # Ta
+    return result
+
+T(1) = Ta + Tc,
+T(n) = Ta + Tc + (n-1)*(Tc + 2*Ta),
+T(n) = Ta*(2*n - 1) + Tc*(n) dla n > 1.
+Złożoność klasy O(N).
+
+ZŁOŻONOŚĆ
+
+Czasem opisuje się złożoność biorąc pod uwagę liczbę bitów danych B dostarczonych na wejście.
+
+Przykład: Sprawdzić, czy liczba całkowita N jest liczbą pierwszą. Metoda sprawdzenia polega na dzieleniu liczby N kolejno przez liczby 2, 3, 4, ..., [sqrt(N)].
+
+Pierwsza analiza złożoności: Mierzymy złożoność jako liczbę dzieleń liczba przez liczbę, co daje O(sqrt(N)) jednostek pracy.
+
+Druga analiza złożoności: Do przedstawienia liczby N potrzebujemy B bitów, N = 2 ** B. W tej sytuacji złożoność wyrażona przez liczbę bitów wynosi O(sqrt(2 ** B)) = O(2 ** (B/2)). Złożoność jest wykładnicza, czyli algorytm jest powolny.
+PROBLEMY ŁATWE I TRUDNE
+
+Problemy łatwe mają znane metody szybkiego ich rozwiązywania (w czasie wielomianowym).
+
+Problem jest trudny, jeżeli udowodnimy, że nie istnieje szybka metoda jego rozwiązania, każdej instacji problemu. Nie wystarczy wskazać jakiś szczególny powolny algorytm do jego rozwiązywania [H. S. Wilf, Algorithms and Complexity, Internet Edition 1994, https://www.math.upenn.edu/~wilf/].
+
+Warto pamiętać, że trudne problemy mogą mieć łatwe instancje, czyli szczególne przypadki, w których łatwo można znaleźć rozwiązanie [np. kolorowanie wierzchołków grafu cyklicznego]. 
+
+
+
+Rekurencja
+WPROWADZENIE
+
+Obiekt zwany jest rekurencyjnym, jeżeli częściowo składa się z siebie samego lub jego definicja odwołuje się do jego samego.
+
+Algorytmy rekurencyjne są szczególnie odpowiednie wtedy, gdy rozważany problem lub przetwarzanie dane są zdefiniowane w sposób rekurencyjny. Zastosowanie rekurencji: liczby naturalne, struktury drzewiaste, definicja silni, krzywe Hilberta, krzywe Sierpińskiego, algorytmy z powrotami (droga skoczka szachowego, problem ośmiu hetmanów), itp.
+
+Zawsze trzeba rozważyć problem stopu (zakończenia) aby mieć pewność, że procedura rekurencyjna zakończy obliczenia.
+
+W praktycznych zastosowaniach nie wystarczy pokazać, że głębokość rekurencji jest skończona, ale również, że jest względnie mała. Każde rekurencyjne uaktywnienie funkcji wymaga pewnego obszaru pamięci do przechowywania zmiennych lokalnych i aktualnego stanu obliczeń. Wniosek: należy unikać rekurencji, jeśli istnieje oczywiste rozwiązanie iteracyjne.
+LICZBY FIBONACCIEGO
+
+PROBLEM
+Wyznaczyć n-ty wyraz ciągu Fibonacciego.
+
+F(0) = 0,
+F(1) = 1,
+F(n) = F(n-1) + F(n-2).
+Pierwsze wyrazy ciągu: 0, 1, 1, 2, 3, 5, 8,...
+
+Wzór na n-ty wyraz ciągu Fibonacciego [sqrt(5) = 2.236...]:
+
+F(n) = {[(1 + sqrt(5)) / 2] ** n - [(1 - sqrt(5)) / 2] ** n} / sqrt(5).
+
+Wzór można wykorzystać do szybkiego obliczania dużych liczb Fibonacciego.
+
+Algorytm rekurencyjny
+
+WEJŚCIE
+n - numer liczby ciągu Fibonacciego do wyliczenia (n naturalne)
+
+WYJŚCIE
+n-ta liczba ciągu Fibonacciego
+
+Lista kroków funkcji F(n)
+
+K01: Jeśli n <= 1, to zwróć n i zakończ.   # obliczenie F(0) i F(1)
+
+K02: Zwróć F(n-2) + F(n-1) i zakończ.   # dwa wywołania rekurencyjne
+
+Analiza złożoności.
+Tc to czas wykonania instrukcji if.
+T(0) = Tc,
+T(1) = Tc,
+T(n) = Tc + T(n-1) + T(n-2) dla n >= 2,
+T(2) = 3 * Tc,
+T(3) = Tc + 3 * Tc + Tc = 5 * Tc,
+T(4) = Tc + 5 * Tc + 3 * Tc = 9 * Tc.
+
+Zastosowanie: opis rozrastania się stada królików, liczba rozwiązań układanki z klocków,..
+WIEŻE HANOI
+
+[ hanoi ]
+
+Układanka została wynaleziona przez francuskiego matematyka Edouarda Lucasa, który zaproponował zagadkę dla 8 krążków. Do sprzedawanego zestawu była dołączona (prawdopodobnie wymyślona przez Lucasa) tybetańska legenda, według której mnisi w świątyni Brahmy rozwiązują tę łamigłówkę dla 64 złotych krążków. Legenda mówi, że gdy mnisi zakończą zadanie, nastąpi koniec świata. Celem układanki jest przeniesienie wieży z krążków o różnych średnicach z jednego palika na drugi, mając do pomocy trzeci palik. Na starcie na pierwszym paliku mamy stos krążków ułożonych rosnąco, od najmniejszego na górze. Reguły układanki są następujące.
+
+    Wolno przenosić po jednym krążku na raz.
+    Jeden ruch polega na podniesieniu górnego krążka z jednego palika i nałożeniu go na inny palik, który może zawierać inne krążki.
+    Nie wolno położyć większego krążka na mniejszy. 
+
+Wieże Hanoi są przykładem zadania, którego złożoność obliczeniowa rożnie szybko wraz ze wzrostem parametru wejściowego (liczby krążków). Problem można rozwiązać za pomocą algorytmu rekurencyjnego. Najmniejsza liczba wymaganych ruchów wynosi L(n) = 2 ** n - 1, gdzie n jest liczbą krążków.
+
+Zastosowania Wież Hanoi.
+
+    W psychologi są używane w badaniach nad rozwiązywaniem problemów, jako test na kojarzenie. Jest też test neuropsychologiczny do diagnozowania dysfunkcji płatów czołowych mózgu.
+    Istnieje backup rotation scheme do wykonywania kopii zapasowych danych komputerowych, kiedy jest do dyspozycji wiele taśm, czy innych nośników.
+    W edukacji jest to przykład algorytmu rekurencujnego.
+    W matematyce istnieją różne uogólnienia problemu, np. większa liczba palików, szukanie optymalnej procedury przejścia między dwoma różnymi stanami układanki, itp. Gra może być przedstawiona jako graf nieskierowany, który ma kształt trójkąta Sierpińskiego (fraktal). 
+
+Implementacja algorytmu w języku Python. Krążki są reprezentowane przez liczby, a palikami są listy Pythona.
+
+def hanoi(n, A, B, C):
+    """Wieże Hanoi w Pythonie."""
+    if n == 1:
+        C.append(A.pop())
+        print A, B, C
+    else:
+        hanoi(n-1, A, C, B)   # hanoi() samo drukuje
+        C.append(A.pop())
+        print A, B, C
+        hanoi(n-1, B, A, C)
+
+number = 3   # rozwiązanie dla trzech krążków
+a = ["a"]
+b = ["b"]
+c = ["c"]
+for i in range(number):
+    a.append(number-i)
+print a, b, c
+hanoi(number, a, b, c)
+
+# Inna wersja rozwiązania.
+def hanoi(n, A, B, C):
+    """Wieże Hanoi w Pythonie."""
+    if n > 0:
+        hanoi(n-1, A, C, B)
+        C.append(A.pop())
+        print A, B, C
+        hanoi(n-1, B, A, C)
+
+# Przykładowy wynik działania programu dla n=3.
+['a', 3, 2, 1] ['b'] ['c']
+['a', 3, 2] ['b'] ['c', 1]
+['a', 3] ['c', 1] ['b', 2]
+['c'] ['a', 3] ['b', 2, 1]
+['a'] ['b', 2, 1] ['c', 3]
+['b', 2] ['c', 3] ['a', 1]
+['b'] ['a', 1] ['c', 3, 2]
+['a'] ['b'] ['c', 3, 2, 1]
+
+Problem: ile należy wykonać ruchów pojedyńczymi krążkami, 
+by rozwiązać łamigłówkę?
+H(1) = 1,
+H(n) = 2 * H(n-1) + 1 dla n > 1,
+H(n) = 2 * [2 * H(n-2) + 1] + 1 = 2 * 2 * H(n-2) + 2 + 1,
+H(n) = 2 * 2 * [2 * H(n-3) + 1] + 2 + 1 = 2 * 2 * 2 * H(n-3) + 2 * 2 + 2 + 1,
+H(n) = 2 ** (n-1) * H(1) + 2 ** (n-2) + ... + 2 ** 2 + 2 + 1,
+H(n) = 2 ** n - 1 dla n > 0.
+Złożoność klasy O(2 ** n).
+
+
+
