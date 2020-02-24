@@ -1,0 +1,1105 @@
+Python (7) - wyjątki
+
+PLAN
+
+    Podstawy wyjątków
+    Wyjątki jako stringi
+    Wyjątki jako klasy
+    Iteratory
+    Menedżery kontekstu
+    Zmienne prywatne w klasach
+    Hints
+    Klasy w nowym stylu
+    Dekoratory
+    Metaklasy 
+    
+
+
+Podstawy wyjątków
+WPROWADZENIE
+
+Przy próbie uruchomienia kodu Pythona mogą pojawić się co najmniej dwa rodzaje błędów: błędy składniowe (syntax errors) oraz wyjątki (exceptions).
+BŁĘDY SKŁADNIOWE
+
+Błędy składniowe, inaczej błędy parsowania, wywołane są przez nieprawidłową składnię instrukcji. W efekcie otrzymujemy komunikat z numerem linii z błędem i jej treścią. Mała strzałka pokazuje token przed którym wykryto błąd.
+
+>>> if True print "word"
+  File "<stdin>", line 1
+    if True print "word"      # brak średnika PRZED print
+                ^
+SyntaxError: invalid syntax
+
+Jeżeli instrukcja jest poprawna składniowo, to w dalszym ciągu mogą się pojawić błędy przy próbie jej uruchomienia. Takie błędy są nazywane wyjątkami i niekoniecznie muszą oznaczać katastrofę.
+WYJĄTKI
+
+Wyjątek jest to zdarzenie, które może modyfikować przebieg sterowania w programów. W Pythonie wyjątki wywoływane są automatycznie w momencie wystąpienia błędów i mogą być wywoływane oraz przechwytywane przez nasz kod. Wyjątki pozwalają nam wyskoczyć z dowolnie dużych części programu do kodu z programu obsługi wyjątku. Jest to spójny sposób reagowania na niezwykłe zdarzenia, narzędzie sterowania wysokiego poziomu.
+
+Wyjątki są przetwarzane przez cztery instrukcje:
+
+    try/except/else/finally - przechwytywanie wyjątków i działania oczyszczające.
+    raise - ręczne wywołanie wyjątku w kodzie.
+    assert - warunkowe wywołanie wyjątku w kodzie.
+    with/as - implementuje menedżery kontekstu (Python 2.6+ i 3.x). 
+
+Najważniejsze powody wykorzystywania wyjątków:
+
+    obsługa błędów,
+    powiadomienia o zdarzeniach (nie każdy wyjątek to błąd),
+    obsługa przypadków specjalnych,
+    działania końcowe (try/finally),
+    niezwykły przebieg sterowania (pythonowe "goto"). 
+
+Kiedy pojawi się błąd w czasie wykonywania programu, tworzony jest wyjątek (exception). Zwykle wtedy program jest zatrzymywany, a Python wypisuje komunikat o błędzie. Tak działa domyślny program obsługi wyjątków. Standardowo komunikat o błędzie obejmuje zgłoszony wyjątek wraz ze śladem stosu, czyli listą wszystkich wierszy oraz funkcji aktywnych w momencie, kiedy nastąpił wyjątek.
+
+# Przykłady poleceń powodujących wyjątki.
+# Dzielenie przez zero - ZeroDivisionError.
+print 23/0
+
+# Odwołanie się do nieistniejącego elementu listy - IndexError.
+alist = []                        # pusta lista
+print alist[5]
+
+# Odwołanie się do nieistniejącego klucza w słowniku - KeyError.
+adict = {}                        # pusty słownik
+print adict["key"]
+
+# Otwarcie do czytania nieistniejącego pliku - IOError.
+afile = open("nie_istnieje.txt", "r")
+
+PRZECHWYTYWANIE WYJĄTKÓW
+
+Czasem nie chcemy, aby program zatrzymał się po wystąpieniu wyjątku. Wtedy należy opakować wywołanie w instrukcję try/except/else w celu samodzielnego przechwycenia wyjątku. Jeżeli zależy nam na wykonaniu pewnych działań końcowych, niezależnych od wystąpienia wyjątku, to stosujemy instrukcję try/finally.
+
+Od Pythona 2.5 mamy jedną instrukcję try/except/finally, czyli bloki except i finally mogą wystąpić w jednej instukcji try.
+
+L = []
+# L = [1, 2, 3]
+try:
+    print L[1]
+except IndexError:            # przechwycenie wyjątku
+    print "mam wyjątek"   # nasz program obsługi
+else:
+    print "nie było wyjątku"
+print "kontynuuję"
+
+L = []
+# L = [1, 2, 3]
+try:
+    print L[1]
+finally:                      # działania końcowe
+    print "zawsze wykonane"
+print "kontynuuję"
+
+Jeżeli podczas wykonywania bloku try nie wystapił wyjątek, to będzie wykonany blok finally, a następnie instrukcje pod instrukcją try. Jeżeli podczas wykonywania bloku try wystapił wyjątek, to będzie wykonany blok finally, ale potem wyjątek będzie przekazany wyżej.
+
+Po otwarciu pliku do czytania również mogą się pojawić różne błędy, które przerwą program. Można zastosować konstrukcję try/finally, aby na pewno zamknąć otwarty plik.
+
+afile = open("tekstowy.txt")  # najpierw otwieramy plik tekstowy
+try:                          # pracujemy na pliku
+    text = afile.read()   # czytamy cały tekst
+finally:                      # na pewno zamkniemy plik
+    afile.close()
+
+Sprawdzenie poprawności nazwy pliku podanej przez użytkownika można wykonać przy pomocy wyjątków.
+
+# Bezpieczna obsługa pliku.
+filename = raw_input("Podaj nazwę pliku: ")
+try:                          # pierwszy blok
+    afile = open(filename, "r")
+except Exception:             # drugi blok (w razie wyjątku)
+    print "Nie ma pliku o nazwie", filename
+else:                         # trzeci blok opcjonalny (nie było wyjątku)
+    print "Plik został otwarty"
+
+Można zamknąć taką funkcjonalność wewnątrz funkcji.
+
+# Funkcja zwraca True, jeżeli plik istnieje, lub False, w przeciwnym razie.
+def if_exist(filename):
+    try:
+        afile = open(filename)
+        afile.close()
+        return True
+    except Exception:
+        return False
+
+Ogólny format instrukcji try/except/else/finally zawiera wiele opcjonalnych bloków z programami obsługi, choć musi pojawić się przynajmniej jeden.
+
+# Składnia.
+try:
+    instrukcje                 # podstawowe działanie instrukcji
+except Exception1:                 # przechwytuje wskazany wyjątek
+    instrukcje
+except (Exception2, Exception3):   # przechwytuje wymienione wyjątki
+    instrukcje
+except Exception4 as Value1:       # przechwytuje wyjątek i jego instancję
+    instrukcje
+except (Exception4, Exception5) as Value2: # przechwytuje wyjątki i instancję
+    instrukcje
+except:                            # przechwytuje wszystkie (pozostałe) wyjątki
+    instrukcje
+else:                              # działania przy braku zgłoszenia wyjątku
+    instrukcje
+finally:                           # działania końcowe
+    instrukcje
+
+Należy ostrożnie korzystać z pustej części except, ponieważ może przechwycić nieoczekiwane wyjątki systemowe niezwiązane z naszym kodem albo wyjątki przeznaczone dla innych programów obsługi. Lepsza jest postać except Exception, która ignoruje wyjątki powiązane z systemowymi wyjściami z programu.
+
+Część else jest pomocna przy ustaleniu, czy wyjątek nie został zgłoszony, czy wystąpił i został obsłużony.
+ZGŁASZANIE WYJĄTKÓW
+
+Do ręcznego wywoływania wyjątków służy instrukcja raise.
+
+try:
+    raise IndexError
+except IndexError:            # przechwycenie wyjątku
+    print "mam wyjątek"   # nasz program obsługi
+print "kontynuuję"
+
+>>> raise IndexError
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IndexError
+
+>>> raise IndexError, "message"   # stara składnia
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IndexError: message
+
+>>> raise IndexError("message")  # nowa składnia
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IndexError: message
+
+Do wywołania wyjątku można także wykorzystać wyrażenie assert, które jest wykorzystywana głównie przy debugowaniu kodu. Jest to pomoc dla programistów do wyszukiwania błędów w programie, sprawdza się występowanie "niemożliwych" sytuacji. Nie jest to mechanizm do obsługi błędów czasu wykonania (run-time errors). AssertionError nie powinien się nigdy pojawić, jeżeli program nie ma błędów.
+
+>>> assert False, "message"
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AssertionError: message
+
+
+
+
+Wyjątki jako stringi
+WPROWADZENIE
+
+Jeżeli nasz program rozpozna pewną błędną sytuację, możemy zgłosić (raise) wyjątek.
+
+# Określamy nasz nowy wyjątek jako string.
+BadNumberError = "BadNumberError"
+BadNumberMessage = "13 przynosi pecha"
+
+def read_number():
+    number = int(raw_input("Podaj liczbę: "))
+    if number == 13:      # nie podoba nam się liczba 13
+        raise BadNumberError, BadNumberMessage
+    return number
+
+try:
+    n = read_number()
+except BadNumberError:
+    print "przechwycenie BadNumberError"
+
+Wyjątki oparte na łańcuchach znaków zniknęły w Pythonie 2.6+ i 3.x. Obecnie korzysta się z wyjątków opartych na klasach. 
+
+
+
+Wyjątki jako klasy
+WPROWADZENIE
+
+Zalety wyjątków opartych na klasach.
+
+    Można je organizować w kategorie.
+    Dołączają informacje o stanie.
+    Obsługują dziedziczenie. 
+
+# Dawne podejście - wyjątek to string.
+MyError = "MyError"
+
+raise MyError, "message"      # wywołanie wyjątku
+
+# Nowe podejście - wyjątek to klasa wywiedziona z Exception.
+# Do nazwy dajemy suffix "Error", o ile wyjątek to błąd.
+class MyError(Exception):
+    """Warto stworzyć wiersz dokumentujący."""
+    pass
+
+raise MyError("message")                # wywołanie wyjątku
+exception = MyError("a", "b")           # instancja wyjątku
+# W atrybucie args znajduje się krotka argumentów konstruktora domyślnego.
+print exception.args                    # ('a', 'b')
+# Domyślnie str() wyświetla zawartość atrybutu args.
+print exception                         # ('a', 'b')
+
+try:
+    raise MyError()       # instancja
+except MyError:
+#except MyError as exception:
+    print "przechwycenie MyError"
+
+Jeżeli wyjątek został wyzwolony z argumentami, to w instancji wyjątku są domyślnie przechowywane jako krotka w atrybucie args. Dla wygody klasa Exception definiuje metodę __str__() wyświetlającą argumenty, dzięki czemu nie musimy bezpośrednio odwoływać się do atrybutu args.
+
+Można zdefiniować własny konstruktor wyjątku (__init__). Podobnie można określić własny sposób wyświetlania wyjątku (__str__).
+
+class MyError(Exception):
+
+    def __init__(self, value):      # nasz konstruktor wyjątku
+        self.value = value
+
+    def __str__(self):              # zmiana sposobu wyświetlania wyjątku
+        return repr(self.value)
+
+try:
+    raise MyError(2*2)    # instancja
+except MyError as exception:  # Python 2.6+ i 3.x
+# except MyError, exception:   # Python 2.6-
+# Python 3 interpretuje przecinek jako oznaczający krotkę.
+# Obiekt exception jest to zgłoszona instancja klasy MyError.
+    print "mam wyjątek, value:", exception.value
+    print "mam wyjątek, value:", exception    # jw, bo jest __str__
+
+import sys
+
+print "Zgłoszono wyjątek", sys.exc_info()
+
+Ostatnio zgłoszony i przechwycony wyjątek jest dostępny ogólnie, jako drugi argument krotki wyników wywołania sys.exc_info(), (typ, wartość, ślad), (type, value, traceback). Jeżeli żaden wyjątek nie jest obsługiwany, to zwracana krotka ma postać (None, None, None).
+INSTRUKCJA RAISE
+
+Do jawnego wywoływania wyjątków służy instrukcja raise.
+
+# Składnia.
+# Zgłoszenie instancji klasy [najbardziej typowe].
+# raise instancja
+raise IndexError()
+raise IndexError("Nasz komunikat")
+
+# Utworzenie i zgłoszenie instancji klasy.
+# raise klasa
+raise IndexError
+raise               # ponowne zgłoszenie ostatniego wyjątku
+
+# Dla wbudowanych wyjątków mamy równoważne formy.
+raise KeyError
+raise KeyError()
+
+# Utworzenie instancji z wyprzedzeniem.
+exception = IndexError()
+raise exception
+
+INSTRUKCJA ASSERT
+
+Instrukcja assert jest składniowym skrótem dla często wykorzystywanego w debugowaniu wzorca z instrukcją raise. Instrukcję assert można usunąć z kodu bajtowego skompilowanego programu, jeżeli w wierszu poleceń Pythona użyjemy opcji -O (python -O main.py), tym samym optymalizując program. Instrukcję assert najczęściej wykorzystuje się do weryfikowania warunków programu w czasie jego tworzenia (tzw. sytuacje niemożliwe). Nie powinno się używać assert do obsługi błędów użytkownika, czy innych błędów pojawiających się w trakcie pracy programu.
+
+# Składnia.
+assert warunek
+assert warunek, komunikat
+# warunek to wyrażenie zwracające bool
+# komunikat to strig
+
+# Równoważny kod.
+if __debug__:
+    if not warunek:
+        raise AssertionError(komunikat)
+
+>>> x = 1
+>>> assert x == 0
+Traceback (most recent call last):
+  File "", line 1, in 
+AssertionError
+>>> assert x == 0, "x have to be zero"
+Traceback (most recent call last):
+  File "", line 1, in 
+AssertionError: x have to be zero
+>>>
+
+HIERARCHIA KLAS DLA WYJĄTKÓW WBUDOWANYCH
+
+Kiedy except z instrukcji try wymienia klasę nadrzędną, przechwytuje instancje tej klasy, a także instancje wszystkich jej klas podrzędnych.
+
+>>> import exceptions          # Python 2.6
+>>> help(exceptions)           # drzewo klas
+
+BaseException                 # Python 2.5+
+    +-- SystemExit
+    +-- KeyboardInterrupt
+    +-- GeneratorExit
+    +-- Exception   # all other current built-in exceptions
+        +-- StopIteration
+        +-- StandardError
+        |    +-- ArithmeticError
+        |    +-- AssertionError
+        |    +-- AttributeError
+        |    +-- NameError
+        |    +-- SyntaxError
+        |        +-- IndentationError
+        |    +-- TypeError
+        |    +-- ValueError
+        |    +-- ImportError
+        |    +-- MemoryError
+        |    +-- RuntimeError
+        |        +-- NotImplementedError
+        |    +-- EnvironmentError
+        |        +-- IOError
+        |        +-- OSError
+        |    +-- LookupError
+        |        +-- IndexError
+        |        +-- KeyError
+        |    +-- ...
+        +-- Warning
+            +-- DeprecationWarning
+            +-- UserWarning
+            +-- SyntaxWarning
+            +-- RuntimeWarning
+            +-- ...
+
+Wybrane wyjątki.
+
+    ArithmeticError. Klasa bazowa dla wyjątków związanych z błędami arytmetycznymi.
+    AssertionError. Powstaje gdy wyrażenie assert napotka False.
+    IndexError. Powstaje kiedy indeks sekwencji jest poza dozwolonym zakresem. Jeżeli indeks nie jest liczbą całkowitą, to powstaje TypeError.
+    KeyError. Powstaje kiedy słownik (ogólnie mapping) nie posiada żądanego klucza.
+    LookupError. Wspólna klasa bazowa dla IndexError i KeyError.
+    NameError. Powstaje kiedy lokalna lub globalna nazwa zmiennej nie zostaje znaleziona.
+    SyntaxError. Powstaje kiedy parser napotka błąd składniowy.
+    TypeError. Powstaje kiedy operacja lub funkcja jest zastosowana do obiektu niewłaściwego typu.
+    EnvironmentError. Wspólna klasa bazowa dla IOError i OSError.
+    ValueError. Powstaje kiedy wbudowana operacja lub funkcja otrzymuje argument właściwego typu, ale mający niewłaściwą wartość. Chodzi o sytuację podobną do tej opisywanej przez IndexError. 
+
+
+
+Iteratory
+WPROWADZENIE
+
+Iterator jest obiektem reprezentującym strumień danych. Kolejne wywołania metody next() zwracają kolejne elementy ze strumienia danych. Kiedy strumień danych zostaje wyczerpany, to kolejne wywołania next() wyzwalają wyjątek StopIteration.
+
+Kolejna wymagana metoda iteratorów to __iter__(), która zwraca sam obiekt iteratora. Po każdym iteratorze można iterować (jest iterable). Funkcja iter() odwołuje się do metody __iter__(), ale w odróżnieniu od np. list, kolejne wywołania funkcji iter() zwrócą ten sam wyczerpany iterator (dla list dostaniemy świeży iterator idący od początku listy). Kiedy iterator zostanie wyczerpany, nie można użyć ponownie ani zresetować.
+
+class Reverse:
+    """Iterator odwrotny."""
+
+    def __init__(self, data):
+        self.data = data
+        self.idx = len(data)
+
+    def __iter__(self):   # typowa postać
+        return self
+
+    def next(self):
+        if self.idx == 0:
+            raise StopIteration
+        self.idx = self.idx - 1
+        return self.data[self.idx]
+
+    __next__ = next   # kompatybilność z Pythonem 3
+        # W Pythonie 2 mamy X.next().
+        # W Pythonie 3 mamy next(X).
+
+# Zastosowanie
+for char in Reverse("spam"):
+    print char           # m, a, p, s
+
+print list(Reverse("spam"))   # ['m', 'a', 'p', 's']
+
+for item in Reverse([1, 2, 3, 4]):
+    print item           # 4, 3, 2, 1
+
+# https://www.programiz.com/python-programming/iterator
+
+for element in iterable:
+    # do something with element
+
+# Działanie takiej pętli for można opisać następująco.
+
+# create an iterator object from that iterable
+iter_obj = iter(iterable)
+
+# infinite loop
+while True:
+    try:
+        # get the next item
+        element = iter_obj.next()       # Python 2
+        #element = next(iter_obj)       # Python 3
+        # do something with element
+    except StopIteration:
+        # if StopIteration is raised, break from loop
+        break
+
+Wg dokumentacji Pythona, generatory dostarczają wygodnego sposobu implementacji protokołu iteracji. Każdy generator jest iteratorem, ale nie na odwrót. 
+
+
+Menedżery kontekstu
+WPROWADZENIE
+
+W Pythonie 2.6 i 3.x pojawiła się nowa instrukcja związana z wyjątkami - with z opcjonalnym as [PEP 343]. Instrukcja została zaprojektowana do pracy z obiektami menedżerów kontekstu obsługującymi protokół oparty na metodach. Instrukcja with/as ma być alternatywą dla zwykłego zastosowania try/finally.
+
+# Składnia podstawowa.
+# Wyrażenie ma zwracać obiekt obsługujący protokół zarządzania kontekstem.
+with wyrażenie [as zmienna]:
+    instrukcje
+
+# Czytanie danych z pliku.
+# Plik zostanie zamknięty nawet gdy wystąpi wyjątek.
+with open(infile_name, 'r') as infile:
+    read_data = infile.read()
+
+# How to open a file using the open with statement.
+# http://stackoverflow.com/questions/9282967/how-to-open-a-file-using-the-open-with-statement
+
+def filter(text, infile_name, outfile_name):
+    '''Read a list of names from a file line by line into an output file.
+    If a line begins with a particular name, insert a string of text
+    after the name before appending the line to the output file.
+    '''
+    with open(outfile_name, 'w') as outfile:
+        with open(infile_name, 'r', encoding='utf-8') as infile:
+            for line in infile:
+                if line.startswith(text):
+                    line = line[0:len(text)] + ' - Truly a great person!\n'
+                outfile.write(line)
+
+# W Pythonie 2.7 i 3.1+ można użyć wielokrotnie open(),
+# co jest równoważne zagnieżdżaniu with.
+# http://docs.python.org/reference/compound_stmts.html#the-with-statement
+
+with open(outfile_name, 'w') as outfile, \
+    open(infile_name, 'r', encoding='utf-8') as infile:
+        pass
+
+PROTOKÓŁ ZARZĄDZANIA KONTEKSTEM
+
+Opis działania instrukcji with.
+
+    Wyrażenie jest analizowane, w wyniku czego otrzymujemy obiekt menedżera kontekstu, który musi zawierać metody __enter__ i __exit__.
+    Wywoływana jest metoda __enter__, a wartość przez nią zwracana jest przypisywana do zmiennej w części as, jeśli jest ona obecna.
+    Wykonywany jest kod w bloku with.
+    Jeżeli blok with zwraca wyjątek, to zostaje wywołana metoda __exit__ z argumentami zawierającymi szczegóły wyjątku.. Jeżeli metoda zwraca wartość będącą fałszem (typowe działanie), to wyjątek jest zgłaszany ponownie.
+    Jeżeli blok with nie zgłasza wyjątku, to nadal wywoływana jest metoda __exit__, ale do jej argumentów przekazywane są obiekty None. 
+
+# Przykład działania protokołu zarządzania kontekstem.
+
+class ContextManager:
+
+    def __init__(self):   # metoda opcjonalna
+        pass
+
+    def message(self, argument):
+        print "wykonywanie", argument
+
+    def __enter__(self):
+        print "rozpoczęcie bloku with"
+        return self   # czasem może być inny obiekt
+
+    def __exit__(self, exception_type, exception_value, exception_traceback):
+        # typ, wartość, ślad
+        if exception_type is None:
+            print "normalne wyjście"
+            return True
+        else:
+            print "zgłoszenie wyjątku", exception_type
+            return False    # przekazanie wyjątku
+
+# Zastosowanie.
+
+with ContextManager() as context:
+    context.message("test 1")
+    print "wiersz osiągnięty"
+
+with ContextManager() as context:
+    context.message("test 2")
+    raise TypeError
+    print "wiersz nie został osiągnięty"
+
+Menedżery kontekstu są zaawansowanymi narzędziami, przeznaczonymi dla osób tworzących narzędzia. Dodatkowe narzędzia służące do tworzenia kodu menedżerów kontekstu udostępnia moduł contextlib [PEP 343].
+UNITTEST
+
+W Pythonie 2.7 pojawiła się możliwość użycia assertRaises() jako menedżera kontekstu. Można badać szczegóły wyzwolonego w teście wyjątku. Warto prześledzić przykłady z dokumentacji [25.3 unittest].
+
+with self.assertRaises(SomeException) as context:
+    do_something()
+
+# Sprawdzenie pewnego kodu błędu.
+self.assertEqual(context.exception.error_code, 3)
+
+# Można sprawdzić, czy dostaliśmy daną klasę wyjątku,
+# czy może jego rodzica.
+self.assertEqual(context.exception.__class__, SomeException)
+
+# Sprawdzenie występowania pewnego tekstu w komunikacie.
+self.assertTrue("NoneType" in str(context.exception))
+
+W Pythonie 3.4 pojawił się menedżer kontekstu subTest(), który pomaga tworzyć testy o bardziej czytelnych komunikatach. Zwykle używa się subTest() gdy mamy wiele mało różniących się testów, np. zmieniają się tylko paramatry wywołania danej funkcji.
+
+# https://docs.python.org/3/library/unittest.html
+# https://www.caktusgroup.com/blog/2017/05/29/subtests-are-best/
+
+def is_even(n):
+    return n % 2 == 0
+
+class NumbersTest(unittest.TestCase):
+
+    def test_even(self):
+        """
+        Test that numbers between 0 and 5 are all even.
+        """
+        for i in range(0, 6):
+            with self.subTest(i=i):
+                self.assertEqual(i % 2, 0)
+                # self.assertTrue(is_even(i))   # wersja z funkcją
+
+# Dzięki subTest() otrzymamy informację dla jakiego 'i' były błędy.
+
+
+
+Zmienne prywatne w klasach
+WPROWADZENIE
+
+Jeżeli w klasie pojawi się identyfikator postaci __X, czyli rozpoczynający się dwoma lub większą liczbą znaków podkreślenia, oraz nie kończy się dwoma lub wiekszą liczbą znaków podkreślenia, to identyfikator traktowany jest jako prywatny w klasie. Wykonywana jest transformacja nazwy (private name mangling), na początku jest dodawany znak podkreślenia i nazwa klasy. Przykładowo dla klasy Person i zmiennej __spam, nowa nazwa ma postać _Person__spam.
+
+Transformacja nazwy ma na celu zapobieganie przed przypadkowym nadpisaniem identyfikatorów z klas nadrzędnych. 
+
+
+Hints
+PRAWDA I FAUSZ
+
+Aby kontrolować wartość prawdy w instancjach klas zdefiniowanych przez użytkownika, należy korzystać z metod specjalnych __nonzero__ lub __len__. Korzystamy z __len__, jeżeli nasza klasa jest kontenerem, który ma długość (przykład z sieci, Code Like a Pythonist).
+
+class MyContainer(object):
+    """Klasa definiująca pewien kontener."""
+
+    def __init__(self, data):
+        self.data = data
+
+    def __len__(self):
+        """Return my length."""
+        return len(self.data)
+
+Jeżeli nasza klasa nie jest kontenerem, korzystamy z __nonzero__.
+
+class MyClass(object):
+    """Klasa nie będąca kontenerem."""
+
+    def __init__(self, value):
+        self.value = value
+
+    def __nonzero__(self):
+        """Return my truth value (True or False)."""
+        # This could be arbitrarily complex:
+        return bool(self.value)
+
+    # Kompatybilność z Pythonem 3.
+    __bool__ = __nonzero__
+
+DESTRUKTOR
+
+class Life:
+
+    def __init__(self, name="NN"):   # konstruktor
+        print "Hello", name
+        self.name = name
+
+    def __str__(self):
+        return self.name
+
+    def __del__(self):   # destruktor
+        print "Goodbye", self.name
+
+adam = Life("Adam")
+# Zamazujemy jedyną referencję do Adama, działa destruktor.
+adam = Life("Bogdan")
+print "Before delete"
+print adam
+# Usuwamy nazwę adam z przestrzeni nazw.
+# Zamazujemy jedyną referencję do Bogdana, działa destruktor.
+del adam
+print "After delete"
+
+# Wypisywane komunikaty.
+Hello Adam
+Hello Bogdan
+Goodbye Adam
+Before delete
+Bogdan
+Goodbye Bogdan
+After delete
+
+HASHING
+
+Każda klasa Pythona ma metodę __hash__(), której domyślna implementacja ma postać:
+
+def __hash__(self):
+    return id(self)
+
+User może zaimplementować to na nowo po swojemu. Funkcja hash(x) wywołuje metodę x.__hash__(). Klasy wbudowane Pythona z reguły redefiniują metodę __hash__().
+
+# Przykładowo dla int mamy coś takiego.
+def __hash__(self):
+    return int(self)
+
+# Dla list mamy wyjątek.
+def __hash__(self):
+    raise TypeError("list objects are unhashable")
+
+Główna idea dotycząca hash jest taka, że jeżeli dwa obiekty mają różny hash, to nie są równe, ale jeżeli mają taki sam hash, to _mogą_ być równe (to jest nazywane "hash collision"). Jedyne wymaganie ze strony Pythona jest aby wartości hash nie zmieniały się po tym, jak zostaną zwrócone przez metodę __hash__().
+
+Trzeba pamiętać, że hashing jest platform-dependent. Stąd w SymPy mogą być różne kolejności zwracanych wyrażeń, co rodzi problemy przy pisaniu testów (np. doctest).
+
+[http://stackoverflow.com/questions/17192418/hash-function-in-python] hash() is randomised by default each time you start a new instance of recent versions (Python3.3+) to prevent dictionary insertion DOS attacks. If you want something that does hash to the same thing every time, use one of the hashes in hashlib (import hashlib).
+METHOD RESOLUTION
+
+Niech a, b i c będą instancjami pewnej klasy Pythona. Sprawdzamy co się dzieje przy wywołaniu polecenia a == b. Python wywołuje metody w podanej kolejności. Jeżeli dana metoda nie jest zaimplementowana, lub jeżeli zwróci wyjątek NotImplemented, Python przeskakuje ją i próbuje następnej, aż do skutku. Ostatnia linia zawsze kończy się sukcesem.
+
+# Polecenie a == b.
+a.__eq__(b)
+b.__eq__(a)
+a.__cmp__(b)
+b.__cmp__(a)
+id(a) == id(b)
+
+# Polecenie a != b.
+a.__ne__(b)
+b.__ne__(a)
+a.__cmp__(b)
+b.__cmp__(a)
+id(a) != id(b)      # tu jest błąd w SymPy
+
+# Polecenie a < b.
+a.__lt__(b)
+b.__gt__(a)
+a.__cmp__(b)
+b.__cmp__(a)
+id(a) < id(b)
+
+# Polecenie a <= b.
+a.__le__(b)
+b.__ge__(a)
+a.__cmp__(b)
+b.__cmp__(a)
+id(a) <= id(b)
+
+# Polecenie a > b.
+a.__gt__(b)
+b.__lt__(a)
+a.__cmp__(b)
+b.__cmp__(a)
+id(a) > id(b)
+
+# Polecenie a >= b.
+a.__ge__(b)
+b.__le__(a)
+a.__cmp__(b)
+b.__cmp__(a)
+id(a) >= id(b)
+
+# Jeżeli napiszemy
+a in {d: 5}
+a in set([d, d, d])
+set([a, b]) == set([a, b])
+# Python najpierw porównuje hash, tzn.:
+a.__hash__()
+d.__hash__()
+# Jeżeli hash(a) != hash(d), to wynik wyrażenia a in {d: 5}
+# jest natychmiast False.
+# Jeżeli hash(a) == hash(d), to Python przechodzi przez method 
+# resolution dla operatora == jak pokazano powyżej.
+
+Widać, że w method resolution dla operatorów porównań nie ma hash, więc nie ma znaczenia co zwraca. Ale hash jest używany przy słownikach i zbiorach. Oficjalna dokumentacja Pythona mówi o obiektach hashable i non-hashable. W praktyce wystarczy prześledzić method resolution opisaną tutaj.
+FUNCTION ANNOTATIONS
+
+Python 3 wprowadza function annotations (PEP 3107). Jest to składnia do dołączania do funkcji dodatkowych informacji (metadata) dotyczących parametrów i wartości zwracanych. Jest to mechanizm całkowicie opcjonalny. W Pythonie 2 można było tylko w docstringu coś dopowiedzieć.
+
+# https://stackoverflow.com/questions/14379753/what-does-mean-in-python-function-definitions
+def kinetic_energy(m:'in kg', v:'in m/s')->'Joules': 
+    return 0.5*m*v**2
+# dictionary kinetic_energy.__annotations__
+# {'return': 'Joules', 'v': 'in m/s', 'm': 'in kg'}
+
+SLOTS
+
+Python domyślnie przechowuje atrybuty instancji w słowniku __dict__, co daje możliwość dodawania atrybutów w czasie pracy programu. Przy małych klasach ze znanymi atrybutami może to jednak prowadzić do marnowania pamięci RAM. Można wymusić alokowanie stałej ilości pamięci na atrybuty przy zastosowaniu __slots__ zamiast słownika. Pewne problemy pojawiają się przy korzystaniu z dziedziczenia.
+
+# https://stackoverflow.com/questions/472000/usage-of-slots
+class ClassWithoutSlots(object):
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
+
+class ClassWithSlots(object):
+    __slots__ = ['name', 'value']
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
+
+FUNKCJA SUPER
+
+PEP 367 -- New Super [Python 2.6]
+
+PEP 3135 -- New Super [Python 3.0]
+
+https://rhettinger.wordpress.com/2011/05/26/super-considered-super/
+
+W Pythonie 2.2 pojawiła się funkcja wbudowana super(), która działa tylko z klasami w nowym stylu. Return a proxy object that delegates method calls to a parent or sibling class of type. This is useful for accessing inherited methods that have been overridden in a class.
+
+# super(type[, object-or-type])    # Python 2.7
+# Typowe wywołanie funkcji super(): przy pojedynczym dziedziczeniu można
+# odwołać się do klasy nadrzędnej bez jawnego użycia jej nazwy.
+# To będzie działać nawet po zmianie klasy nadrzędnej.
+class B(object):
+    def method(self, arg):
+        print ( "B: {}".format(arg) )
+
+class C(B):
+    def method(self, arg):
+        super(C, self).method(arg)   # Python 2, szuka powyżej C
+        # super(self.__class__, self).method(arg)   # Python 2, bez powtarzania C
+        # super().method(arg)     # Python 3
+
+# Korzystanie z nowej wersji super() w Pythonie 2.5 wymaga (PEP 367):
+from __future__ import new_super
+
+
+
+Klasy w nowym stylu
+REFERENCJE
+
+    Guido van Rossum, Unifying types and classes in Python 2.2 [Chodzi o zniesienie różnic pomiędzy typami wbudowanymi, a klasami stworzonymi przez użytkownika.]
+    http://python-history.blogspot.com/2010/06/inside-story-on-new-style-classes.html
+    https://rhettinger.wordpress.com/2011/05/26/super-considered-super/
+    http://stackoverflow.com/questions/222877/how-to-use-super-in-python
+    https://docs.python.org/2/howto/descriptor.html 
+
+WPROWADZENIE
+
+W Pythonie 2.2 wprowadzono nowy rodzaj klas "w nowym stylu". Klasy zwyczajne nazywane są "klasycznymi" lub "w starym stylu". W Pythonie 3 wszystkie klasy są automatycznie tworzone w nowym stylu. Główne różnice pomiędzy tymi dwoma stylami klas dotyczą algorytmu wyszukiwania nazw w tzw. diamentowym wzorcu dziedziczenia ("najpierw poziomo od lewej do prawej, potem pionowo"), oraz mechanizmu wyszukiwania metod specjalnych dla operacji wbudowanych.
+
+Klasy w nowym stylu dziedziczą z object. W Pythonie 3 wszystkie klasy są tworzone w nowym stylu.
+
+Klasy w nowym stylu mogą używać niskopoziomowych konstruktorów __new__().
+
+Klasy w nowym stylu mogą używać deskryptorów (łącznie z __slots__), stare nie mogą [a generalized way to customize attribute access].
+
+Klasy w nowym stylu mogą używać metod statycznych i metod klasy.
+
+Klasy w nowym stylu mogą używać dekoratorów (Python 2.4+).
+
+Klasy w nowym stylu mogą używać funkcji super [super(SomeClass, object-or-type). Delegowanie wywołania metody do przodka klasy. To jest szczególnie przydatne, gdy metoda została nadpisana].
+
+Method Resolution Order (MRO): Klasy w nowym stylu przeszukują każdą klasę bazową tylko raz. Klasy w starym stylu przeszukują klasy bazowe od lewej do prawej, stosując rekurencję, co czasem prowadzi do niejednoznaczności (wielokrotne przeszukiwanie).
+
+class OldStyle1: pass
+
+class OldStyle2(OldStyle1): pass
+
+# Przeszukiwanie (karo).
+class Old1: pass
+
+class Old2(Old1): pass
+
+class Old3(Old1): pass
+
+class Old4(Old2, Old3): pass
+
+# Teraz MRO: Old4, Old2, Old1, Old3, Old1 [powtórnie].
+
+class NewStyle1(object): pass
+
+class NewStyle2(NewStyle1): pass
+
+# Przeszukiwanie (karo).
+class New1(object): pass
+
+class New2(New1): pass
+
+class New3(New1): pass
+
+class New4(New2, New3): pass
+
+# Teraz MRO: New4, New2, New3, New1, object.
+
+METODY STATYCZNE I METODY KLASY
+
+Metody statyczne są opcją dodaną w Pythonie 2.2. Pozwalają one zapisywać w kodzie klasy funkcje nieoczekujące podania obiektów instancji w pierwszym argumencie. Takie metody mogą działać jak proste funkcje bez instancji, ich nazwy są lokalne dla klas, w których są zapisane. Metody statyczne mogą być wykorzystane do zarządzania danymi klas.
+
+Do tych zadań można byłoby wykorzystać zwykłe funkcje zdefiniowane poza klasą, które mają dostęp do atrybutów klasy za pośrednictwem nazwy klasy. Jednak dzięki powiązaniu z klasą można lepiej podzielić kod programu oraz można korzystać z dziedziczenia.
+
+class Methods:
+
+    def imeth(self, x):   # zwykła metoda instancji
+        # Pierwszy argument to zwyczajowo self.
+        print self, x
+
+    def smeth(x):         # metoda statyczna
+        # Pierwszy argument to nie jest self.
+        print x
+
+    def cmeth(cls, x):    # metoda klasy
+        # pierwszy argument tradycyjnie to cls, a nie self.
+        print cls, x
+
+    smeth = staticmethod(smeth)   # przekształcanie
+    cmeth = classmethod(cmeth)    # przekształcanie
+
+# Zastosowanie.
+item = Methods()
+item.imeth(1)                 # <__main__.Methods instance at 0xb739546c> 1
+Methods.imeth(item, 2)        # <__main__.Methods instance at 0xb739546c> 2
+
+# Przy metodach statycznych i metodach klas nie musi istnieć instancja klasy.
+Methods.smeth(3)              # 3
+item.smeth(4)                 # 4
+
+Methods.cmeth(5)              # __main__.Methods 5
+item.cmeth(6)                 # __main__.Methods 6
+
+Do utworzenia metod statycznych i metod klasy można użyć dekoratorów metod.
+
+class Methods:
+
+    @staticmethod         # składnia dekoratora
+    def smeth(x): ...
+
+    @classmethod         # składnia dekoratora
+    def cmeth(cls, x): ...
+
+
+
+
+Dekoratory
+WPROWADZENIE
+
+Dekoratory funkcji udostępniają możliwość określania specjalnych trybów operacji dla funkcji, opakowując je w dodatkową warstwę logiki zaimplementowanej jako kolejna funkcja. Istnieje sporo funkcji wbudowanych, które można użyć w charakterze dekoratora. Można także stworzyć własny dekorator. Składnia dekoratorów pojawiła się w Pythonie 2.4 (PEP 318).
+
+Od Pythona 2.6 dekoratory mają możliwość współpracy z klasami (PEP 3129). Wtedy uruchamiane są na końcu instrukcji class, wiążąc wynik swojego wykonania z nazwą klasy.
+
+# Składnia dekoratorów funkcji/metod ma postać ...
+
+@decorator2
+@decorator1
+def func(arg1, arg2, ...):
+    pass
+
+# ... co jest równoważne ...
+
+def func(arg1, arg2, ...):
+    pass
+
+func = decorator2(decorator1(func))
+
+# Składnia dekoratora z argumentami ...
+
+@decorator_maker(argA, argB, ...)
+def func(arg1, arg2, ...):
+    pass
+
+# ... co jest równoważne ...
+
+func = decorator_maker(argA, argB, ...)(func)
+
+DEKORATORY FUNKCJI I METOD
+
+# Poradnik do dekoratorów można znaleźć na blogu "The Code Ship",
+# http://thecodeship.com/patterns/guide-to-python-function-decorators/
+
+# Tworzymy własny dekorator funkcji będący klasą (jeden ze sposobów).
+# Ten sposób nie zadziała dla metod w klasach.
+
+class Tracer:
+
+    def __init__(self, func):
+        self.calls = 0
+        self.func = func
+
+    def __call__(self, *arguments, **keywords):
+        self.calls += 1
+        print "call {0} to {1}".format(self.calls, self.func.__name__)
+        self.func(*arguments, **keywords)
+
+# Do funkcji spam() dodajemy warstwę logiki.
+# spam = Tracer(spam)
+@Tracer
+def spam(a, b, c):
+    print a, b, c
+
+spam(1, 2, 3)            # call 1 to spam
+spam("a", "b", "c")      # call 2 to spam
+
+# Tutaj instancja klasy będzie dekoratorem.
+# Jest możliwość przekazywania parametrów do dekoratora.
+
+from functools import wraps
+# Decorator factory to apply update_wrapper() to a wrapper function.
+
+class Tracer2:
+
+    def __init__(self):   # tu mogą być parametry dekoratora
+        self.calls = 0
+
+    def __call__(self, func):   # tu łapiemy funkcję do przetworzenia
+        @wraps(func)
+        def func_wrapper(*arguments, **keywords):
+            self.calls += 1
+            print "call {0} to {1}".format(self.calls, func.__name__)
+            func(*arguments, **keywords)
+        return func_wrapper
+
+# Do funkcji spam2() dodajemy warstwę logiki.
+# spam2 = Tracer()(spam2)
+@Tracer2()
+def spam2(a, b, c):
+    print a, b, c
+
+spam2(1, 2, 3)          # call 1 to spam2
+spam2("a", "b", "c")    # call 2 to spam2
+spam2(c=1, b=2, a=3)    # call 3 to spam2
+
+PROPERTY
+
+# A typical use is to define a managed attribute x.
+# Chyba chodzi o to, ze zamiast domyślnego przypinania
+# atrybutu do obiektu, można dodać jakąś akcję ukrytą.
+# I tu chodzi o atrybut o konkretnej nazwie.
+
+class C1(object):
+    """Klasa C1."""
+
+    def __init__(self):
+        self._x = None
+
+    def getx(self):   # getting an attribute value
+        return self._x
+
+    def setx(self, value):   # setting an attribute value
+        self._x = value
+
+    def delx(self):   # deleting an attribute value
+        del self._x
+
+    x = property(getx, setx, delx, "I'm the 'x' property.")
+
+c = C1()
+#print dir(c)
+c.x = 10            # setx
+print c.__doc__
+print c.x           # getx
+del c.x             # delx
+
+# W Pythonie 2.6 można użyć getter, setter, deleter.
+# Trzeba użyć tej samej nazwy (tu x i _x).
+# Tu jest użycie property jako dekoratora.
+
+class C2(object):
+    """Klasa C2."""
+
+    def __init__(self):
+        self._x = None
+
+    @property
+    def x(self):   # getting an attribute value
+        """I'm the 'x' property."""
+        return self._x
+
+    @x.setter
+    def x(self, value):   # setting an attribute value
+        self._x = value
+
+    @x.deleter
+    def x(self):   # deleting an attribute value
+        del self._x
+
+
+c = C2()
+print dir(c)
+c.x = 10
+print c.x
+del c.x
+
+DEKORATORY KLAS
+
+# Składnia dekoratorów klas ma postać ...
+
+@decorator2
+@decorator1
+class C(object):
+    pass
+
+# ... co jest równoważne ...
+
+class C(object):
+    pass
+
+C = decorator2(decorator1(C))
+
+# Dekorator klasy.
+def class_decorator(cls): ...
+
+@class_decorator              # zastosowanie
+class C(object):
+    pass
+
+# lub inaczej
+
+class C(object):
+    pass
+
+C = class_decorator(C)
+
+
+
+Metaklasy
+REFERENCJE
+
+    PEP 3115 - Metaclasses in Python 3000
+    https://blog.ionelmc.ro/2015/02/09/understanding-python-metaclasses/
+    http://stackoverflow.com/questions/100003/what-is-a-metaclass-in-python
+    http://ivansmirnov.io/python-metaclasses/ 
+
+WPROWADZENIE
+
+W Pythonie mamy do czynienia z obiektami. Funkcja jest obiektem, klasa jest obiektem, itp. Obiekt instancji jest instancją obiektu klasy, obiekt klasy jest instacją obiektu metaklasy.
+
+Funkcjonalność metaklas częściowo pokrywa się z funkcjonalnością dekoratorów klas.
+TWORZENIE METAKLASY
+
+Metaklasy najczęściej implementują dwie metody (__init__, __new__), przejmując kontrolę nad procedurą tworzenia i inicjalizacji nowej instancji klasy. Klasy otrzymują nową warstwę logiki.
+
+# Domyślnie klasy są konstruowane przy użyciu type().
+# Nazwa klasy jest łączona z wynikiem type(name, bases, clsdict), np.
+# MyClass = type("MyClass", (), {})
+
+MyClass = type("MyClass", (BaseClass,), {'attribute' : 42})
+
+# To jest równoważne z kodem
+
+class MyClass(BaseClass):
+    attribute = 42
+
+# Metaklasy najczęściej implementują dwie metody.
+class Meta(type):        # dziedziczenie z 'type' w klasach w nowym stylu
+    def __init__ ...   # opcjonalne
+    def __new__(mcls, name, bases, clsdict):
+        clsdict['foo'] = 'Meta was here'
+        # Dodajemy atrybut 'foo' do słownika klasy
+        # zanim zostanie utworzona nowa klasa.
+        return type.__new__(mcls, name, bases, clsdict)
+
+class C(object):
+    __metaclass__ = Meta            # składnia Pythona 2.6
+    # Teraz zamiast type(name, bases, clsdict)
+    # do budowy klasy będzie użyte Meta.
+
+# class C(metaclass=Meta): ...     # składnia Pythona 3 (PEP 3115)
+
+print dir(C)            # znajdziemy klucz 'foo'
+
+ABSTRACT BASE CLASSES
+
+from abc import ABCMeta
+
+class MyABC:
+    __metaclass__ = ABCMeta
+
+MyABC.register(tuple)
+
+assert issubclass(tuple, MyABC)
+assert isinstance((), MyABC)
+
+
