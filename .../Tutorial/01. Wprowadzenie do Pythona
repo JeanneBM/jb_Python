@@ -244,67 +244,6 @@ Dostęp do programu w Linuksie Debian Squezze: Programy | Programowanie | IDLE.
 
 Zaawansowane możliwości IDLE: kolorowanie składni Pythona, debuger (w menu Debug), przeglądarka obiektów (w menu File). 
 
-
-Python w Linuksie
-WPROWADZENIE
-
-W Linuksie Python jest zwykle standardowo instalowany przy instalacji systemu operacyjnego (pakiet python). Jednak warto sprawdzić, czy nie należy doinstalować dodatkowych pakietów rozszerzających funkcjonalność języka.
-
-W Linuksie Debian (wydanie Squezze) interpreter znajduje się w pliku /usr/bin/python.
-
-Interpreter Pythona pracuje podobnie do powłoki systemu Unix. Zwykle umieszczamy jedno polecenie w wierszu, a znak końca wiersza powoduje rozpoczęcie przetwarzania polecenia. Komentarze w Pythonie rozpoczynają się od znaku hash (#) i rozciągają się do końca wiersza. Sesję interaktywną kończymy przez wywołanie funkcji quit() lub przez kombinację klawiszy [Ctrl]+[d] (wygenerowanie z klawiatury znaku końca pliku).
-
-$ python                      # uruchomienie interpretera z powłoki
-Python 2.6.6 ...              # i wejście do trybu interaktywnego
->>> print 1 + 2
-3
->>> 1/0
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-ZeroDivisionError: integer division or modulo by zero
-# Pojawienie się błędu powoduje wywołanie wyjątku,
-# komunikat o błędzie i powrót do znaku zachęty.
->>> [Ctrl]+[d]
-# Wygenerowanie znaku EOF, koniec pracy z interpreterem.
-# Można użyć funkcji quit(), tylko w trybie interaktywnym.
-$                             # wracamy do powłoki
-
-$ python -c "print 1 + 2"     # polecenia umieszczamy w cudzysłowiu
-3                             # wynik 
-$                             # wracamy do powłoki
-
-$ python skrypt.py            # wywołanie skryptu z powłoki
-3
-$ python -i skrypt.py         # przetworzenie skryptu i przejście
-3                             # do trybu interaktywnego
->>>
-
-$ python < skrypt.py       # dołączenie skryptu na stdin,
-3                             # tu nie działają raw_input(), input()
-$ python < skrypt.py > wyniki.txt      # przekierowanie wejścia i wyjścia
-$
-
-Do pracy interaktywnej można przygotować polecenia startowe Pythona w osobnym pliku (np. w .pythonrc.py) i umieścić ścieżkę do niego w zmiennej powłoki PYTHONSTARTUP. Plik jest przetwarzany tylko przy pracy interaktywnej.
-
-Dodanie katalogu z modułami Pythona do zmiennej PYTHONPATH.
-
-# W Debianie wstawiamy dopisek do pliku ~/.bashrc (na początku).
-# Jeżeli łańcuch nie jest zerowy, to dopisuję.
-
-if [ -n "${PYTHONPATH}" ] ; then
-    export PYTHONPATH="${PYTHONPATH}:$HOME/my_python_modules"
-else
-    export PYTHONPATH="$HOME/my_python_modules"
-fi
-
-IDLE
-
-Program IDLE (An Integrated DeveLopment Environment for Python) jest zawarty w pakiecie Debiana idle, który zwykle trzeba dodatkowo zainstalować. IDLE bazuje na Tkinter, interfejsie do Tk (widget set). IDLE jest wieloplatformowe, działa na wszystkich platformach, na których jest zainstalowane Tk.
-
-Dostęp do programu w Linuksie Debian Squezze: Programy | Programowanie | IDLE.
-
-Zaawansowane możliwości IDLE: kolorowanie składni Pythona, debuger (w menu Debug), przeglądarka obiektów (w menu File). 
-
  
 Korzystanie z pomocy
 WPROWADZENIE
