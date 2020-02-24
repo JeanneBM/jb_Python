@@ -1,0 +1,403 @@
+Python (1) - wprowadzenie do Pythona
+PLAN
+
+    Charakterystyka języka Python
+    Historia Pythona
+    Zastosowania
+    Python w Windows
+    Python w Linuksie
+    Korzystanie z pomocy
+    Styl, konwencje, zaliczenie
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+Charakterystyka języka Python
+CECHY PYTHONA
+
+    Język skryptowy (interpretowany) wysokiego poziomu, zorientowany obiektowo, dostępny za darmo.
+    Prosta i czytelna składnia ułatwiająca utrzymywanie, używanie i rozumienie kodu.
+    Struktury danych wysokiego poziomu, dynamiczny system typów zwiększające wydajność i produktywność programistów.
+    Wsparcie dla modułów i pakietów, co zachęca do modularyzacji programów i ponownego użycia kodu. Możliwa budowa dużych aplikacji.
+    Przenośność - interpreter dostępny na wszystkie główne platformy: DOS, Windows, Linux/Unix, Mac OS X.
+    Bogata biblioteka standardowa (baterie w zestawie) oraz różne rozszerzenia.
+    Łatwa integracja programów w Pythonie z innymi częściami aplikacji, napisanymi w innych językach. Różne implementacje Pythona: CPython (język C), IronPython (platforma .NET), Jython (Java), PyPy (Python).
+    Łatwość nauczenia się podstaw języka i przyjemność z programowania.
+    Rosnąca społeczność skupiona wokół języka - konferencje (PyCon), listy dyskusyjne (SIG), nagrody dla twórców, repozytoria z oprogramowaniem i dokumentacją, itd. 
+
+PROGRAMOWANIE W PYTHONIE
+
+Możliwość programowania w różnych stylach (paradygmatach): imperatywnym/proceduralnym, obiektowym, deklaratywnym/funkcyjnym.
+
+Możliwość pracy w trybie linii poleceń lub w trybie skryptowym (rozszerzenie nazw plików z poleceniami to .py).
+
+Duże projekty napisane w Pythonie:
+
+    system algebry komputerowej Sage, http://www.sagemath.org/,
+    serwer aplikacji Zope, http://www.zope.org/,
+    system zarządzania treścią (CMS) Plone, http://www.plone.org/,
+    programy do grafiki wektorowej Sketch i Skencil. 
+
+Programy w Pythonie są zwykle krótsze od napisanych w C/C++ z kilku powodów:
+
+    typy danych wysokiego poziomu (listy, krotki, słowniki, zbiory),
+    grupowanie instrukcji przez wcięcia, a nie parę nawiasów,
+    nie potrzeba deklaracji zmiennych czy argumentów. 
+
+STRUKTURA PROGRAMU W PYTHONIE
+
+    Programy składają się z modułów.
+    Moduły zawierają instrukcje.
+    Instrukcje zawierają wyrażenia.
+    Wyrażenia tworzą i przetwarzają obiekty. 
+
+WADY PYTHONA
+
+Chyba jedyną wadą Pythona (nie zawsze istotną) jest to, że prędkość wykonywania może nie zawsze być porównywalna z prędkością języków kompilowanych, takich jak C czy C++.
+ZEN PYTHONA
+
+>>> import this
+The Zen of Python, by Tim Peters
+
+Beautiful is better than ugly.
+Explicit is better than implicit.
+Simple is better than complex.
+Complex is better than complicated.
+Flat is better than nested.
+Sparse is better than dense.
+Readability counts.
+Special cases aren't special enough to break the rules.
+Although practicality beats purity.
+Errors should never pass silently.
+Unless explicitly silenced.
+In the face of ambiguity, refuse the temptation to guess.
+There should be one-- and preferably only one --obvious way to do it.
+Although that way may not be obvious at first unless you're Dutch.
+Now is better than never.
+Although never is often better than *right* now.
+If the implementation is hard to explain, it's a bad idea.
+If the implementation is easy to explain, it may be a good idea.
+Namespaces are one honking great idea -- let's do more of those!
+
+
+Historia Pythona
+POCZĄTKI
+
+    Nazwa języka pochodzi od serialu BBC Latający Cyrk Monty Pythona.
+    Twórcą Pythona jest holender Guido van Rossum (ur. 1960). Społeczność Pythona nazywa go BDFL (Benevolent Dictator For Life), tytuł pochodzi ze skeczu Monty Python. GvR przeniósł się do USA w 1995, do 2003 mieszkał blisko Waszyngtonu. Od 2005 do 2013 pracował dla Google. Obecnie pracuje dla Dropbox.
+    Python (jego interpreter) zaczął powstawać od 1989 jako następca języka ABC, stworzonego w CWI (Centrum Matematyki i Informatyki) w Amsterdamie. Ostatnia wersja Pythona, która powstała w CWI to 1.2 (1995).
+    Od wersji 2.1 (2001) język jest rozwijany jako projekt Open Source przez niedochodową organizację Python Software Foundation (PSF), wzorowaną na Apache Software Foundation.
+    Od 2008 istnieją dwie gałęzie: Python 2 i Python 3 (zerwanie kompatybilności wstecz).
+    Kod napisany w Pythonie 2 może być prawie mechanicznie przetłumaczony na Pythona 3. Istnieje narzędzie 2to3 stworzone do tego celu. Inne narzędzie to 3to2, które wykonuje konwersję w drugą stronę. 
+
+IMPLEMENTACJE PYTHONA
+
+https://www.python.org/download/alternatives/
+
+    IronPython (Python running on .NET)
+    Jython (Python running on the Java Virtual Machine)
+    PyPy (A fast python implementation with a JIT compiler)
+    Stackless Python (Branch of CPython supporting microthreads)
+    MicroPython (Python running on micro controllers) 
+
+
+Zastosowania Pythona
+TECHNICZNE MOCNE STRONY PYTHONA
+
+    Jest zorientowany obiektowo, jego model klas obsługuje polimorfizm, przeciążanie operatorów i dziedziczenie wielokrotne.
+    Typy dynamiczne, obiekty przekazywane przez referencję.
+    Automatyczne zarządzanie pamięcią.
+    Obsługa błędów na bazie wyjątków.
+    Wbudowane typy obiektów: listy, słowniki, łańcuchy znaków, zbiory.
+    Wbudowane mechanizmy introspekcji. 
+
+WYBRANE ZASTOSOWANIA PYTHONA
+
+    Programowanie systemowe - skrypty do administrowania systemem operacyjnym.
+    Graficzne interfejsy użytkownika (GUI) - interfejsy do bibliotek Tk, Qt, GTK i innych.
+    Skrypty internetowe - moduły do CGI, FTP, przetwarzanie XML i XHTML, wiadomości email.
+    Integracja komponentów.
+    Programowanie bazodanowe - interfejsy do relacyjnych baz danych.
+    Szybkie prototypowanie (Rapid Application Development).
+    Programowanie naukowe i edukacja. 
+
+PAKIETY I BIBLIOTEKI NAUKOWE
+
+    SciPy - procedury do całkowania, optymalizacji, wizualizacji wyników; przetwarzanie obrazów i sygnałów; funkcje specjalne, solwery równań różniczkowych.
+    NumPy - N-wymiarowe macierze, narzędzia do integracji kodu C/C++, Fortranu; algebra liniowa, transformata Fouriera i in.
+    Matplotlib - biblioteka rysunków 2D.
+    IPython - udoskonalona interaktywana konsola.
+    SymPy - biblioteka do obliczeń symbolicznych.
+    pandas - biblioteka struktur danych i narzędzi do analizy danych.
+    scikit-learn - narzędzia do uczenia maszynowego.
+    Django - the web application framework.
+    Twisted - the networking programming library.
+    PyGSL - interfejs do biblioteki GNU GSL.
+    Sage - pakiet matematyczny łączący ponad 100 narzędzi Open Source.
+    Gnuplot.py (SourceForge) - interfejs do programu graficznego Gnuplot. 
+
+PROJEKTY EDUKACYJNE
+
+    Computer Programming for Everybody (CP4E) - projekt złożony przez GvR do DARPA (1999). Zdefiniowane w projekcie cele Pythona są następujące [http://www.python.org/doc/essays/cp4e/]:
+    (a) łatwy do nauczenia, intuicyjny język o dużych możliwościach;
+    (b) rozwijany na zasadzie open source;
+    (c) zrozumiały kod w języku angielskim;
+    (d) przydatność do rozmaitych celów, owocująca krótkim czasem programowania.
+    Wyniki projektu: środowisko IDLE, tutorial.
+    Python jako pierwszy język (Zelle, 1999) - kursy CS w Wartburg College, Iowa, USA.
+    Jakub Swacha, Podstawy programowania komputerów w języku PYTHON, Uniwersytet Szczeciński, 2009.
+    Jeffrey Elkner i inni, How to Think Like a Computer Scientist (online). 
+
+
+Python w Windows
+WPROWADZENIE
+
+Instalator Pythona można pobrać ze strony domowej języka http://www.python.org/, przykładowo plik python-2.7.3.msi (15.1 MB).
+
+Podczas instalacji mamy następujące etapy:
+
+    Dostępność dla innych użytkowników systemu
+
+    (*) Install for all users
+    ( ) Install just for me (not available on Windows Vista)
+
+    Folder instalacji, domyślnie C:\Python27\.
+    Wybór składników, domyślnie wszystko (82 MB). 
+
+PYTHON W SYSTEMIE WINDOWS XP
+
+Pozycje w Start | Programy | Python2.7:
+
+    IDLE (Python GUI)
+    Module Docs
+    Python (command line)
+    Python Manuals
+    Uninstall Python 
+
+Edycja kodów źródłowych Pythona (pliki .py):
+
+    IDLE Pythona
+    Notatnik Windows
+    Edytory dla programistów, np. Notepad++ (http://notepad-plus-plus.org/) 
+
+Warto założyć folder C:\Python27\Programy\, w którym będziemy przechowywać skrypty Pythona.
+
+W systemie Windows skrypty powinny kończyć się funkcją raw_input() (Python 2) lub input() (Python 3). Dzięki temu po kliknięciu ikony pliku z kodem Pythona będziemy mogli obejrzeć wyniki. Czarne okno konsoli DS będzie czekało na naciśnięcie klawisza Enter. 
+
+
+Python w Linuksie
+WPROWADZENIE
+
+W Linuksie Python jest zwykle standardowo instalowany przy instalacji systemu operacyjnego (pakiet python). Jednak warto sprawdzić, czy nie należy doinstalować dodatkowych pakietów rozszerzających funkcjonalność języka.
+
+W Linuksie Debian (wydanie Squezze) interpreter znajduje się w pliku /usr/bin/python.
+
+Interpreter Pythona pracuje podobnie do powłoki systemu Unix. Zwykle umieszczamy jedno polecenie w wierszu, a znak końca wiersza powoduje rozpoczęcie przetwarzania polecenia. Komentarze w Pythonie rozpoczynają się od znaku hash (#) i rozciągają się do końca wiersza. Sesję interaktywną kończymy przez wywołanie funkcji quit() lub przez kombinację klawiszy [Ctrl]+[d] (wygenerowanie z klawiatury znaku końca pliku).
+
+$ python                      # uruchomienie interpretera z powłoki
+Python 2.6.6 ...              # i wejście do trybu interaktywnego
+>>> print 1 + 2
+3
+>>> 1/0
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ZeroDivisionError: integer division or modulo by zero
+# Pojawienie się błędu powoduje wywołanie wyjątku,
+# komunikat o błędzie i powrót do znaku zachęty.
+>>> [Ctrl]+[d]
+# Wygenerowanie znaku EOF, koniec pracy z interpreterem.
+# Można użyć funkcji quit(), tylko w trybie interaktywnym.
+$                             # wracamy do powłoki
+
+$ python -c "print 1 + 2"     # polecenia umieszczamy w cudzysłowiu
+3                             # wynik 
+$                             # wracamy do powłoki
+
+$ python skrypt.py            # wywołanie skryptu z powłoki
+3
+$ python -i skrypt.py         # przetworzenie skryptu i przejście
+3                             # do trybu interaktywnego
+>>>
+
+$ python < skrypt.py       # dołączenie skryptu na stdin,
+3                             # tu nie działają raw_input(), input()
+$ python < skrypt.py > wyniki.txt      # przekierowanie wejścia i wyjścia
+$
+
+Do pracy interaktywnej można przygotować polecenia startowe Pythona w osobnym pliku (np. w .pythonrc.py) i umieścić ścieżkę do niego w zmiennej powłoki PYTHONSTARTUP. Plik jest przetwarzany tylko przy pracy interaktywnej.
+
+Dodanie katalogu z modułami Pythona do zmiennej PYTHONPATH.
+
+# W Debianie wstawiamy dopisek do pliku ~/.bashrc (na początku).
+# Jeżeli łańcuch nie jest zerowy, to dopisuję.
+
+if [ -n "${PYTHONPATH}" ] ; then
+    export PYTHONPATH="${PYTHONPATH}:$HOME/my_python_modules"
+else
+    export PYTHONPATH="$HOME/my_python_modules"
+fi
+
+IDLE
+
+Program IDLE (An Integrated DeveLopment Environment for Python) jest zawarty w pakiecie Debiana idle, który zwykle trzeba dodatkowo zainstalować. IDLE bazuje na Tkinter, interfejsie do Tk (widget set). IDLE jest wieloplatformowe, działa na wszystkich platformach, na których jest zainstalowane Tk.
+
+Dostęp do programu w Linuksie Debian Squezze: Programy | Programowanie | IDLE.
+
+Zaawansowane możliwości IDLE: kolorowanie składni Pythona, debuger (w menu Debug), przeglądarka obiektów (w menu File). 
+
+
+Python w Linuksie
+WPROWADZENIE
+
+W Linuksie Python jest zwykle standardowo instalowany przy instalacji systemu operacyjnego (pakiet python). Jednak warto sprawdzić, czy nie należy doinstalować dodatkowych pakietów rozszerzających funkcjonalność języka.
+
+W Linuksie Debian (wydanie Squezze) interpreter znajduje się w pliku /usr/bin/python.
+
+Interpreter Pythona pracuje podobnie do powłoki systemu Unix. Zwykle umieszczamy jedno polecenie w wierszu, a znak końca wiersza powoduje rozpoczęcie przetwarzania polecenia. Komentarze w Pythonie rozpoczynają się od znaku hash (#) i rozciągają się do końca wiersza. Sesję interaktywną kończymy przez wywołanie funkcji quit() lub przez kombinację klawiszy [Ctrl]+[d] (wygenerowanie z klawiatury znaku końca pliku).
+
+$ python                      # uruchomienie interpretera z powłoki
+Python 2.6.6 ...              # i wejście do trybu interaktywnego
+>>> print 1 + 2
+3
+>>> 1/0
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ZeroDivisionError: integer division or modulo by zero
+# Pojawienie się błędu powoduje wywołanie wyjątku,
+# komunikat o błędzie i powrót do znaku zachęty.
+>>> [Ctrl]+[d]
+# Wygenerowanie znaku EOF, koniec pracy z interpreterem.
+# Można użyć funkcji quit(), tylko w trybie interaktywnym.
+$                             # wracamy do powłoki
+
+$ python -c "print 1 + 2"     # polecenia umieszczamy w cudzysłowiu
+3                             # wynik 
+$                             # wracamy do powłoki
+
+$ python skrypt.py            # wywołanie skryptu z powłoki
+3
+$ python -i skrypt.py         # przetworzenie skryptu i przejście
+3                             # do trybu interaktywnego
+>>>
+
+$ python < skrypt.py       # dołączenie skryptu na stdin,
+3                             # tu nie działają raw_input(), input()
+$ python < skrypt.py > wyniki.txt      # przekierowanie wejścia i wyjścia
+$
+
+Do pracy interaktywnej można przygotować polecenia startowe Pythona w osobnym pliku (np. w .pythonrc.py) i umieścić ścieżkę do niego w zmiennej powłoki PYTHONSTARTUP. Plik jest przetwarzany tylko przy pracy interaktywnej.
+
+Dodanie katalogu z modułami Pythona do zmiennej PYTHONPATH.
+
+# W Debianie wstawiamy dopisek do pliku ~/.bashrc (na początku).
+# Jeżeli łańcuch nie jest zerowy, to dopisuję.
+
+if [ -n "${PYTHONPATH}" ] ; then
+    export PYTHONPATH="${PYTHONPATH}:$HOME/my_python_modules"
+else
+    export PYTHONPATH="$HOME/my_python_modules"
+fi
+
+IDLE
+
+Program IDLE (An Integrated DeveLopment Environment for Python) jest zawarty w pakiecie Debiana idle, który zwykle trzeba dodatkowo zainstalować. IDLE bazuje na Tkinter, interfejsie do Tk (widget set). IDLE jest wieloplatformowe, działa na wszystkich platformach, na których jest zainstalowane Tk.
+
+Dostęp do programu w Linuksie Debian Squezze: Programy | Programowanie | IDLE.
+
+Zaawansowane możliwości IDLE: kolorowanie składni Pythona, debuger (w menu Debug), przeglądarka obiektów (w menu File). 
+
+ 
+Korzystanie z pomocy
+WPROWADZENIE
+
+W razie potrzeby możemy w wielu miejscach znaleźć potrzebną informację na temat języka Python.
+
++--------------------------+-----------------------------+
+| Forma                    | Rola                        |
++--------------------------+-----------------------------+
+| Komentarze ze znakiem #  | Dokumentacja w pliku        |
+| Funkcja dir              | Lista atrybutów w obiektach |
+| __doc__                  | Dokumentacja w pliku        |
+| PyDoc                    | Pomoc interaktywna          |
+| Standardowa dokumentacja | Oficjalne opisy języka      |
+| Zasoby internetowe       | Materiały w Internecie      |
+| Książki                  | Komercyjne teksty           |
++--------------------------+-----------------------------+
+
+Przed zadawaniem pytań na forach internetowych warto przeczytać tekst How To Ask Questions The Smart Way (Eric Steven Raymond).
+
+Pomoc przy pracy interaktywnej z interpreterem, funkcje dir() i help().
+
+>>> help(obiekt)         # pomoc na temat obiektu
+>>> help()               # pomoc interaktywna
+help> keywords                 # lista słów kluczowych
+help> topics                   # lista tematów
+help> modules                  # lista dostępnych modułów (długa!)
+help> modules math             # lista modułów ze słowem "math"
+help> obiekt                   # pomoc na temat obiektu
+help> quit                     # powrót do interpretera
+>>> dir()                # nazwy w bieżącym zakresie
+>>> L = []               # tworzymy pustą listę
+>>> dir(L)               # atrybuty związane z listami
+>>> dir(list)            # można podać nazwę typu
+>>> help(L.count)        # pomoc dla konkretnej nazwy
+>>> help(list.count)     # pomoc dla konkretnej nazwy
+
+PYDOC
+
+Korzystanie z narzędzia pydoc.
+
+$ pydoc nazwa_szukana
+$ pydoc -k klucz_szukany
+
+EDYTORY
+
+Wiele edytorów tekstu wspomaga programowanie w Pythonie przez podświetlanie składni języka.
+
+Program IDLE podpowiada składnię dla wpisywanych w kodzie funkcji wbudowanych Pythona. 
+
+
+Styl, konwencje, zaliczenie
+WPROWADZENIE
+
+Zaliczenie kursu polega na zaliczeniu wykładu i laboratorium. Obecność na wykładzie nie jest obowiązkowa, ale bardzo polecana. Zaliczenie wykładu polega na zaliczeniu projektu programistycznego. Zaliczenie laboratorium bazuje na aktywności na zajęciach oraz na terminowym przesyłaniu (email) rozwiązań zadań załączonych do każdej części kursu (archiwum ZIP, np. kowalski4.zip). Należy przesłać rozwiązania zadań z minimum dziesięciu części kursu. Polecanym sposobem dostarczania rozwiązań zadań jest umieszczanie ich w repozytorium zdalnym (GitHub, Bitbucket, GitLab). To samo repozytorium można wykorzystać do rozwijania projektu programistycznego.
+ZALECENIA DLA PRZESYŁANYCH ZADAŃ I PROJEKTU PROGRAMISTYCZNEGO
+
+    Listy związane z kursem proszę w tytule oznaczać przez [Python], np.
+    [Python] Zestaw nr 2.
+    Pomoże mi to w sortowaniu poczty.
+    Oficjalne zalecenia dotyczące stylu programowania (coding style) w języku Python opisane są w PEP 8.
+    Projekt programistyczny składa się z programu napisanego w języku Python (minimum 100 linii kodu łącznie z komentarzami), oraz dokumentacji programu.
+    Program powinien prawidłowo działać na Studenckiej Pracowni Komputerowej pod systemem Linux. Zalecana forma programu to moduł, który może być importowany. Może to być również samodzielny program, dostosowany do konwencji znanych w systemie Linux, np. składnia NAZWA [OPCJA] [PLIK]; obsługa opcji wiersza poleceń -h, --help, -v, --version; rozsądne zachowanie domyślne. Zalecana tematyka projektu to implementacja wybranego algorytmu nienumerycznego, który nie jest omawiany podczas kursu.
+    Preferowane są programy działające w trybie tekstowym. Wyjątkowo można wprowadzić elementy grafiki na bazie pygame lub semigrafikę z ncurses.
+    Kod programu powinien być czytelny na ekranie terminala 80x25, czyli długość wierszy nie powinna przekraczać 80 znaków.
+    Ze względu na częste problemy z kodowaniem polskich znaków nie używać polskich liter w kodzie programu.
+    Każdą instrukcję umieszczamy w osobnym wierszu.
+    Funkcje muszą być krótkie (maksimum dwa ekrany) i robić dobrze jedną rzecz. Liczba zmiennych lokalnych w funkcji nie powinna przekraczać 5-10 (optymalnie do 7). Używamy zmiennych globalnych wyłącznie tam, gdzie to konieczne.
+    Wstawiać komentarze, które mają tłumaczyć CO robi program, a nie JAK to robi. Komentarz do funkcji lub klasy ma być na początku (docstring), a raczej nie w kilku miejscach wewnątrz ciała funkcji. Wyjątkiem mogą być sprytne triki.
+    Programom zawsze powinny towarzyszyć testy poprawności. Jest to szczególnie istotne dla języka interpretowanego, jakim jest Python. Zaleca się umieszczać testy w bloku instrukcji warunkowej
+
+    if __name__ == "__main__":
+        # testy
+
+    W najprostszym przypadku testy to wywołania funkcji dla pewnych konkretnych danych. Zaawansowany sposób to zastosowanie modułu unittest lub doctest. W trakcie tworzenia programu warto wstawiać pomocnicze instrukcje print do wyświetlania komunikatów np. z chwilowymi wartościami zmiennych z programu.
+    Kolejne działające wersje programu warto umieszczać w osobnych katalogach (wersja1, wersja2, itd.) lub tylko w osobnych plikach (program1.py, program2.py, itd.). Zaawansowany sposób pracy to korzystanie z wybranego systemu kontroli wersji, np. git. Pomocne jest zdalne archiwum git, które można założyć w jednym z serwisów, np. GitHub, Bitbucket, GitLab.
+    Tworzymy plik README z opisem zmian w programie.
+    Dokumentację programu piszemy w formatach otwartych (HTML, LaTeX, PS, PDF), objętość kilka-kilkanaście stron. Warto również w samym programie umieścić pomoc dla użytkownika. Standardowe rozdziały dokumentacji to: (1) wprowadzenie z opisem teoretycznym algorytmu, (2) opis interfejsu, (3) uwagi na temat implementacji, często cytowany jest cały kod programu lub wybrane fragmenty, (4) podsumowanie, wyniki testów, itp., (5) literatura wykorzystana przy tworzeniu projektu, linki do stron w Internecie. 
+
+NAZWY ZMIENNYCH, FUNKCJI, KLAS
+
+    Nie używać słów kluczowych jako nazw zmiennych. Nie używać nazw typów wbudowanych jako nazw zmiennych (str, list).
+    Nie używać małej litery l (jak Lucyna) jako nazwy zmiennej, bo łatwo ją pomylić z 1 (jedynka).
+    W nazwach zmiennych nie można używać polskich znaków, dlatego lepiej wyglądają wyrazy angielskie, np. my_variable (konwencja lower_case_with_underscores), my_function, MyClass (konwencja CamelCase), my_module. Czasem wystarczają krótkie nazwy, jak S (string), L (lista), D (słownik), i, j, k (zmienne w pętlach).
+    Nazwy rozpoczynające się od jednego znaku podkreślenia (jak _X) nie są importowane za pomocą instrukcji from module import *.
+    Nazwy z dwoma początkowymi i końcowymi znakami podkreślenia (jak __X__) są nazwami zdefiniowanymi przez system, które mają specjalne znaczenie dla interpretera.
+    Nazwy rozpoczynające się dwoma znakami podkreślenia i niekończące się dwoma kolejnymi takimi znakami (jak __X) są lokalne dla zawierających je klas.
+    Nazwa self pełni w klasach specjalną rolę, występuje jako pierwszy argument w metodach. Również nazwa other przyjęła się w definicjach metod opisujących działania na instancjach klas, np. dodawanie, mnożenie. Podobnie lepiej unikać korzystania z nazw obiektów wbudowanych. 
+
+INNE KONWENCJE
+
+    Przy korzystaniu ze zdalnego archiwum należy zawsze w liście wstawiać link do repo i informację o tym, który zestaw został ukończony.
+    Przy przesyłaniu poprawionych rozwiązań zestawów odpowiadać przez Reply (kontynuacja wątku), aby zachować historię komunikacji.
+    Wcięcia w instrukcjach złożonych mają szerokość 4 spacji. Warto pracować w edytorze, który nie wprowadza tabulacji do kodu.
+    Używać pustych linii do rozdzielania funkcji i klas, a także większych bloków kodu wewnątrz funkcji.
+    Wstawiać spacje dokoła operatorów i po przecinkach, ale nie bezpośrednio po nawiasach, np. a = f(1, 2) + 3. 
