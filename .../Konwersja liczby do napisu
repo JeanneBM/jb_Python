@@ -1,0 +1,31 @@
+# Funkcja len().
+len("napis")                  # 5
+len(str(2 ** 10000))            # konwersja liczby do napisu
+
+"abc", 'abc'                  # identyczne
+S = "ab"   'cd'               # niejawna konkatenacja do "abcd"
+"ab'cd", 'ab"cd'              # zastosowanie
+S = "a\tb\nc\"d"              # znaki specjalne
+print(len(S), S)              # 7
+
+S = """jeden
+dwa
+trzy"""     # napis wielowierszowy, podobnie z '''
+print (S)
+
+# Sprawdzić indeksowanie i wycinki.
+S = "abrakadabra"
+S[2], S[-3], S[3:5], S[3:], S[:4]
+
+# Sprawdzić konkatenację (łączenie) i powtórzenie napisów.
+L = ["a", "b", "c"]
+L[0] + L[1] + L[2]            # ręczne dodawanie
+L[0] + "=" + L[1] + "=" + L[2]
+"".join(L)                    # zalecane
+"=".join(L)                   # zalecane
+# S.join([S1,S2,S3]) daje S1+S+S2+S+S3
+
+# Sprawdzić niezmienność napisów.
+
+------------------------------------------------------------------------------------------------------
+
