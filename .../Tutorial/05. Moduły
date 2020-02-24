@@ -1,0 +1,1062 @@
+Python (5) - moduły
+PLAN
+
+    Korzystanie z modułów
+    Tworzenie modułów
+    Pakiety modułów
+    Moduły systemowe
+    Moduły matematyczne
+    Moduły programistyczne
+    Moduły bazodanowe
+    Macierze 
+    
+
+Korzystanie z modułów
+WPROWADZENIE
+
+Python pozwala umieszczać pożyteczne definicje obiektów oraz instrukcje w osobnym pliku zwanym modułem. Możemy importować definicje z danego mudułu do innych modułów lub do modułu głównego, czy trybu interaktywnego. Jeżeli nazwa modułu to abc, to nazwa pliku modułu ma postać abc.py. Wewnątrz modułu jego nazwa dostępna jest jako wartość zmiennej globalnej __name__.
+
+Import modułu tworzy przestrzeń nazw, a zmienne zdefiniowane na najwyższym poziomie pliku modułu stają się atrybutami zaimportowanego obiektu modułu. Inaczej mówiąc, zakres globalny pliku modułu staje się po zaimportowaniu przestrzenią nazw atrybutów obiektu modułu.
+
+Podstawowa rola modułów:
+
+    ponowne wykorzystanie kodu (kod zapisany jest w pliku),
+    dzielenie przestrzeni nazw systemu (zapobieganie konfliktom nazw),
+    implementowanie współdzielonych usług oraz danych (moduł jest współdzielony przez inne komponenty systemu). 
+
+ARCHITEKTURA PROGRAMU W PYTHONIE
+
+Program napisany w Pythonie składa się z pliku najwyższego poziomu (moduł główny) wraz z zero lub większą liczbą plików modułów dodatkowych.
+
+Instrukcje związane z modułami to import oraz from. Funkcja związana z modułami to reload(). Zwyczajowo instrukcje import umieszcza się na początku modułu. Zalecane jest umieszczanie każdego importu w osobnej linii.
+
+Kod modułu jest wykonywany tylko raz podczas pierwszego importu. Python wykonuje instrukcje modułu jedna po drugiej, od góry pliku do dołu. Zwykle instrukcje wewnątrz modułu służą do jego inicjalizacji. Importowany moduł może z kolei importować inne moduły.
+
+# Zastosowanie instrukcji import.
+import module1                # zaleca się pojedyńcze zapisy
+import module2, module3       # import kilku modułów
+
+print ( module1.name1 )       # kwalifikacja zmiennej z modułu
+module1.name1 = new_value     # zwykle dozwolone, ale ostrożnie!
+print ( module1.name2() )     # kwalifikacja funkcji z modułu
+print ( module1.__doc__ )     # dostęp do łańcucha dokumentacyjnego
+help(module1)                 # NAME, FILE, FUNCTIONS, DATA
+dir(module1)                  # przestrzeń nazw
+module1.__dict__.keys()       # przestrzeń nazw
+
+# Zastosowanie instrukcji from.
+from module1 import name1, name2        # ładowanie wybranych nazw
+# Równoważne instrukcje są następujące:
+# import module1
+# name1 = module1.name1
+# name2 = module1.name2
+# del module1
+
+from module2 import *                   # ładowanie wszystkich nazw
+
+print ( "{} {}".format(name1, name2()) )   # nie ma kwalifikacji
+
+import module1 as module2      # import modułu pod inną nazwą
+# Równoważne instrukcje są następujące:
+# import module1
+# module2 = module1
+# del module1
+
+from module3 import name1 as name2     # zmiana nazw atrybutów
+
+reload(module1)               # ponowne ładowanie modułu
+
+Instrukcja from niszczy podział przestrzeni nazw, ponieważ nazwy są importowane bezpośrednio do lokalnej tablicy symboli. Sama nazwa modułu, z którego importowane są nazwy, nie jest ustawiana. Beztroskie korzystanie z instrukcji from grozi nadpisaniem istniejących zmiennych z lokalnego zakresu. Inne problemy mogą pojawić się przy zastosowaniu reload(). Generalnie zalecane jest stosowanie instrukcji import.
+
+Dostęp do przestrzeni nazw modułu odbywa się za pomocą atrybutu __dict__ lub dir(module). Inaczej mówiąc, funkcja wbudowana dir() pozwala dowiedzieć się jakie nazwy są zdefiniowane przez moduł.
+
+Python automatycznie zawiera wielki zbiór modułów narzędzi znany pod nazwą biblioteki standardowej. Są one zwykle dostępne tam, gdzie można uruchomić Pythona.
+JAK DZIAŁA IMPORTOWANIE
+
+Przy pierwszym imporcie danego pliku przez program wykonywane są trzy osobne kroki.
+
+    Odnalezienie pliku modułu (wykorzystanie standardowej ścieżki wyszukiwania modułów).
+    Skompilowanie go do kodu bajtowego, jeśli jest to konieczne (powstają pliki .pyc).
+    Wykonanie kodu modułu w celu utworzenia zdefiniowanych przez niego obiektów. 
+
+Python przechowuje moduły programu w słowniku sys.modules.
+
+import sys
+
+print ( sys.modules.keys() )  # nazwy importowanych modułów
+print ( sys.path )            # ścieżka wyszukiwania
+
+ŚCIEŻKA WYSZUKIWANIA MODUŁÓW
+
+    Katalog główny programu.
+    Katalogi ze zmiennej środowiskowej PYTHONPATH (jeśli są ustawione).
+    Katalogi biblioteki standardowej (zależne od instalacji).
+    Zawartość wszystkich plików .pth (jeśli są obecne). 
+
+Zestawienie tych czterech komponentów staje się sys.path (lista nazw katalogów).
+PRZEŁADOWYWANIE MODUŁÓW
+
+Do funkcji reload() przekazuje się istniejący obiekt modułu, który wcześniej został zaimportowany. Przeładowanie oferuje możliwość modyfikowania działających programów bez zatrzymywania ich. Dzięki temu można skrócić cykl programowania.
+
+Funkcja reload() wykonuje nowy kod pliku modułu w bieżącej przestrzeni nazw modułu. Funkcja modyfikuje obiekt modułu IN PLACE. Przeładowanie nie ma wpływu na kod, który wcześniej wykorzystał instrukcję from - pozostaną referencje do starych obiektów.
+IMPORTOWANIE MODUŁÓW ZA POMOCĄ ŁAŃCUCHA NAZWY
+
+# Korzystanie z funkcji exec().
+module_name = "string"
+exec("import " + module_name)
+
+# Korzystanie z __import__.
+module_name = "string"
+string = __import__(module_name)
+
+"SKOMPILOWANE" PLIKI PYTHONA
+
+Załóżmy, że nasz program składa się z modułu głównego main.py, który importuje moduł spam z pliku spam.py. Przy pierwszym uruchomieniu naszego programu kod z pliku spam.py jest kompilowany do bytecode i zapisywany do pliku spam.pyc, którego zawartość jest niezależna od platformy. Przy następnym uruchomieniu naszego programu kod modułu spam jest wczytywany bezpośrednio z pliku spam.pyc, dzięki czemu program uruchamia się szybciej. Jeżeli czas modyfikacji pliku spam.py nie zgadza się z czasem zapisanym w pliku spam.pyc, to plik spam.pyc jest ignorowany.
+
+Przy normalnej pracy nie ma potrzeby zajmować się plikami .pyc. Czasem rozpowszechnia się biblioteki Pythona w postaci plików .pyc, aby utrudnić poznanie ich kodu. Ponadto czasem można spotkać pliki z rozszerzeniem .pyo które oznacza, że interpreter Pythona został uruchomiony w trybie optymalizacji z flagą -O. 
+
+
+
+Tworzenie modułów
+WPROWADZENIE
+
+W najprostszym przypadku moduły zawierają kod napisany w języku Python. Moduły mogą też odpowiadać rozszerzeniom napisanym w innych językach zewnętrznych, takich jak C, Java czy C#.
+
+Rozszerzenia zewnętrzne do Pythona zazwyczaj wykorzystują narzędzia z pakietu distutils z biblioteki standardowej do automatycznej instalacji. Zwykle tworzy się skrypt setup.py wykonywany w celu instalacji rozszerzeń.
+
+Każdy moduł ma wbudowany atrybut __name__, który Python automatycznie ustawia w następujący sposób:
+
+    Jeśli plik jest wykonywany jako plik programu najwyższego poziomu, atrybut __name__ ustawiany jest po uruchomieniu na łańcuch znaków "__main__".
+    Jeśli plik jest importowany, atrybut __name__ jest ustawiany na nazwę modułu w formie znanej przez klienta. 
+
+W rezultacie zmienna __name__ modułu służy jako opcja trybu użycia, pozwalając na wykorzystanie kodu zarówno w postaci biblioteki i jak i skryptu najwyższego poziomu.
+STRUKTURA MODUŁU
+
+#!/usr/bin/python
+
+module_docstring              # opcjonalnie
+
+# imports
+import sys
+
+# constants
+
+# exception classes
+
+# interface functions
+
+# classes
+
+# internal functions and classes
+
+def tester():                 # funkcja testująca moduł
+    instructions
+
+if __name__ == "__main__":
+    status = tester()
+    sys.exit(status)
+
+UKRYWANIE DANYCH W MODUŁACH
+
+Jeżeli wykonujemy import modułu za pomocą instrukcji from *, to istnieją dwa sposoby, aby zapobiec skopiowaniu wszystkich zmiennych z modułu do modułu głównego i zanieczyszczenia przestrzeni nazw.
+
+    Możemy nazwy wybranych zmiennych rozpoczynać od jednego znaku podkreślenia (na przykład _X). Te zmienne nie są "prywatne", można je zobaczyć i modyfikować korzystając z innych form importowania, takich jak instrukcja import.
+    Możemy zmienne wybrane do eksportu umieścić na liście łańcuchów nazw zmiennych, którą przypiszemy do zmiennej __all__ na najwyższym poziomie modułu. 
+
+__all__ = ["MyError", "encode", "decode"] # eksportuje tylko te zmienne
+
+Python najpierw szuka w module listy __all__, a jeżeli jej nie znajdzie, to kopiowane są wszystkie zmienne niezawierające znaku pojedyńczego podkreślenia. Należy podkreślić, że te dwa podane sposoby (konwencje) mają znaczenie jedynie dla instrukcji from * i nie mają nic wspólnego z deklarowaniem zmiennej jako prywatnej. 
+
+
+
+Pakiety modułów
+WPROWADZENIE
+
+Tworzenie pakietów jest opcją Pythona bardziej zaawansowaną niż tworzenie pojedyńczych modułów. Przy większej liczbie modułów korzystne jest umieszczanie ich w osobnych katalogach, co tworzy kolejne przestrzenie nazw zapobiegające konfliktom nazw.
+PODSTAWY IMPORTOWANIA PAKIETÓW
+
+# Załóżmy, że w katalogu bieżącym mamy moduł główny i moduły:
+# dir1/__init__.py            (obowiązkowy plik)
+# dir1/module1.py
+# dir1/dir2/__init__.py       (obowiązkowy plik)
+# dir1/dir2/module2.py
+
+# Instrukcje w module głównym.
+import dir1.module1           # ścieżka rozdzielona kropką
+import dir1.dir2.module2
+
+# Postać importu z instrukcją from.
+
+from dir1.module1 import name1
+from dir1.dir2.module2 import *
+
+Pliki __init__.py mogą zawierać kod Pythona, ale mogą też pozostać puste. Są one obecne jako deklaracje dla Pythona.
+STRUKTURA PRZYKŁADOWEGO PAKIETU
+
+Fragment struktury przykładowego pakietu SymPy. Wszystko działa, jeżeli katalog "sympy" znajduje się w zmiennej PYTHONPATH.
+
+sympy/          # główny katalog
+sympy/__init__.py       # obowiązkowy
+
+sympy/core/
+sympy/core/__init__.py       # obowiązkowy
+sympy/core/basic.py
+
+sympy/core/tests/
+sympy/core/tests/__init__.py       # obowiązkowy
+sympy/core/tests/test_basic.py
+# from sympy.core.basic import *
+#
+#def test_structure():  # to nie są testy z unittest!
+#    assert b21.args == (b2, b1)
+
+sympy/combinatorics/
+sympy/combinatorics/__init__.py       # obowiązkowy
+sympy/combinatorics/permutations.py
+# from sympy.core.basic import *
+
+sympy/combinatorics/tests/
+sympy/combinatorics/tests/__init__.py       # obowiązkowy
+sympy/combinatorics/tests/test_permutations.py
+# from sympy.combinatorics.permutations import *
+# from sympy.utilities.pytest import raises
+
+sympy/utilities/
+sympy/utilities/__init__.py       # obowiązkowy
+
+
+
+Moduły systemowe
+MODUŁ __builtin__
+
+Moduł umożliwia sprawdzenie listy obiektów wbudowanych
+MODUŁ __future__
+
+Udostępnianie właściwości języka niezgodnych z wcześniejszym zachowaniem jest możliwe poprzez import z modułu __future__. Ważne, że to nie jest normalny import, to jest zmiana sposobu interpretowania kodu przez Pythona. Takie wiersze muszą być na samej górze pliku.
+
+# PEP 236 -- Back to the __future__
+from __future__ import feature_name
+from __future__ import nested_scopes    # Python 2.1, PEP 227 (LGB na LEGB)
+from __future__ import division         # Python 2.2
+from __future__ import generators       # Python 2.2
+from __future__ import print_function   # Python 2.6
+from __future__ import braces
+# SyntaxError: not a chance
+# To jest dowcip: nigdy nie będzie wprowadzone oznaczanie bloku
+# instrukcji przez nawiasy jak w C/C++.
+# The Python developers have a well-developed sense of humour!
+
+# W sesji interaktywnej można sprawdzić zawartość modułu.
+>>> import __future__
+>>> help(__future__)
+>>> __future__.all_feature_names     # Python 2.7.3
+['nested_scopes', 'generators', 'division', 'absolute_import', 
+'with_statement', 'print_function', 'unicode_literals']
+>>> import __hello__   # dowcip
+Hello world...
+>>> import antigravity   # Python 2.7 i 3
+# Dowcip. Otwiera komiks w przeglądarce.
+>>> from __future__ import barry_as_FLUFL   # Python 3.1
+# Dowcip. Nie działa a != b, tylko a <> b.
+>>> 
+
+MODUŁ os
+
+import os
+
+os.system("date")                       # wywołanie polecenia powłoki
+var = os.environ.get("SHELL")           # pobranie zawartości zmiennej powłoki
+print ( var )
+print ( os.uname() )                    # krotka z informacją o systemie
+print ( os.name )                       # "posix" lub "nt" lub "mac" lub ...
+
+MODUŁ sys
+
+W każdy interpreter Pythona wbudowany jest moduł sys.
+
+import sys
+
+# dir(sys)                    # można sprawdzić udostępniane symbole
+print ( "sys.version: {}".format(sys.version) )
+print ( "sys.platform: {}".format(sys.platform) )
+print ( "sys.byteorder: {}".format(sys.byteorder) )
+# sys.exit()                  # domyślnie zwróci 0 - sukces
+# sys.exit(1)                 # zwraca 1 - niepowodzenie
+print ( "długość sys.argv: {} {}".format(len(sys.argv), type(sys.argv)) )
+for i in range(len(sys.argv)):
+    print ( "{} {}".format(i, sys.argv[i]) )
+
+# Znaki zachęty są określone tylko w trybie interaktywnym.
+# print ( "{} {}".format(sys.ps1, sys.ps2) )
+
+print ( "sys.path: {}".format(sys.path) )   # ścieżki wyszukiwania modułów
+print ( "sys.prefix: {}".format(sys.prefix) )         # "/usr"
+print ( "sys.executable: {}".format(sys.executable) ) # "/usr/bin/python"
+print ( "sys.maxint: {}".format(sys.maxint) )         # 2147483647
+
+# Nazwy strumieni: sys.stdin, sys.stdout, sys.stderr
+
+# Sprawdzanie licznika referencji.
+print ( "sys.getrefcount {}".format(sys.getrefcount(1)) )
+print ( "sys.getrefcount {}".format(sys.getrefcount("a")) )
+
+# Bieżąca wartość limitu rekurencji, czyli maksymalna głębokość
+# stosu interpretera Pythona.
+print ( "limit rekurencji {}".format(sys.getrecursionlimit()) ) # 1000
+
+# Zmiana limitu rekurencji Pythona.
+# Największa możliwa wartość zależy od platformy.
+# sys.setrecursionlimit(n)
+
+Zaawansowane możliwości przetwarzania oparte na wierszu poleceń (oprócz ręcznego sprawdzania sys.argv), można znaleźć w modułach getopt i optparse z biblioteki standardowej.
+MODUŁ copy
+
+import copy
+
+# Są tylko dwie metody.
+x = "dowolny obiekt"
+y = copy.copy(x)              # płytka kopia x
+z = copy.deepcopy(x)          # głęboka kopia x
+
+# Głęboka kopia niesie ze soba dwa problemy.
+# 1. Obiekty rekurencyjne mogą powodować zapętlenie.
+# 2. Głęboka kopia może skopiować aż za dużo elementów.
+# Rozwiązaniem jest słownik "memo" obiektów już skopiowanych
+# i kopiowanie określone przez użytkownika.
+
+# Od Pythona 2.5 kopiowane są funkcje.
+
+# Klasy mogą używać tego samego interfejsu do kontroli kopiowania
+# co w przypadku modułu pickle.
+# W klasach można zdefiniować metody specjalne __copy__ i __deepcopy__,
+# które opisują płytką i głęboką kopię instancji tej klasy.
+
+# http://stackoverflow.com/questions/1500718/
+# what-is-the-right-way-to-override-the-copy-deepcopy-operations-on-an-object-in-p
+
+class MyClass(object):
+    def __init__(self): ...
+    def __copy__(self):
+    def __deepcopy__(self, memo): ...
+
+MODUŁ time
+
+import time
+
+start = time.clock()
+# instrukcje
+elapsed = time.clock() - start
+
+MODUŁ collections (Python 2.4+)
+
+Moduł dostarcza specjalistyczne kontenerowe typy danych.
+
+    namedtuple() - (Python 2.6+) factory function for creating tuple subclasses with named fields
+    deque - (Python 2.4+) list-like container with fast appends and pops on either end (kolejka dwukierunkowa)
+    Counter - (Python 2.7) dict subclass for counting hashable objects [domyślnie brakujące klucze mają wartość 0, nie pojawia się KeyError]
+    OrderedDict - (Python 2.7) dict subclass that remembers the order entries were added [PEP 372]
+    defaultdict - (Python 2.5+) dict subclass that calls a factory function to supply missing values 
+
+W Pythonie 2.6 dodano abstrakcyjne klasy bazowe (ABCs, PEP 3119): Container, Hashable, Iterable, Iterator, Sized, Callable, Sequence, MutableSequence, Set, MutableSet, Mapping, MutableMapping, MappingView, KeysView, ItemsView, ValuesView. Dzięki ABCs możemy pytać, czy klasy lub instancje posiadają pewną funkcjonalność.
+
+size = None
+if isinstance(myvar, collections.Sized):
+    size = len(myvar)
+
+MODUŁ itertools (Python 2.3+)
+
+Moduł implementuje zestaw wygodnych iteratorów.
+
+    Iteratory nieskończone (count, cycle, repeat).
+    Iteratory zatrzymujące się na najkrótszej sekwencji (chain, izip, izip_longest, ...).
+    Generatory kombinatoryczne (product, permutations, combinations). 
+
+MODUŁ argparse (Python 2.7)
+
+Moduły getopt, optparse, argparse [PEP 389] służą do parsowania argumentów podanych w wierszu poleceń. Moduł getopt przypomina getopt() z biblioteki języka C, przez co przydaje się do pisania prototypów, które będą przepisywane do C. Do nowych skryptów Pythona zaleca się używanie najnowszego modułu argparse. 
+
+
+Moduły matematyczne
+MODUŁ math
+
+Moduł jest otoczką dla biblioteki math z języka C.
+
+import math
+
+# Wybrane funkcje matematyczne, zwykle zwracają float.
+# dir(math) - lista obiektów.
+# help(math) - opisy obiektów.
+
+# Zaokrąglanie.
+# math.ceil(x) - the smallest integer value greater than or equal to x.
+# math.floor(x) - the largest integer value less than or equal to x.
+# math.trunc(x) - int bliżej zera (Python 2.6+).
+
+# Potęgi i logarytmy.
+# math.exp(x) - inaczej e ** x
+# math.log(x) - logarytm naturalny ln(x).
+# math.log(x, base) - inaczej math.log(x)/math.log(base) (Python 2.3+)
+# math.log1p(x) - oznacza math.log(1 + x),
+# lepsze dla małych x (Python 2.6+)
+# math.log10(x) - dokładniajsze niż math.log(x, 10).
+# math.pow(x, y) - oznacza x ** y
+# math.sqrt(x) - pierwiastek kwadratowy.
+
+# Funkcje trygonometryczne.
+# math.sin(x), math.cos(x), math.tan(x),
+# math.asin(x), math.acos(x), math.atan(x),
+# math.sinh(x), math.cosh(x), math.tanh(x),
+# math.asinh(x), math.acosh(x), math.atanh(x), (Python 2.6)
+
+# math.hypot(x, y) - oznacza math.sqrt(x*x + y*y), norma euklidesowa.
+# math.fabs(x) - wartość bezwzględna float.
+# math.radians(x) - zamiana stopni na radiany.
+# math.degrees(x) - zamiana radiany na stopnie.
+
+print ( math.pi )             # 3.141592... stała matematyczna
+print ( math.e )              # 2.718281...  stała matematyczna
+print ( math.hypot(3, 4) )    # 5.0 float
+
+# Nowe funkcje z Pythona 2.6.
+# math.factorial(x) - silnia.
+# math.fsum(iterable) - suma float bez (dużej) utraty precyzji.
+# Nieskończoności: float("inf"), float("-inf"), math.inf [Python 3.5+]
+# A floating-point "not a number" (NaN) value:
+# float("nan"), math.nan [Python 3.5+]
+# math.isinf(x) - Check if the float x is positive or negative infinity.
+# math.isnan(x) - Check if the float x is a NaN (not a number).
+
+math.factorial(16)            # 20922789888000L
+
+sum([.1, .1, .1, .1, .1, .1, .1, .1, .1, .1])
+# 0.99999999999999989   gubimy precyzję
+
+math.fsum([.1, .1, .1, .1, .1, .1, .1, .1, .1, .1])
+# 1.0   jest dokładniej
+
+# Nowe funkcje z Pythona 2.7.
+# math.erf(x) - the error function.
+# math.erfc(x) - the complementary error function.
+# math.expm1(x) - dokładniejsze niż math.exp(x)-1.
+# math.gamma(x) - the Gamma function.
+# math.lgamma(x) - the natural log of the Gamma function.
+
+MODUŁ random
+
+import random
+
+# Liczba przypadkowa z przedziału [0, 1).
+print ( random.random() )
+
+# Liczba przypadkowa całkowita z przedziału [start, stop].
+# Oba końce są włączone, co jest nietypowe dla Pythona.
+# random.randint(start, stop)
+print ( random.randint(1, 6) )
+
+# Liczba przypadkowa całkowita z przedziału [start, stop).
+# random.randrange(start, stop=None, step=1)
+print ( random.randrange(1, 7) )
+
+# Wybór przypadkowego elementu z niepustej sekwencji.
+# random.choice(sequence)
+# To samo co
+# sequence[int(random.random() * len(sequence))]
+print ( random.choice(["jeden", "dwa", "trzy"]) )
+
+# Wymieszanie danej listy IN PLACE (Fisher-Yates shuffle).
+# L = range(100)
+# random.shuffle(L)
+
+# Chooses k unique random elements from a population sequence.
+# Zwraca nową listę, population zostaje bez zmiany.
+# population może zawierać powtórzenia, które mogą pojawić się
+# w wynikowej liście. Elementy nie muszą być hashable.
+# population może być generatorem, będzie to wydajne.
+# random.sample(population, k)
+print ( random.sample(xrange(1000), 100) )
+
+MODUŁ decimal
+
+import decimal
+
+x = decimal.Decimal("0.1")
+y = decimal.Decimal("0.3")
+z = 3*x-y                     # Decimal('0.0')
+print ( z )                   # 0.0
+print ( 3 * 0.1 - 0.3 )       # 5.5511151231257827e-17
+
+# Ustawienie precyzji przydatne w aplikacjach finansowych.
+print ( 1999 + 1.33 )                   # 2000.3299999999999
+decimal.getcontext().prec = 2
+pay = decimal.Decimal(str(1999 + 1.33)) # Decimal('2000.33')
+print ( pay )                           # 2000.33
+
+MODUŁ fractions
+
+from fractions import Fraction
+
+u1 = Fraction(2, 3)           # Fraction(2, 3)
+print ( u1 )                  # 2/3
+print ( u1.numerator )        # 2, licznik
+print ( u1.denominator )      # 3, mianownik
+u2 = Fraction(2, 8)           # Fraction(1, 4)
+
+# Konwersja z float do Fraction.
+u2 = Fraction("0.25")         # Fraction(1, 4)
+print ( u2 )                  # 1/4
+u3 = u1 / u2                  # Fraction(4, 3)
+u4 = Fraction("1.5")          # Fraction(3, 2)
+u4 = Fraction.from_float(1.5) # Fraction(3, 2)
+# Stosowanie metody float.as_integer_ratio() może prowadzić
+# do pewnej utraty precyzji.
+T = (2.5).as_integer_ratio()            # (5, 2), krotka liczb int
+u5 = Fraction(*T)             # rozpakowanie krotki
+
+# Konwersja z Fraction do float.
+f1 = float(u5)                # 2.5, zwykły sposób
+
+# Python 2.7
+# Konwersja ze stringu.
+Fraction("314")               # Fraction(314, 1)
+Fraction("2/3")               # Fraction(2, 3)
+Fraction("3.1415")            # Fraction(6283, 2000)
+
+# Zapis z "e" jest dozwolony dla stringów z float.
+Fraction("1.2e-2")            # Fraction(3, 250)
+
+from fractions import gcd
+# gcd(a, b) - calculate the Greatest Common Divisor of a and b.
+# Od Pythona 3.5 gcd() znajduje się w module math.
+# gcd() i lcm() znajdują się też w pakiecie numpy().
+
+# Można robić konwersje z Decimal.
+from decimal import Decimal
+Fraction(Decimal('1.1'))      # Fraction(11, 10)
+
+# Ułamek z ułamka.
+Fraction(Fraction(1, 7), 5)   # Fraction(1, 35)
+Fraction(Fraction(1, 7), Fraction(2, 3))  # Fraction(3, 14)
+
+MODUŁ cmath
+
+import cmath
+
+# Dostęp do funkcji matematycznych działających na liczbach zespolonych.
+# help(cmath)
+
+MODUŁ scipy
+
+import scipy
+
+# SciPy --- A scientific computing package for Python
+# help(scipy)
+
+MODUŁ numpy
+
+import numpy
+#import numpy as np     # typowy import w aplikacjach
+
+# 1. An array object of arbitrary homogeneous items.
+# 2. Fast mathematical operations over arrays.
+# 3. Linear Algebra, Fourier Transforms, Random Number Generation.
+# help(numpy)
+
+MODUŁ secrets
+
+Moduł random nie jest przeznaczony do zastosowań związanych z bezpieczeństwem lub kryptografią. Do takich zastosowań w Pythonie 3.6 pojawił się moduł secrets (PEP 506). PyPI zawiera ponadto moduł cryptography, który wspiera Pythona 2.6+, 3.4+ (instalacja przez pip).
+
+# Python 3.6+
+import secrets
+foo = ['a', 'b', 'c', 'd', 'e']
+print(secrets.choice(foo))
+# To print a random index:
+print(secrets.randbelow(len(foo)))
+
+
+
+Moduły programistyczne
+WPROWADZENIE
+
+Podstawowym sposobem umieszczania kodu samosprawdzającego moduł Pythona jest wykorzystanie zmiennej __name__. Bardziej zaawansowane narzędzia testujące oferują moduły doctest i unittest z biblioteki standardowej. Moduł unittest2 to backport nowych możliwości z Pythona 2.7 do Pythona 2.4-2.6. Moduły nose i pytest to third-party unittest frameworks with a lighter-weight syntax for writing tests.
+MODUŁ doctest
+
+import doctest
+
+def average(values):
+    """Oblicza średnią arytmetyczną listy liczb.
+    >>> print ( average([20, 30, 70]) )
+    40.0
+    """
+    return sum(values, 0.0) / len(values)
+
+doctest.testmod()   # automatyczne sprawdzanie wbudowanych testów
+
+MODUŁ unittest
+
+Moduł wspiera automatyzację testów, grupowanie testów w kolekcje, niezależność testów od reporting framework. Moduł dostarcza klasy, które ułatwiają te zadania. Ważne pojęcia:
+
+    test fixture - reprezentuje przygotowania potrzebne do przeprowadzenia testów, różne akcje czyszczące.
+    test case - najmniejsza jednostka testowania, sprawdza konkretny wynik dla danego wejścia.
+    test suite - kolekcja test cases lub test suites.
+    test runner - zarządza testami i prezentuje wyniki użytkownikowi. 
+
+Testy tworzymy w klasach wywiedzionych z unittest.TestCase. Jednostką testowania (test case) jest metoda bez parametrów, o nazwie rozpoczynającej się od "test", która ma sprawdzać jedną konkretną rzecz dotyczącą kodu. Test ma być przeprowadzony automatycznie, ma być niezależny od innych testów, a wynik ma być automatycznie zinterpretowany.
+
+Testy mogą być grupowane w zestawach (test suits), typowy zestaw tworzą metody z jednej klasy wywiedzionej z unittest.TestCase.
+
+Poniżej mamy przykład prostego modułu zawierającego funkcję average() do obliczania średniej arytmetycznej listy liczb. Kod testujący funkcję został umieszczony w tym samym module. Kod testujący zostanie wykonany, jeżeli moduł zostanie uruchomiony jako moduł główny.
+
+W praktyce kod testujący moduł zwykle umieszcza się w osobnym pliku. Testy dla modułu spam.py umieszcza się w pliku test_spam.py. Często testy (pliki test_*.py) umieszcza się w osobnym katalogu tests.
+
+import unittest
+
+def average(values):
+    """Oblicza średnią arytmetyczną listy liczb."""
+    return sum(values, 0.0) / len(values)
+
+# testcase tworzymy przez dziedziczenie z unittest.TestCase.
+# Kolejne testy to metody w klasie o nazwach zaczynających się
+# od "test" (to jest konwencja dla test runnera).
+# W każdej metodzie kluczowe jest zastosowanie funkcji:
+
+# assertEqual(first, second, msg=None)
+# - sprawdzanie wyniku,
+# msg to komunikat do wypisania przy wystąpieniu błędu;
+
+# assertAlmostEqual(first, second, places=7, msg=None)
+# - sprawdzanie wyniku typu float z domyślną dokładnością 7 cyfr;
+
+# assertNotEqual(first, second, msg=None)
+# - sprawdzanie wyniku;
+
+# assertNotAlmostEqual(first, second, places=7, msg=None)
+# - sprawdzanie wyniku;
+
+# assertTrue(expr, msg=None)
+# - sprawdzanie wartości logicznej;
+
+# assertFalse(expr, msg=None)
+# - sprawdzanie wartości logicznej;
+
+# assertRaises(exception, callable, ...)
+# - sprawdzenie wystąpienia spodziewanego wyjątku;
+
+# assertRaises(exception, func, *args, **keywords) 
+# - sprawdzenie wyjątku func(*args, **keywords)
+
+class TestStatisticalFunctions(unittest.TestCase):
+
+    # Można określić czynności przygotowawcze.
+    def setUp(self): pass
+
+    # Dla poprawnych danych wejściowych nie ma prawa pojawić się wyjątek.
+    def test_average_good(self):
+        # Nie wstawiamy docstringu.
+        self.assertEqual(average([20, 30, 70]), 40.0)
+        self.assertEqual(round(average([1, 5, 7]), 1), 4.3)
+
+    # Nieprawidłowe dane powinny generować konkretny wyjątek.
+    def test_average_bad(self):
+        # Nie wstawiamy docstringu.
+        self.assertRaises(ZeroDivisionError, average, [])
+        self.assertRaises(TypeError, average, 20, 30, 70)
+
+    # Końcowe czynności czyszczące.
+    def tearDown(self): pass
+
+# Załóżmy, że mamy w danym module zdefiniowane inne funkcje.
+# Przygotowujemy nową klasę do testowania tych funkcji.
+
+class TestOtherFunctions(unittest.TestCase):
+
+    def test_other(self):
+        pass
+
+# Prosty sposób uruchomienia wszystkich testów z obu klas
+# TestStatisticalFunctions i TestOtherFunctions.
+
+if __name__ == '__main__':
+    unittest.main()     # włącza wszystkie testy
+    #unittest.main(verbosity=2)    # Python 2.7, więcej informacji
+
+# Zakładamy, że istnieje tylko klasa TestStatisticalFunctions.
+# Uruchomienie testów, przy którym dostajemy więcej informacji.
+# Mamy możliwość wyboru testów.
+
+if __name__ == '__main__':
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestStatisticalFunctions)
+    unittest.TextTestRunner(verbosity=2).run(suite)
+
+# Przy wielu klasach z testami możemy wybierać, z których klas
+# mają pochodzić testy.
+
+if __name__ == '__main__':
+    suite1 = unittest.TestLoader().loadTestsFromTestCase(TestStatisticalFunctions)
+    suite2 = unittest.TestLoader().loadTestsFromTestCase(TestOtherFunctions)
+    #suite = unittest.TestSuite([suite1, suite2])  # wszystkie testy
+    suite = unittest.TestSuite([suite2])           # wybrany zestaw testów
+    unittest.TextTestRunner(verbosity=2).run(suite)
+
+# Możemy ręcznie wstawiać nazwy testów do zestawu.
+
+if __name__ == '__main__':
+    suite = unittest.TestSuite()    # pusty zestaw testów
+    suite.addTest(TestStatisticalFunctions("test_average_good"))
+    unittest.TextTestRunner(verbosity=2).run(suite)
+
+# Przykład z książki Turnquista.
+# Zakładamy, że istnieje tylko klasa TestStatisticalFunctions.
+# Nazwy testów podajemy w wierszu poleceń:
+# python skrypt.py test_name1 test_name2 ...
+
+if __name__ == '__main__':
+    import sys
+    suite = unittest.TestSuite()
+    if len(sys.argv) == 1:
+        suite = unittest.TestLoader().loadTestsFromTestCase(
+            TestStatisticalFunctions)
+    else:
+        for test_name in sys.argv[1:]:
+            suite.addTest(TestStatisticalFunctions(test_name))
+    unittest.TextTestRunner(verbosity=2).run(suite)
+
+Przykład tworzenia testów dla funkcji konwertujących liczby zapisane w systemie rzymskim można znaleźć w książce Marka Pilgrima Dive Into Python, dostępną za darmo pod adresem http://www.diveintopython.net/.
+MODUŁ timeit
+
+Moduł służy do testowania czasu wykonania małych kawałków kodu. Do testowania większych bloków kodu: profile, pstats.
+
+Głównym elementem modułu jest klasa Timer(stmt="pass", setup="pass").
+Metoda repeat(self, repeat=3, number=1000000) - wywołanie timeit() kilka razy (zwraca listę wyników).
+Metoda timeit(self, number=1000000) - najpierw następuje pojedyncze wykonanie poleceń z setup, a potem number wykonań stmt.
+
+import timeit
+# help(timeit)
+
+# Często przydaje się średnik do rozdzielania poleceń.
+t1 = timeit.Timer(stmt="t=a ; a=b ; b=t", setup="a=1 ; b=2")
+t2 = timeit.Timer(stmt="(a,b) = (b,a)", setup="a=1 ; b=2")
+print ( t1.timeit() )         # domyślnie milion wykonań
+print ( t2.timeit() )
+print ( t2.repeat(5) )        # zwraca listę 5 wyników
+print ( min(t2.repeat(10)) )  # to jest zwykle miarodajne, a nie średnia
+
+import timeit
+
+# Można budować polecenia wielowierszowe.
+s = """\
+pierwszy wiersz
+drugi wiersz
+"""
+t = timeit.Timer(stmt=s)
+print ( t.timeit() )
+
+import random
+import timeit
+
+def mysort(L, left, right):
+    L[left: right+1] = sorted(L[left: right+1])
+
+lista = range(1000)
+random.shuffle(lista)
+
+t1 = timeit.Timer(stmt="mysort(lista, 0, len(lista)-1)", 
+                  setup="from __main__ import mysort, lista")
+
+print ( t1.timeit(1) )        # pojedyncze wykonanie
+
+# Od Pythona 2.6 można przekazywać obiekty callable bez argumentów.
+
+import random
+import timeit
+
+def mysort(L, left, right):
+    L[left: right+1] = sorted(L[left: right+1])
+
+lista = range(1000)
+random.shuffle(lista)
+
+t1 = timeit.Timer(lambda: mysort(lista, 0, len(lista)-1))
+
+print ( t1.timeit(1) )        # pojedyncze wykonanie
+
+MODUŁ enum
+
+Typ Enum został dodany do Pythona 3.4 (PEP 0435 -- Adding an Enum type to the Python standard library).
+
+from enum import Enum
+# from enum import IntEnum   # można porównywać z int
+
+class Color(Enum):
+    red = 1
+    green = 2
+    blue = 3
+
+for c in Color:
+    print(c)
+# Color.red
+# Color.green
+# Color.blue
+
+
+Moduły bazodanowe
+MODUŁ pickle
+
+W Pythonie 3, przy korzystaniu z modułu pickle, trzeba otwierać i zamykać pliki w trybie binarnym (do zapisu "wb", do odczytu "rb").
+
+import pickle
+
+adict = {"a": "jeden", "b": "dwa"}
+
+# Serializacja słownika do stringu.
+word = pickle.dumps(adict)
+
+# Odtworzenie słownika ze stringu.
+bdict = pickle.loads(word)
+
+import pickle
+
+adict = {"a": "jeden", "b": "dwa"}
+
+# Zapisanie słownika w pliku.
+afile = open("data.pickle", "w")
+pickle.dump(adict, afile)
+afile.close()
+
+# Odtworzenie słownika z pliku.
+bfile = open("data.pickle", "r")
+bdict = pickle.load(bfile)
+bfile.close()
+
+import pickle
+
+alist = [1, "a", 2, "b"]
+adict = {"a": "jeden", "b": "dwa"}
+
+# Zapisanie kilku elementów w pliku (w krotce).
+afile = open("data.pickle", "w")
+pickle.dump((alist, adict), afile)
+afile.close()
+
+# Odtworzenie elementów z pliku.
+bfile = open("data.pickle", "r")
+(blist, bdict) = pickle.load(bfile)
+bfile.close()
+
+import pickle
+
+adict = {"a": "jeden", "b": "dwa"}
+alist = [1, "a", 2, "b"]
+
+# Zapisanie danych w pliku.
+afile = open("data.pickle", "w")
+pickle.dump(adict, afile)
+pickle.dump(alist, afile)
+afile.close()
+
+# Odtworzenie danych z pliku (kolejność!).
+bfile = open("data.pickle", "r")
+bdict = pickle.load(bfile)
+blist = pickle.load(bfile)
+bfile.close()
+
+Jeżeli zrobimy peklowanie np. słownika z instancjami klasy X, to przed przywróceniem słownika trzeba sprawdzić, czy istnieje definicja klasy X.
+MODUŁ anydbm
+
+Moduł implementuje system plików dostępu wg klucza, służący do przechowywania łańcuchów znaków.
+
+import anydbm
+
+# anydbm - Generic interface to all dbm clones.
+
+d = anydbm.open(file, 'w')
+d[key] = data
+# store data at key (may override data at existing key)
+
+data = d[key]
+# retrieve data at key (raise KeyError if no such key)
+
+del d[key]
+# delete data stored at key (raises KeyError if no such key)
+
+flag = key in d   # true if the key exists
+
+alist = d.keys() # return a list of all existing keys (slow!)
+
+MODUŁ dumbdbm
+
+Moduł dumbdbm dostarcza bazę danych, która jest implementacją pliku o organizacji indeksowo-sekwencyjnej. Dla bazy danych spam istnieje plik indeksujący spam.dir (tekstowy), plik z danymi spam.dat (binarny), oraz czasem kopia pliku indeksującego spam.bak (tekstowy). Bazę obsługuje się tak jak zwykły słownik. W tej bazie danych klucze i wartości muszą być stringami. W razie potrzeby pewne obiekty możemy serializować za pomocą modułu pickle.
+
+import dumbdbm
+import pickle
+
+db = dumbdbm.open("data.dumbdbm")
+
+db["a"] = "Adam"
+db["b"] = "Bogdan"
+db["c"] = pickle.dumps([1, 3, 5])
+
+print ( db )
+print ( db["b"] )
+print ( pickle.loads(db["c"]) )
+
+db.close()      # zamknięcie bazy danych
+
+MODUŁ shelve
+
+Dzięki modułowi shelve mamy dostęp do danych analogiczny do słownika, ale możemy zachowywać obiekty dowolnego typu, nie tylko stringi. Moduł shelve implementuje interfejs BSD baz danych.
+
+import shelve
+
+adict = {"a": "jeden", "b": "dwa"}
+alist = [1,"a",2,"b"]
+
+db = shelve.open("data.shelve")
+
+db["adict"] = adict
+db["alist"] = alist
+
+print ( db )             # jak słownik
+print db["alist"]
+
+# alist.append(3)        # to nie zmienia db["alist"]
+# db["alist"] = alist    # trzeba na nowo zapisać alist w bazie
+
+blist = db["alist"]      # odzyskujemy KOPIĘ danych
+
+print ( len(db) )        # liczba elementów w bazie
+print ( "alist" in db )  # należenie do bazy
+
+# Inne metody: keys(), values(), items(), ...
+# Usuwanie danych: del db["alist"]
+# Czyszczenie bazy: db.clear()
+
+# Zamknięcie bazy.
+db.close()
+
+MODUŁ json
+
+JSON (JavaScript Object Notation) to lekki format wymiany danych komputerowych, bazujący na podzbiorze języka JavaScript. Typ MIME dla formatu JSON to application/json. Format został opisany w dokumencie RFC 4627 i nowszym RFC 7159. Moduł json pojawił się w Pythonie 2.6.
+
+import json     # Python 2.6+
+
+# Serializacja (encoding) obiektu obj do outfile (opened for writing).
+json.dump(obj, outfile)
+
+# Serializacja podstawowych obiektów Pythona.
+word = json.dumps(obj)
+
+# Compact encoding.
+word = json.dumps(obj, separators=(',',':'))
+
+# Pretty printing.
+word = json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
+
+# Deserializacja (decoding) infile (opened for reading) do obiektu Pythona.
+obj = json.load(infile)
+
+# Decoding JSON.
+obj = json.loads(word)
+
+
+
+
+Macierze
+WPROWADZENIE
+
+Działania na macierzach kwadratowych potrzebne są w wielu zastosowaniach (algebra, obroty). Zdarza się, że macierze mają dużą liczbę zer (macierze rzadkie). Wtedy można zastosować specjalne struktury danych, aby przyspieszyć obliczenia i zmniejszyć zapotrzebowanie na pamięć. Wg typowej definicji, macierz rzadka ma co najwyżej jeden niezerowy element w każdym wierszu i każdej kolumnie. Przykładem macierzy rzadkiej jest macierz diagonalna.
+
++----------------+---------+---------+
+| Działanie      | Dense   | Sparse  |
++----------------+---------+---------+
+| dodawanie      | O(n**2) | O(n)    |
+| odejmowanie    | O(n**2) | O(n)    |
+| transponowanie | O(n**2) | O(n)    |
+| mnożenie       | O(n**3) | O(n**2) |
++----------------+---------+---------+
+
+MACIERZE KWADRATOWE GĘSTE (DENSE)
+
+n = 3
+# Macierz zerowa to lista list z zerami.
+a = [[0]*n for i in range(n)]
+a[1][2] = 3         # [[0, 0, 0], [0, 0, 3], [0, 0, 0]]
+
+MACIERZE KWADRATOWE RZADKIE (SPARSE)
+
+# Macierz zerowa to pusty słownik.
+a = dict()
+a[1, 2] = 3         # {(1, 2): 3}
+
+DODAWANIE MACIERZY
+
+# Dodawanie a + b = c.
+# c to macierz zerowa.
+c = [[0]*n for i in range(n)]
+for i in range(n):
+    for j in range(n):
+        c[i][j] = a[i][j] + b[i][j]
+
+# c to macierz zerowa.
+c = dict()
+for pair in a:
+    c[pair] = c.get(pair, 0) + a[pair]
+# prościej c = dict(a)
+for pair in b:
+    c[pair] = c.get(pair, 0) + b[pair]
+
+ODEJMOWANIE MACIERZY
+
+# Dodawanie a - b = c.
+# c to macierz zerowa.
+c = [[0]*n for i in range(n)]
+for i in range(n):
+    for j in range(n):
+        c[i][j] = a[i][j] - b[i][j]
+
+# c to macierz zerowa.
+c = dict()
+for pair in a:
+    c[pair] = c.get(pair, 0) + a[pair]
+# prościej c = dict(a)
+for pair in b:
+    c[pair] = c.get(pair, 0) - b[pair]
+
+TRANSPONOWANIE MACIERZY
+
+# Otrzymujemy a_tr.
+# a_tr to macierz zerowa.
+a_tr = [[0]*n for i in range(n)]
+for i in range(n):
+    for j in range(n):
+        a_tr[j][i] = a[i][j]
+
+# a_tr to macierz zerowa.
+a_tr = dict()
+for (row, col) in a:
+    a_tr[col, row] = a[row, col]
+
+MNOŻENIE MACIERZY
+
+# Mnożenie a * b = c.
+# c to macierz zerowa.
+c = [[0]*n for i in range(n)]
+for i in range(n):
+    for j in range(n):
+        for k in range(n):
+            c[i][j] = c[i][j] + a[i][k] * b[k][j]
+
+# Przygotowanie do uogólnienia.
+for i in range(n):
+    for j in range(n):
+        for k in range(n):
+            for s in range(n):
+                if k == s:
+                    c[i][j] = c[i][j] + a[i][k] * b[s][j]
+
+# c to macierz zerowa.
+c = dict()
+for (row1, col1) in a:
+    for (row2, col2) in b:
+        if col1 == row2:
+            c[row1, col2] = c.get((row1, col2), 0) + a[row1, col1] * b[row2, col2]
+
