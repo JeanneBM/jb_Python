@@ -69,5 +69,33 @@ else:   # powiązane z if x
     
 -------------------------------------------------------------------------------------------------
 
+# Zastosowanie słownika (nie korzystać na siłę).
+# W zależności od wyboru użytkownika podstawiamy inne wartości.
+adict = {"a":1, "b":2, "c":3}           # lista możliwości
+choice = "b"
+result = adict[choice]                  # zamiast if-elif
+resutl = adict.get(choice, "Error")     # z zabezpieczeniem
+
+-------------------------------------------------------------------------------------------------
+
+WYRAŻENIE TRÓJARGUMENTOWE
+
+if X:
+    A = Y
+else:
+    A = Z
+# Można to zapisać prościej (wyrażenie trójargumentowe).
+A = Y if X else Z
+
+a = 25 ; b = 30
+pos_a = (-a) if a < 0 else a
+max_a_b = b if a < b else a
+
+# Zastosowanie do słowników.
+# Ustawienie domyślnej wartości, jeżeli klucza nie ma.
+value = D.get("x", 0)                   # klasycznie
+value = D["x"] if "x" in D else 0       # if-else
+
+-------------------------------------------------------------------------------------------------
 
 
