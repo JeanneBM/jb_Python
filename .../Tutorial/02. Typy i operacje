@@ -1,0 +1,1318 @@
+Python (2) - typy i operacje
+
+PLAN
+
+    Zmienne
+    Obiekt None
+    Typ bool
+    Liczby
+    Łańcuchy znaków
+    Listy
+    Krotki
+    Słowniki
+    Pliki
+    Zbiory
+    Zadania 
+    
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+
+Zmienne
+STRUKTURA PROGRAMU W PYTHONIE
+
+    Programy składają się z modułów.
+    Moduły zawierają instrukcje.
+    Instrukcje zawierają wyrażenia.
+    Wyrażenia tworzą i przetwarzają obiekty. 
+
+WPROWADZENIE
+
+W Pythonie wartości, a nie zmienne, posiadają typ - tak więc Python jest językiem z typami dynamicznymi. Wszystkie wartości przekazywane są przez referencję.
+
+Każda zmienna posiada nazwę i zawiera referencję do określonego obiektu. Zmienna jest uniwersalna, sama nie ma określonego typu, może przechowywać referencję do obiektu każdego typu. Wszystkie zmienne muszą mieć jawnie przypisane wartości, zanim będzie można ich użyć.
+
+>>> X
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'X' is not defined
+>>> X = 11           # powołujemy do życia zmienną X
+>>> X                # sprawdzamy wartość zmiennej
+11
+>>> del X            # usuwamy zmienną
+>>>
+
+W Pythonie obiekty posiadają dwa standardowe pola:
+
+    Desygnator typu; stąd obiekty znają swój typ.
+    Licznik referencji; wykorzystywany do zwalniania pamięci zajmowanej przez obiekt, jeżeli liczba referencji do obiektu spadnie do zera. 
+
+TYPY WBUDOWANE
+
+The principal built-in types are numerics, sequences, mappings, files, classes, instances and exceptions (z dokumentacji Pythona).
+
+Python posiada szeroki zakres podstawowych typów liczbowych: liczby całkowite (dowolnych rozmiarów), liczby zmiennoprzecinkowe, liczby zespolone. Są stringi (łańcuchy napisowe). Python jest wyposażony w kilka typów kolekcji: listy, krotki (tuples), słowniki, zbiory. Listy, krotki i napisy są sekwencjami i mają wiele wspólnych metod.
+
+Typy danych możemy jeszcze podzielić na mutowalne (zmienne) i niemutowalne (niezmienne). Niezmienne są przede wszystkim liczby, stringi i krotki.
+
+Warto korzystać z wbudowanych typów danych z wielu powodów:
+
+    Są dostępne od ręki, są standardową częścią języka.
+    Można na ich bazie budować nowe obiekty (np. stos, kolejka).
+    Często są bardziej wydajne od własnych struktur danych. 
+
+Przegląd obiektów wbudowanych Pythona:
+
++-------------+--------------+----------------------+
+| Typ obiektu | Kategoria    | Czy podlega zmianom? |
++-------------+--------------+----------------------+
+| Liczby      | Liczbowa     | Nie                  |
+| Łańcuchy    | Sekwencja    | Nie                  |
+| Listy       | Sekwencja    | Tak                  |
+| Słowniki    | Odwzorowanie | Tak                  |
+| Krotki      | Sekwencja    | Nie                  |
+| Pliki       | Rozszerzenie | Nie dotyczy          |
+| Zbiory      | Zbiór        | Tak                  |
+| frozenset   | Zbiór        | Nie                  |
++-------------+--------------+----------------------+
+
+Aby sprawdzić, czy obiekt jest danego typu, czy instancją klasy, korzystamy z wbudowanej funkcji isinstance(). Generalnie nie powinno się sprawdzać jawnie typu, ponieważ niszczymy wtedy elastyczność kodu. W Pythonie koduje się pod kątem interfejsów obiektów (obsługowanych operacji), a nie typów. Mamy tu związek z koncepcją polimorfizmu [polimorfizm = znaczenie operacji uzależnione jest od typu obiektów, na których się te operację wykonuje. jest to przydatna właściwość Pythona. Przykładowo operator + działa inaczej na liczbach, a inaczej na stringach.].
+
+# Składnia:
+# isinstance(object, class-or-type-or-tuple) -> bool
+
+if isinstance(x, float):
+    print "liczba zmiennoprzecinkowa"
+
+if isinstance(x, (int, long)):   # Python 2 (Python 3 nie ma long)
+    print "liczba całkowita"
+
+# Dawny, odradzany sposób.
+# Funkcja type() zwraca obiekt typu - są różnice między Pythonem 2 i 3.
+if type(x) is type(1) or type(x) is type(1L):   # Python 2 (Python 3 nie ma long)
+    print "liczba całkowita"
+
+if type(x) is int or type(x) is long:   # Python 2 (Python 3 nie ma long)
+    print "liczba całkowita"
+
+# Moduł types zawiera nazwy dla innych typów.
+import types
+dir(types)
+
+Wbudowane stałe Pythona: False, True, None, NotImplemented, Ellipsis.
+SŁOWA ZAREZERWOWANE PYTHONA
+
+>>> help()     # pomoc w trybie interaktywnym
+help> keywords            # wypisanie słów kluczowych
+...
+help> quit
+>>>
+
+Słowa kluczowe Pythona: and, as (2.6+), assert, break, class, continue, def, del, elif, else, except, exec (2.x), finally, for, from, global, if, import, in, is, lambda, nonlocal (3.x), not, or, pass, print (2.x), raise, return, try, while, with (2.6+), yield (2.3+).
+
+Inne słowa, których lepiej nie używać: False, None, True, NotImplemented, Ellipsis.
+
+Z dokumentacji na temat Ellipsis: Special value used in conjunction with extended slicing syntax. It is used to indicate the presence of the ... syntax in a slice. Używane z modułami doctest, numpy. The ellipsis is used to slice higher-dimensional data structures (numpy). Ellipsis jest używane jako singleton tam, gdzie None jest niejednoznaczne.
+
+# http://stackoverflow.com/questions/118370/
+# how-do-you-use-the-ellipsis-slicing-syntax-in-python
+
+# http://stackoverflow.com/questions/17160162/what-is-in-python-2-7
+# What is [...] in Python 2.7?
+
+# http://stackoverflow.com/questions/3993125/what-does-mean-in-numpy-code
+# What does ... mean in numpy code?
+
+>>> p = [1, 2]
+>>> p[1:1] = [p]   # zapętlenie
+>>> p              # Python używa ... do pokazania zapętlenia
+[1, [...], 2]               # (nieskończona rekurencja)
+
+>>> L = [0]
+>>> L[0] = L       # zapętlenie
+>>> L
+[[...]]
+>>> D = {}
+>>> D[...] = 'a'
+>>> D
+{Ellipsis: 'a'}
+
+Słowa zarezerwowane nie mogą być wykorzystane jako nazwy zmiennych, nazwy modułów, itp. 
+
+
+Obiekt None
+WPROWADZENIE
+
+Python posiada specjalny obiekt/wartość None, która oznacza obiekt pusty (null object). Często w Pythonie zmiennej nadajemy wartość None, aby zaznaczyć, że jest ona dostępna, ale chwilowo traktujemy ją jako nieokreśloną.
+
+answer = None
+# Tutaj może być jakiś kod nadający wartość zmiennej answer.
+if answer is None:
+    quit = True
+elif answer == "quit":
+    quit = True
+else:
+    quit = False
+
+Obiekt None ma tylko jedną instancję, dlatego test
+if answer is None (obiekty tożsame; ZALECANE)
+jest równoważny testowi
+if answer == None (równe wartości).
+Zwykle w testach chodzi nam o porównanie wartości obiektów (==). 
+
+
+Typ bool
+WPROWADZENIE
+
+Typ logiczny bool to dwie stałe: True (dawniej równe 1) i False (dawniej równe 0). True i False pojawiły się w Pythonie 2.3. Jednak ogólnie w Pythonie jako fausz logiczny traktuje się:
+
+    liczbę zero (0, 0.0, 0e0, 0j, itp.),
+    False,
+    None (null),
+    puste kolekcje (pusta lista, tuple, słownik, itp.),
+    puste napisy,
+    obiekty posiadające metodę __nonzero__(), jeśli zwraca ona False lub 0. 
+
+Wszystko inne jest prawdą logiczną.
+
+Operatory and i or zwracają wartość ostatnio obliczonego wyrażenia.
+
+Wartości logiczne zwracane przez operatory porównania, operator zawierania (in) oraz operator negacji (not) reprezentowane są przez obiekty True i False.
+
+Operatory porównania można łączyć tak jak w zapisie matematycznym. Priorytety operatorów od najwyższego: not, and, or.
+Przykładowo (A or not B and C)
+jest równoważne (A or ((not B) and C)).
+Dla pewności można jednak stosować nawiasy.
+
+Wyrażenia logiczne są obliczane od lewej do prawej (tak jak w języku C), czyli jeżeli wiadomo jaki będzie rezultat, to nie są sprawdzane do końca wszystkie segmenty wyrażenia, np.
+
+    (False and Anything) zwraca False, Anything nie jest sprawdzane,
+    (True and Anything) zwraca Anything, ale nie przekształca wyniku do typu bool,
+    (True or Anything) zwraca True, Anything nie jest sprawdzane,
+    (False or Anything) zwraca Anything, ale nie przekształca wyniku do typu bool. 
+
+Trzeba pamiętać, że wyrażenie Anything może być samo w sobie niepoprawne, np. odwołanie się poza obszar listy.
+
+Operatory porównań: a < b, a <= b, a > b, a >= b, a == b, a <> b [zniknie], a != b.
+
+Testy identyczności: a is b, a is not b.
+
+Zawieranie się w sekwencji: a in sequence, a not in sequence.
+
+Sekwencje w Pythonie są porównywane leksykograficznie. Dozwolone jest porównywanie obiektów różnych typów, ale rezultaty mogą zależeć od wersji języka. 
+
+
+Liczby
+WPROWADZENIE
+
+Python posiada kilka wbudowanych typów liczbowych:
+
+    Liczby całkowite typu int,
+    Liczby całkowite długie typu long [tożsamy z int w Pythonie 3],
+    Liczby zmiennoprzecinkowe, rzeczywiste typu float,
+    Liczby zespolowe typu complex. 
+
+Typy importowane jako moduły:
+
+    Liczby dziesiętne o ustalonej precyzji (moduł decimal, klasa Decimal, Python 2.4+).
+    Ułamki implementujące obiekt liczby wymiernej, gdzie jawnie przechowuje się licznik i mianownik (moduł fractions, klasa Fraction, Python 2.6+). 
+
+Po przekroczeniu zakresu int Python 2 automatycznie przeskakuje do typu long.
+
+Nazwa typu jest wykorzystywana przy konwersji pomiędzy typami. Trzeba pamiętać, że w Pythonie stringi nie są automatycznie konwertowane do liczb. Python automatycznie wykonuje konwersję do typu "szerszego", jeżeli w działaniu występują argumenty różnych typów [int + float = float, float + complex = complex].
+
+Hierarchię typów liczbowych w ramach Abstract Base Classes (ABCs) opisuje PEP 3141.
+WYŚWIETLANIE LICZB
+
+>>> 2 * 3.14159      # repr(): jako kod
+6.2831799999999998
+>>> str(2 * 3.14159)    # str(): w postaci przyjaznej dla użytkownika
+'6.28318'
+>>> print 2 * 3.14159     # print korzysta z str()
+6.28318
+>>> 0.1     # problem reprezentacji dwójkowej, Python 2.6-
+0.10000000000000001
+>>> print 0.1
+0.1
+>>> 0.5     # dokładna postać dwójkowa
+0.5
+>>> 1/0     # wywołujemy wyjątek
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ZeroDivisionError: integer division or modulo by zero
+>>> 
+
+WBUDOWANE FUNKCJE MATEMATYCZNE
+
+    Potęgowanie pow(x, y [, z]). Dla dwóch argumentów równoważne x ** y, dla trzech argumentów równoważne (x ** y) % z.
+    Wartość bezwzględna abs(x).
+    Zaokrąglanie round(x[, y]), y to liczba cyfr po przecinku. Funkcja różni się od math.trunc().
+    Minimum, min(iterable[, key=func]) - jeden argument, min(a, b, c, ...[, key=func]) - więcej niż jeden argument.
+    Maksimum, max(iterable[, key=func]) - jeden argument, max(a, b, c, ...[, key=func]) - więcej niż jeden argument.
+    Funkcja sum(sequence[, start]), zwraca sumę sekwencji liczb, ale nie stringów. Parametr start domyślnie wynosi zero, dla pustej sekwencji suma wynosi zero. 
+
+Funkcje matematyczne działające na liczbach rzeczywistych zawarte są w module math, a działające na liczbach zespolonych w module cmath. Inne moduły matematyczne: random, scipy, numpy, itp.
+
+# Zmienne i wyrażenia różnych typów.
+0, 1, -4                      # int
+0L, 1L, -3L, 123456789000     # long
+0., .2, -3.45, 2.43e+23       # float
+0j, 2+.3j, 8.9-7J             # complex
+z = 5+1j                      # typ complex
+z, z.real, z.imag             # część rzeczywista i urojona
+3 ** 2, 1.2 ** 3.5            # potęgowanie, równoważne pow()
+pow(3, 2), pow(1.2, 3.5)      # funkcja pow()
+pow(2, 10, 5)                 $ (2 ** 10) % 5 = 1024 % 5 = 4
+
+# Sprawdzanie typu wyrażeń.
+type("zdanie"), type(23), type(1L), type(1j)
+
+# Konwersja typów niejawna.
+1 + 1.2, 34/60.               # int + float = float
+1.2 + 3J                      # float + complex = complex
+
+# Konwersja typów (jawna).
+# Składnia:
+# int(x[, base]), float(x), complex(real[, imag])
+int("32"), int(2.345), int(-3.456)
+int("111", 2), int("20", 16)  # 7, 32; wykorzystanie bazy
+float("3.14159"), float(234)
+float(1.0+2.j)                # TypeError, nie ma jednoznacznej konwersji
+str(1234)
+long(43)
+complex(5), complex(2,3)                # (5+0J), (2+3J)
+
+# Dzielenie liczb.
+5 / 2, 5 % 2, 5. / 2.
+
+# Zaokrąglanie liczb.
+round(3.14159, 2)             # 3.14
+round(123.456,-1)             # 120.0, ujemna precyzja
+round(1.2), round(1.5), round(1.8)      # 1.0, 2.0, 2.0
+round(-1.2), round(-1.5), round(-1.8)   # -1.0, -2.0, -2.0
+int(1.2+0.5), int(1.5+0.5), int(1.8+0.5)   # 1.0, 2.0, 2.0
+int(-1.2+0.5), int(-1.5+0.5), int(-1.8+0.5)   # 0, -1.0, -1.0
+
+# Wartość bezwzględna.
+abs(-5), abs(-4.32), abs(1+1j) # 5, 4.32, 1.41421356237
+
+# Liczby całkowite można zapisywać w układzie ósemkowym i szesnastkowym.
+23, 027, 0x17, 0X17     # zapis liczby 23
+
+# Pozostałość po ułamkach w liczbach całkowitych.
+(4).numerator        # licznik 4
+(4).denominator      # mianownik 1
+
+# Funkcja ord() [string --> kod ASCII].
+# Funkcja chr() [kod ASCII --> string].
+ord("b"), chr(99), type(ord("b")), type(chr(99))
+
+# Metody dla liczb float, liczby to obiekty.
+# Zamiana na krotkę liczb int, odpowiadającą ułamkowi.
+(0.5).as_integer_ratio()      # (1, 2)
+(0.6).as_integer_ratio()      # (5404319552844595L, 9007199254740992L)
+# Powinno być (3, 5), ale są błędy reprezentacji.
+
+(-.25).as_integer_ratio()     # (-1, 4)
+
+(20.0).is_integer()           # True
+(1.5).is_integer()            # False
+
+DZIELENIE LICZB
+
+PEP 238 - Changing the Division Operator.
+
+http://python-history.blogspot.com/2009/03/problem-with-integer-division.html
+
+http://python-history.blogspot.com/2010/08/why-pythons-integer-division-floors.html
+
+Dzielenie liczb w Pythonie przeszło zmianę przy przejściu z Pythona 2 na Python 3. Aby opisać to zagadnienie, trzeba przedstawić trzy pojęcia:
+
+    classic division, dzielenie klasyczne [metoda __div__ w Pythonie 2]
+    true division, dzielenie prawdziwe [metoda __truediv__ w Pythonie 3]
+    floor division, dzielenie bez reszty [metoda __floordiv__ w Pythonie 2 i 3] 
+
+Wydaje się, że głównym powodem wprowadzenia zmiany w działaniu operatora dzielenia było uniknięcie zaskakiwania osób zaczynających naukę programowania, gdzie Python jest ich pierwszym językiem programowania. Python jest językiem o typach dynamicznych i operator dzielenia może działać na dowolnych argumentach przy odpowiednim przeciążenu (overload). Dzielenie klasyczne powoduje sytuacje, które są trudne do zaakceptowania przez początkujących.
+
+>>> 1 == 1.0
+True
+>>> 2 == 2.0
+True
+>>> 1 / 2 == 1.0 / 2.0   # dzielenie klasyczne
+False
+
+Podsumowanie: domyślne działanie operatorów dzielenia w Pythonie w różnych wersjach [W. J. Chun, Python's "New" Division: Python 2 Versus Python 3, http://www.informit.com/articles/article.aspx?p=1439189 ]:
+
++--------+---------+----------+----------+
+|Operator| 2.1-    | 2.2+     | 3.x      |
++--------+---------+----------+----------+
+|  /     |klasyczne|klasyczne |prawdziwe |
++--------+---------+----------+----------+
+|  //    | n/a     |bez reszty|bez reszty|
++--------+---------+----------+----------+
+
+Opcje wiersza poleceń związane z dzieleniem (python -Qopcja).
+
++-----------------------------------------+
+| Opcja | Opis                            |
++-----------------------------------------+
+| old   |Zawsze dzielenie klasyczne       |
++-----------------------------------------+
+| new   |Zawsze dzielenie prawdziwe       |
++-----------------------------------------+
+| warn  |Ostrzega przy int/int (long/long)|
++-------+---------------------------------+
+|warnall|Ostrzega zawsze przy "/"         |
++-------+---------------------------------+
+
+DZIELENIE KLASYCZNE
+
+Klasyczne dzielenie występuje w Pythonie 2 i innych językach programowania, takich jak C/C++ czy Java. Przy dzieleniu liczb całkowitych część ułamkowa jest odrzucana i zwracana jest liczba całkowita. Przy dzieleniu liczb zmiennoprzecinkowych (float), wynik jest ułamkiem zmiennoprzecinkowym.
+
+>>> 1 / 2        # dzielenie bez reszty
+0
+>>> -1 / 2        # dzielenie bez reszty
+-1
+>>> 1.0 / 2.0     # dzielenie prawdziwe
+0.5
+>>> -1.0 / 2.0     # dzielenie prawdziwe
+-0.5
+>>>
+
+DZIELENIE PRAWDZIWE
+
+W wyniku dzielenia prawdziwego zawsze powstaje ułamek zmiennoprzecinkowy, niezależnie od typu operandów. Jest to domyślna operacja w Pythonie 3. Od Pythona 2.2 można korzystać z tego rodzaju dzielenia po imporcie division z modułu __future__, albo można uruchomić interpreter z opcją -Qnew.
+
+>>> from __future__ import division  # tylko Python 2.2+
+>>> 1 / 2    # zwraca rzeczywisty ułamek
+0.5
+>>> 1.0 / 2.0   # zwraca rzeczywisty ułamek
+0.5
+>>>
+
+DZIELENIE BEZ RESZTY
+
+Nowy operator dzielenia bez reszty (//) zawsze odrzuca cząść ułamkową i zaokrągla wynik do najbliższej liczby całkowitej z lewej strony na osi liczbowej. Operator istnieje od Pythona 2.2 i nie wymaga importu. Typ zwracanego wyniku zależy od typu operandów.
+
+>>> 1 // 2   # operandy int, zwraca int
+0
+>>> 1.0 // 2.0   # operandy float, zwraca float
+0.0
+>>> -1 // 2
+-1
+>>> 7 // 2.5
+2.0
+>>>
+
+
+Łańcuchy znaków
+WPROWADZENIE
+
+Łańcuch (string) to uporządkowany ciąg znaków używany do przechowywania informacji tekstowej. Łańcuchy zaliczane są do niezmiennych sekwencji, czyli nie można ich zmieniać w obszarze przechowywania ich w pamięci. Dostęp do znaków możliwy jest za pomocą offsetu (przesunięcia). Dozwolone są ujemne offsety (odliczanie od końca).
+
+W Pythonie nie ma osobnego typu znakowego jak w języku C. Znakami są po prostu stringi o długości jeden.
+
+Moduły pomocnicze: string, regex, re, itp.
+
+Stałe łańcuchowe mogą być zapisywane z użyciem apostrofów lub znaków cudzysłowu. Dzięki temu możemy wstawiać znak cudzysłowu/apostrofu wewnątrz łańcucha bez specjalnych zabiegów. Wielowierszowe bloki wygodnie jest zapisywać wewnątrz potrójnych znaków, ponieważ zachowywane są końce linii.
+OPERACJE NA ŁAŃCUCHACH
+
++----------------------+--------------------------+
+| Operacja             | Znaczenie                |
++----------------------+--------------------------+
+| "", '', str()        | puste napisy             |
+| S = "abc"            | tworzenie napisu         |
+| S = str(obiekt)      | tworzenie napisu         |
+| len(S)               | długość - liczba pozycji |
+| S1 + S2              | łączenie                 |
+| 3 * S, S * 4         | powtarzanie              |
+| S[i]                 | indeksowanie             |
+| S[i:j]               | wycinanie                |
+| S2 = S1[:]           | kopiowanie               |
+| S2 = str(S1)         | kopiowanie               |
+| for char in S: pass  | iteracja                 |
+| S1 in S2             | zawieranie (bool)        |
+| S1 not in S2         |                          |
+| "%s dom" % "stary"   | formatowanie łańcucha    |
+| "%s %s" % ("a", "b") |                          |
+| S.join(iterable)     | sklejanie z napisem      |
+| S.format(...)        | 2.6+, 3.x                |
+| del S                | usuwanie napisu          |
++----------------------+--------------------------+
+
+# Zwykłe stringi.
+"pierwszy", 'drugi', "trzeci'x", 'czwarty"y'
+"raz"  'dwa'                  # napisy obok siebie będą sklejone
+
+# Raw strings - napisy ze znakami specjalnymi.
+r"raw string\n\t\a"
+
+# Unicode strings.
+u"unicode"
+
+# Raw Unicode strings.
+ur"raw unicode"
+
+# Potrójne znaki do wielowierszowych bloków.
+# Można stosować """ lub '''.
+"""
+Syntax: nazwa [OPCJE]
+    -h    pomoc
+    -v    wersja
+"""
+
+# Korzystanie z odwrotnego ukośnika (backslash).
+# Generujemy znaki specjalne lub pozbawiamy jakiś znak
+# jego specjalnego znaczenia.
+"jeden\"dwa", 'trzy\'cztery'  # " lub ' w środku nie kończy stringu
+"pole1\tpole2\tpole3"         # \t to tabulacja, odstep poziomy
+"pierwszy wiersz\ndrugi wiersz"         
+# \n to newline, znak przejścia do nowego wiersza
+"tak pokazujemy ukośnik \\"       # \\ to jeden ukośnik (backslash)
+
+# W skrypcie można wykorzystać potrójne znaki do tymczasowego
+# blokowania (wykomentowania) kodu.
+X = 1
+"""
+import os                     # zablokowany kod
+print os.getcwd()
+"""
+Y = 2
+
+INDEKSOWANIE
+
+Dla łańcucha S dozwolone są indeksy od 0 do len(S)-1. Indeks ujemny S[-n] rozumiany jest jako S[len(S)-n]. S[i] jest napisem o długości jeden.
+WYCINANIE
+
+S[j:k] wycina elementy od S[j] do S[k-1] włącznie, tworząc nowy napis. S[:k] oznacza S[0:k]. S[j:] oznacza S[j:len(S)]. S[:] daje cały napis. S[:j] + S[j:] daje cały napis.
+
+# Napisy można porównywać (<, >, ==), nawet trójkami.
+napis1 = "abc"
+napis2 = "bcd"
+napis1 < napis2
+"a" > "Z"
+
+# owoc = "banan"
+# Nie wolno podstawić tak jak w C, napisy są niezmienne.
+# owoc[0] = "s"       ERROR!
+# Trzeba utworzyć nowy string np. poleceniem
+# nowy_owoc = "s" + owoc[1:]
+
+a = "abc"
+b = "abc"
+c = a
+d = a[:]
+# to samo miejsce w pamięci
+id(a), id(b), id(c), id(d)
+# też dla copy.copy() jest to samo miejsce w pamięci
+# UWAGA Te efekty zachodzą dla krótkich napisów, bo Python
+# krótkie napisy trzyma w pamięci do późniejszego wykorzystania.
+
+# Napisy są niezmienne (immutable).
+>>> a = "abc"
+>>> a[1] = "s"
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: 'str' object does not support item assignment
+>>>
+
+KONKATENACJA I POWTÓRZENIE NAPISÓW
+
+>>> S = "abc"
+>>> S + "xyz"        # konkatenacja
+'abcxyz'
+>>> S                # S pozostaje bez zmian
+'abc'
+>>> 3 * S
+'abcabcabc'
+>>> S * 4
+'abcabcabcabc'
+>>> S[::-1]          # wycinanie od końca
+'cba'
+>>>
+
+Znak plus (+) czy gwiazdka (*) oznacza co innego dla liczb, a co innego dla napisów. Jest to przykład polimorfizmu w Pythonie.
+BUDOWANIE NAPISÓW
+
+colors = ["red", "blue", "green", "yellow"]
+
+# Pierwszy sposób dopuszczalny tylko dla kilku składników.
+result = ""
+for item in colors:
+    result = result + item
+
+# Prawidłowy sposób. Składnia.
+# S.join(iterable), S to separator przy sklejaniu
+result = "".join(colors)
+
+METODY STRINGÓW
+
+Metody dla stringów nie mogą zmienić oryginału, więc zwykle zwracają nowy łańcuch.
+
+dir(str)            # lista metod stringów
+print ord("a")      # 97, kod ASCII znaku
+print chr(98)       # "b", znak dla danego kodu ASCII
+
+word = "".join(["a","b","c","d","e","f"])    # sklejanie listy znaków
+print word          # "abcdef"
+word.find("cd")     # 2, odnalezienie przesunięcia podłańcucha
+word.replace("bc", "xyz")     # zastąpienie wystąpień podłańcucha
+
+# Justowanie tekstu.
+word = "hej"
+word.ljust(6)                 # "hej   "
+word.rjust(6)                 # "   hej"
+word.center(6)                # " hej  "
+
+# Usuwanie białych znaków (whitespace).
+word = " abc  "
+word.lstrip()                 # "abc  "
+word.rstrip()                 # " abc"
+word.strip()                  # "abc"
+
+word = "...abc.."
+word.strip(".")               # "abc"
+
+word = "rAz dWa tRzY"
+word.lower()                  # "raz dwa trzy"
+word.upper()                  # "RAZ DWA TRZY"
+word.capitalize()             # "Raz dwa trzy"
+word.title()                  # "Raz Dwa Trzy"
+word.swapcase()               # "RaZ DwA TrZy"
+word.startswith("abc")        # sprawdzam prefix
+word.endswith("abc")          # sprawdzam suffix
+
+# Lista wyrazów bez białych znaków.
+line = "a\tb c\nd"
+line.split()                  # ['a', 'b', 'c', 'd']
+line.split("\t")              # ["a", "b c\nd"]
+line.splitlines()             # ['a\tb c', 'd']
+
+"111".zfill(8)                # "00000111"
+
+# Badanie typów znaków.
+S.isalnum()
+S.isalpha()
+S.isdigit()
+S.islower()
+S.isupper()
+S.isspace()
+
+Jeżeli chcemy sprawdzić, czy obiekt jest łańcuchem, korzystamy z funkcji isinstance(obiekt, basestring), gdzie basestring to klasa bazowa dla str i unicode (Python 2.3).
+
+Łańcuchy znaków obsługują zaawansowane operacje formatowania ze znakiem procenta (%) lub metodą format [więcej informacji przy opisie standardowego wyjścia].
+MEMORYVIEW
+
+W Pythonie 2.7 pojawia się memoryview(object), przy czym obiekt musi wspierać buffer protocole. Buffer protocole dostarcza sposobu na dostęp do wewnętrznych danych obiektu. W zwykłym kodzie pythonowym do używa się buffer protocole za pomocą memoryview() Obiekty wbudowane wspierające buffer protocole to str i bytearray (ale nie unicode). memoryview() ma dwie metody tobytes() i tolist(), oraz kilka atrybutów tylko do odczytu.
+
+Za pomocą memoryview() można używać i modyfikować duże ilości danych bez ich kopiowania. Dzięki temu dany program używa mniej pamięci i działa szybciej.
+
+>>> v = memoryview('abcefg')   # widok obiektu str
+>>> v[1]   # zwraca str
+'b'
+>>> v[-1]
+'g'
+>>> v[1:4]   # wycinek zwraca subview
+<memory at 0x77ab28>
+>>> v[1:4].tobytes()   # zwraca bytestring, czyli str
+'bce'
+>>> v.readonly   # czy pamięć jest readonly
+True
+>>> v.tolist()   # zwraca listę int
+[97, 98, 99, 101, 102, 103]
+
+>>> data = bytearray('abcefg')
+>>> v = memoryview(data)
+>>> v.readonly   # czy pamięć jest readonly
+False
+>>> v[0] = 'z'   # mutable
+>>> data
+bytearray(b'zbcefg')
+>>> v[2] = 'spam'
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ValueError: cannot modify size of memoryview object
+
+https://stackoverflow.com/questions/6736771/buffers-and-memoryview-objects-explained-for-the-non-c-programmer
+
+Buffers and Memoryview Objects explained for the non-C programmer
+
+https://eli.thegreenplace.net/2011/11/28/less-copies-in-python-with-the-buffer-protocol-and-memoryviews
+
+Less copies in Python with the buffer protocol and memoryviews
+
+https://julien.danjou.info/high-performance-in-python-with-zero-copy-and-the-buffer-protocol/
+
+High-Performance in Python with Zero-Copy and the Buffer Protocol (by Julien Danjou)
+
+PYTHON 3
+
+W Pythonie 3 zamiast typów str i unicode występują typy bytes i str, które mają odmienne własności. W Pythonie 3 znika basestring (PEP 3137).
+
+bytes(object) zwraca niezmienną (immutable) tablicę bajtów. [W Pythonie 2.7 jest to alias do str().]
+
+bytearray(object) zwraca zmienną (mutable) tablicę bajtów. [Istnieje w Pythonie 2.7.]
+
+str(object) zwraca niezmienny string mogący zawierać znaki unikodu. [W Pythonie 2 odpowiada mu unicode().]
+
+memoryview(object) tworzy widok obiektu. Obiekt musi wspierać protokół buforowania (buffer protocol), czyli dawać dostęp do bufora obiektu bez robienia kopii. Było wiele zmian w kolejnych wersjach Pythona 3. 
+
+
+Listy
+WPROWADZENIE
+
+Listy to uporządkowane kolekcje dowolnych obiektów. Są heterogeniczne i mogą być dowolnie zagnieżdżane. Dostęp do obiektów możliwy jest za pomocą offsetu (położenia na liście).
+
+Listy mogą się rozrastać i kurczyć w miejscu, czyli są zmiennymi (mutable) sekwencjami. Z technicznego punktu widzenia, listy Pythona zawierają zero lub więcej odwołań do innych obiektów. Listy obsługują zagnieżdżanie obiektów na dowolną głębokość.
+
+Jeżeli potrzebujemy częstego wyszukiwania elementów na liście, to lepiej zastosować słowniki lub zbiory.
+
++----------------------+-----------------------------+
+| Operacja             | Znaczenie                   |
++----------------------+-----------------------------+
+| L = [] ; L = list()  | lista pusta                 |
+| L = [5, 1.2]         | lista dwupozycyjna          |
+| L = list(sequence)   | tworzenie listy z sekwencji |
+| len(L)               | rozmiar (długość)           |
+| L1 + L2              | łączenie                    |
+| L * 3 ; 4 * L        | powtarzanie                 |
+| L[i]                 | indeks                      |
+| L[i:j]               | wycinek (nowa lista)        |
+| L[i] = item          | nowy element na liście      |
+| L1[i:j] = L2         | podstawienie pod wycinek    |
+| L2 = L1[:]           | kopiowanie płytkie          |
+| L2 = list(L1)        | kopiowanie płytkie          |
+| L2 = L1.copy()       | kopiowanie płytkie (Py 3.3+)|
+| for item in L: pass  | iteracja                    |
+| item in L            | zawieranie (linear-time)    |
+| item not in L        |                             |
+| range(i, j, step)    | budowanie listy             |
+| xrange(i, j, step)   | generator (Py 2.x)          |
+| del L[i]             | usuwanie elementu z listy   |
+| del L[i:j]           | usuwanie wycinka            |
+| del L                | usuwanie całej listy        |
++----------------------+-----------------------------+
+
+# Składnia: range([start,] stop[, step]).
+# Domyślny krok jest równy jeden (step=1).
+# Końcowy punkt (stop) jest pomijany.
+range(1, 6)                   # [1, 2, 3, 4, 5]
+range(4)                      # [0, 1, 2, 3], domyślny start to 0
+range(1, 9, 2)                # [1, 3, 5, 7], krok co 2
+
+list1 = [10, 20, 30, 40, 50, 60, 70]
+list2 = ["abc", "d", "ef", "g", "hij"]
+list3 = [3, "xyz", [10, 20]]  # listy są heterogeniczne
+
+# Elementy listy można uaktualniać.
+list2[1] = "xyz"              # pojedynczy element
+list2[2:4] = ["2", "3"]       # podmiana wycinka
+print list2
+
+alist = range(10)
+alist[4:4] = [1, 1, 1]        # wstawianie PRZED elementem o indeksie 4
+alist[2:4] = []               # usuwanie elementów o indeksach 2, 3
+# Bardziej przejrzyste jest korzystanie z del.
+# del alist[2:4]
+# Można też usunąć całą listę.
+# del alist
+
+KOPIOWANIE LIST
+
+Przy kopiowaniu list trzeba pamiętać o sposobie działania instrukcji podstawiania.
+
+L1 = [12, 13, 14]
+L2 = L1             # kopiowanie referencji do listy
+L1 is L2            # True, id(L1) jest równe id(L2)
+L3 = L1[:]          # kopia przez operator zakresu, powstaje nowa lista
+L4 = list(L1)       # jeszcze prościej
+
+SORTOWANIE LIST
+
+Listy mają wbudowaną metodę do sortowania elementów w miejscu.
+
+# help(list.sort)
+# L.sort(cmp=None, key=None, reverse=False)
+# Sortowanie stabilne IN PLACE.
+# Funkcja cmp(x, y) ma zwracać jedną wartość z (-1, 0, 1).
+
+alist = ["auto", "Ala", "bocian", "Barbara"]
+alist.sort()        # sortowanie listy napisów (duże litery najpierw)
+print alist         # ['Ala', 'Barbara', 'auto', 'bocian']
+
+# Potrzebujemy case-insensitive sort.
+# Stary sposób - określamy funkcję porównującą dwa obiekty.
+# Bazujemy na wbudowanej funkcji porównującej cmp().
+alist.sort(cmp=lambda x,y: cmp(x.lower(), y.lower()))
+print alist         # ['Ala', 'auto', 'Barbara', 'bocian']
+
+# Nowy sposób (Python 2.4+) - podajemy klucz, czyli jakby sposób 
+# patrzenia na obiekt. Nazwa "str" występuje jako nazwa klasy.
+# Sortowanie jest stabilne.
+alist.sort(key=str.lower)
+
+# Sortowanie pod względem długości napisów.
+alist.sort(key=len)
+print alist         # ['Ala', 'auto', 'bocian', 'Barbara']
+
+Prosty sposób sortowania to wykorzystanie wbudowanej funkcji sorted(), która zwraca nową, posortowaną listę. Korzysta ona z metody specjalnej __lt__ i może być używana nie tylko dla list, ale dla obiektów iterowanych.
+
+# help(sorted)
+# sorted(iterable, cmp=None, key=None, reverse=False)
+# Zwraca nową posortowaną listę.
+
+# Działanie funkcji sorted() możemy zasymulować za pomocą funkcji.
+def mysorted(iterable):
+    alist = list(iterable)
+    alist.sort()
+    return alist
+
+Przy sortowaniu krotek przydaje się konstrukcja z modułu operator.
+
+# https://docs.python.org/2/library/operator.html
+
+import operator   # Python 2.4+
+
+# Sortowanie IN PLACE krotek wg wartości pola o indeksie 1.
+alist = [('apple', 3), ('banana', 2), ('pear', 5), ('orange', 1)]
+alist.sort(key=operator.itemgetter(1))
+# [('orange', 1), ('banana', 2), ('apple', 3), ('pear', 5)]
+
+# Można też utworzyć nowa listę.
+blist = sorted(alist, key=operator.itemgetter(1))
+
+WZORZEC DSU
+
+Jeżeli w Pythonie musimy posortować dane, to najlepiej znaleźć sposób na wykorzystanie wbudowanej w listy Pythona metody sort(). Często stosowanym rozwiązaniem jest implementacja wzorca DSU (Decorate, Sort, Undecorate; dekoruj-sortuj-usuń dekorację), opisanego w [Receptury]. Wzorzec opiera się na tym, że w Pythonie sekwencje są porównywane leksykograficznie.
+
+# Wzorzec DSU na przykładzie sortowania stringów
+# bez uwzględniania wielkości liter.
+def case_insensitive_sort(string_list):
+    alist = [(x.lower(), x) for x in string_list]  # dekoruj
+    alist.sort()                                   # sortuj
+    return [x[1] for x in alist]          # usuń dekorację
+
+METODY LIST
+
+W Pythonie często możemy zobaczyć wyrażenia typu obiekt.metoda(argumenty). Nawiązuje to do programowania obiektowego. Metoda jest funkcją, która należy do obiektu i nosi pełną nazwę obiekt.metoda(). Obiekt innego typu może posiadać metodę o tej samej nazwie, np. obiekt2.metoda(), ale nie prowadzi to do dwuznaczności. Mamy również konstrukcje typu obiekt.atrybut i również różne obiekty mogą mieć atrybut o tej samej nazwie, ale o różnych typach.
+
+dir(list)           # spis metod i atrybutów dla list
+
+L = ["a", "a", "a", "b", "b"]
+L.count("a")        # 3, liczba wystąpień
+
+L.append("c")       # dołączenie "c" na koniec listy
+print L             # ['a', 'a', 'a', 'b', 'b', 'c']
+
+L.insert(1, "x")    # dołączenie przed indeksem 1
+print L             # ['a', 'x', 'a', 'a', 'b', 'b', 'c']
+
+L.remove("a")       # usuwanie wskazanego elementu - pierwsze wystąpienie
+print L             # ['x', 'a', 'a', 'b', 'b', 'c']
+
+L.pop()             # "c", usuwanie od końca (błąd dla pustej listy)
+L.pop(2)            # "a", usuwanie elementu nr 2 - zwraca element
+print L             # ['x', 'a', 'b', 'b']
+
+L.reverse()         #  odwracanie listy IN PLACE
+print L             # ['b', 'b', 'a', 'x']
+L.index("a")        # 2, jaki indeks ma "a"
+L.extend("qwerty")  # L.extend(iterable), dołączyć nowe elementy
+print L             # ['b', 'b', 'a', 'x', 'q', 'w', 'e', 'r', 't', 'y']
+
+LISTY SKŁADANE
+
+List comprehensions, czyli listy składane są elementami programowania funkcyjnego, przejętymi z języka Haskell. Jest to zwarty sposób na tworzenie list bez odwoływania się do map(), filter(), czy wyrażeń lambda. Kolejność elementów w nawiasie kwadratowym: wyrażenie, pętla for, dalej wielokrotnie (opcjonalnie) pętla for lub if. Listy składane często pozwalają uzyskać dużą szybkość przetwarzania, jak kod w języku C. Należy zachować umiar przy tworzeniu zagnieżdżonych list składanych, często bardziej czytelne są zwykłe pętle wielokrotne.
+
+Składnia list składanych przenosi się w dużej mierze na generatory, czyli "leniwe" funkcje zwracające pojedyńczą wartość na żądanie. Generatory można również tworzyć za pomocą wyrażenia yield. Więcej wyjaśnień zostanie podanych przy funkcjach.
+
+[x for x in "qwerty"]                   # ['q', 'w', 'e', 'r', 't', 'y']
+[x * x for x in range(6)]               # [0, 1, 4, 9, 16, 25]
+[3 * x for x in range(6) if x < 4]   # [0, 3, 6, 9]
+[2 ** x for x in range(5)]              # [1, 2, 4, 8, 16]
+[[x, x * x] for x in range(6)]          # lista list
+[(x, x * x * x) for x in range(6)]      # przy krotkach wymagane nawiasy
+[x + y for x in range(3) for y in range(4)]
+[(x, y) for x in range(3) for y in range(4)]
+[chr(x) for x in range(97, 110)]
+"".join([chr(x) for x in range(97, 110)])    # sklejamy listę
+
+sum([x * x for x in range(100)])        # pełne listy
+sum(x * x for x in xrange(100))         # generatory
+sum(len(x) for x in ["a", "bb", "ccc"]) # generator
+max(ord(x) for x in "qwerty")           # największy numer
+max("qwerty", key=ord)                  # znak o największym numerze
+
+
+Krotki
+WPROWADZENIE
+
+Krotki (tuples) to uporządkowane kolekcje dowolnych obiektów. Są heterogeniczne i mogą być dowolnie zagnieżdżane. Dostęp do obiektów możliwy jest za pomocą offsetu.
+
+Krotki są niezmiennymi sekwencjami, jak łańcuchy. Nie można ich modyfikować w miejscu i mają ustalony rozmiar. Podobnie jak listy, krotki najlepiej traktować jako tablice odwołań obiektowych.
+
+Krotki są stosowane zamiast list tam, gdzie zależy nam na niezmienności.
+
++----------------------+-------------------------------------------+
+| Operacja             | Znaczenie                                 |
++----------------------+-------------------------------------------+
+| T = () ; T = tuple() | krotka pusta                              |
+| T = (0,)             | krotka jednopozycyjna (nawiasy zalecane)  |                  |
+| T = (1, 3, 5, 7)     | krotka czteropozycyjna (nawiasy zbędne)   |
+| T = tuple(sequence)  | tworzenie krotki z sekwencji              |
+| T[i]                 | indeks                                    |
+| T[i:j]               | wycinek (nowa krotka)                     |
+| len(T)               | rozmiar (długość)                         |
+| T1 + T2              | łączenie                                  |
+| T * 3, 4 * T         | powtarzanie                               |
+| for item in T: pass  | iteracja                                  |
+| item in T            | zawieranie (bool)                         |
+| item not in T        |                                           |
+| del T                | usuwanie krotki                           |
+| (x, y) = (2, 4)      | x = 2 ; y = 4   # podstawianie            |
++----------------------+-------------------------------------------+
+
+# Krotka jednoelementowa.
+T = ('a',)                    # bez przecinka będzie string
+# Można też T = tuple('a'), bo string jest sekwencją.
+# Dla liczb można przekonwertować listę T = tuple([2]).
+
+T = ('a','b','c')
+T[1]
+len(T)
+
+# Można tworzyć zmodyfikowaną (nową) krotkę.
+T = ('A',) + T[1:]
+
+L = [1, 2, 3, 4]
+front, L = L[0], L[1:]        # odcięcie początku
+# Konwersja listy do krotki.
+T = tuple(L)
+
+# Krotki mogą występować w nietypowym podstawieniu.
+(x, y) = (12, 34)             # podstawiamy za x i y
+a, b = b, a                   # zamiana w Pythonie
+dane = (43, 54)
+(x2, y2) = dane
+(NIEDZIELA, PONIEDZIALEK, WTOREK, SRODA, CZWARTEK, PIATEK, SOBOTA) = range(7)
+
+METODY KROTEK
+
+dir(tuple)     # spis metod
+T = (1, 2, 3, 5, 7)
+T.index(5)     # 3, jaki indeks ma 5
+T.count(5)     # 1, 5 pojawia się raz
+
+>>> T = (5, 7)
+>>> T[1] = 9
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: 'tuple' object does not support item assignment
+>>> T.append(9)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'tuple' object has no attribute 'append'
+>>> 
+
+
+Słowniki
+WPROWADZENIE
+
+Słownik (dictionary) to nieuporządkowany zbiór par (klucz: wartość), przy czym klucze muszą być różne. Słowniki nie są sekwencjami, ale odwzorowaniami (mapping). Wartości (obiekty) są przechowywane po kluczu, a nie po ich pozycji względnej.
+
+Klucz musi być niezmienny (immutable), zwykle są to liczby lub stringi. Kluczami mogą być krotki (tuple), jeśli zawierają tylko liczby, napisy i krotki.
+
+Próba pobrania nieistniejącego klucza jest błędem (KeyError).
+
+Słowniki są zmienne, mogą być modyfikowane w miejscu, mogą rosnąć lub kurczyć się na życzenie. Słowniki obsługują zagnieżdżanie obiektów na dowolną głębokość.
+
++----------------------+---------------------------+
+| Operacja             | Znaczenie                 |
++----------------------+---------------------------+
+| D = {} ; D = dict()  | pusty słownik             |
+| D = {1: "a", 5: "e"} | słownik (dwa klucze)      |
+| len(D)               | liczebność                |
+| D[key] = value       | dodanie pozycji           |
+| D[key]               | dostęp do wartości        |
+| D = dict(T)          | tworzenie z krotki (pary) |
+| D2 = dict(D1)        | kopiowanie słownika       |
+| D2 = D1.copy()       | stary sposób kopiowania   |
+| key in D             | zawieranie (bool)         |
+| key not in D         |                           |
+| D.has_key(key)       | dawny sposób (2.x)        |
+| for key in D: pass   | iteracja po kluczach      |
+| del D[key]           | usuwanie klucza           |
+| del D                | usuwanie słownika         |
++----------------------+---------------------------+
+
+D = {}                    # pusty słownik - inicjalizacja
+D['one'] = 'jeden'        # dodawanie kluczy
+D['two'] = 'dwa'
+D['three'] = 'trzy'
+
+# Metody słownika bez parametrów.
+D.keys()            # [k1, k2, k3]
+D.values()          # [v1, v2, v3]
+D.items()           # [(k1, v1), (k2, v2), (k3, v3)]
+
+# Metody słownika z parametrami.
+D.has_key('one')    # obecnie zalecane: 'one' in D
+
+# Kopiowanie słownika (shallow copy).
+D_alias = D                   # tylko kopiowanie adresu
+D_copy1 = D.copy()            # metoda słowników do kopiowania
+D_copy2 = dict(D)             # najprostszy sposób
+id(D), id(D_alias), id(D_cp), id(D_cp2)
+
+# Usuwanie elementu ze słownika.
+del D['two']
+
+# Konwersja listy krotek do dict.
+D = dict([("a", 1), ("b", 2), ("c", 3), ("d", 4)])
+
+# Ciekawa pętla po parach - items().
+for (char, n) in D.items():
+    print "klucz:", char, "wartość:", n
+
+Sortowanie kluczy dla słowników.
+
+chars = {}                    # inicjalizacja pustego słownika
+# chars.get(char) zwraca chars[char] lub None.
+# chars.get(char, 0) zwraca chars[char] lub 0.
+for char in "abrakadabra":
+    chars[char] = chars.get(char, 0) + 1
+print chars
+
+# Sortowanie par (klucz, wartość).
+items = chars.items()        # dostaję listę krotek
+items.sort()
+
+# Sortowanie samych kluczy.
+keys = chars.keys()
+keys.sort()
+[chars[key] for key in keys]     # lista wartości
+
+# Python 2.5 zawiera wbudowaną funkcję sorted(), która dla obiektu
+# iterowalnego zwraca posortowaną listę.
+for key in sorted(chars):
+    print key, chars[key]
+
+Wybrane metody dla słowników.
+
+# Przykładowe inicjalizacje słownika.
+D = {k1:v1, k2:v2}                 # klasyczna
+D = dict([(k1, v1), (k2, v2)])     # z listy krotek
+D = dict(zip([k1, k2], [v1, v2]))  # z dwóch list
+D = dict(name1=v1, name2=v2)       # {'name1':v1, 'name2':v2}
+
+if D != {}:         # porównywanie z pustym słownikiem
+    print "słownik nie jest pusty"
+if D:               # pusty słownik oznacza False
+    print "słownik nie jest pusty"          # jw
+
+D.clear()                     # wyczyszczenie słownika
+E = D.copy()                  # kopia słownika
+E = dict(D)                   # jw, ale wygodniej
+D.has_key(key)                # zwraca True/False
+key in D                      # jw, zalecane
+
+D.items()                     # zwraca listę krotek (key, value)
+D.keys()                      # zwraca listę kluczy
+D.values()                    # zwraca listę wartości
+
+D.get(key, value)             # zwraca D[key] lub value
+D.setdefault(key, value)      # jw i jeszcze ustawia D[key] = value
+D.pop(key)                    # zwraca D[key] i usuwa ze słownika
+D.pop(key, value)             # zwraca D[key] lub value, gdy key nie ma w słowniku
+D.popitem()                   # zwraca 2-tuple (key, value) [chyba losowo] 
+                              # lub Error, gdy słownik jest pusty
+D = dict.fromkeys(S[, value])    # S to sekwencja, value to domyślnie None
+D = dict.fromkeys(range(4), 0)   # {0: 0, 1: 0, 2: 0, 3: 0}
+D = dict.fromkeys("abc", 1)   # {'a': 1, 'c': 1, 'b': 1}
+D.update(E)                   # czyli for key in E: D[key] = E[key]
+
+Problem sklejania dwóch słowników.
+
+# http://stackoverflow.com/questions/38987/how-can-i-merge-two-python-dictionaries-in-a-single-expression?rq=1
+# Dane są slowniki A i B. Utworzyć C jako sumę słowników.
+C = A.copy()
+C.update(B)
+
+# Można utworzyć specjalną funkcję (zalecane rozwiązanie).
+def merge_dict(a, b):
+    c = a.copy()
+    c.update(b)
+    return c
+# Użycie: C = merge_dict(A, B)
+
+# Uogólnienie działa w Pythonie 2 i 3.
+def merge_dicts(*dict_args):
+    '''
+    Given any number of dicts, shallow copy and merge into a new dict,
+    precedence goes to key value pairs in latter dicts.
+    '''
+    result = dict()
+    for dictionary in dict_args:
+        result.update(dictionary)
+    return result
+
+SŁOWNIKI SYSTEMOWE
+
+locals() zwraca słownik zawierający current scope's local variables, czyli lokalnie dostępne nazwy.
+
+vars() jest równoważne locals().
+
+vars([object]) jest równoważne object.__dict__, czyli dostajemy słownik będący przestrzenią nazw obiektu, zawierającą np. atrybuty obiektu.
+DZIEDZICZENIE ZE SŁOWNIKÓW
+
+Od Pythona 2.5 w klasie dziedziczonej z dict można zdefiniować metodę __missing__(). Wtedy przy wywołaniu D[key], jeżeli klucz nie istnieje, to wywoływana jest metoda __missing__(key). Można określić pożądane zachowanie, np. inne niż stała domyślna wartość. Daje to większą elastyczność niż metody get() czy setdefault().
+PYTHON 3
+
+Metody słowników zwracają iteratory, a nie gotowe listy. Jeżeli chcemy zobaczyć gotową listę trzeba użyć konwersji.
+
+list(D.items())               # zwraca listę krotek (key, value)
+list(D.keys())                # zwraca listę kluczy
+list(D.values())              # zwraca listę wartości
+
+Obiekty zwracane przez metody słowników są dynamiczne, to są widoki (views). Można po nich iterować, można sprawdzać należenie do obiektu (membership test).
+
+>>> D = { "first" : 1, "second" : 2 }
+>>> ks = D.keys()
+>>> ks
+dict_keys(['second', 'first'])
+>>> D["third"] = 3
+>>> ks
+dict_keys(['second', 'third', 'first'])   # widać zmianę
+>>> 'second' in ks   # membership test
+True
+
+Nie ma metody D.has_key(key), stosuje się konstrukcję key in D.
+
+Występuje konstrukcja słowników składanych (dict comprehension). Wydaje się, że można to łatwo zastąpić przez konstrukcję z listą par (key, value),
+
+keys = [k1, k2, k3]
+values = [v1, v2, v3]
+D = dict(zip(keys, values))                  # Python 2 i 3
+D = {k: v for (k, v) in zip(keys, values)}   # Python 3 i 2.7
+
+D = {x: x ** 2 for x in [1, 2, 3, 4]}        # Python 3 i 2.7
+D = dict((x, x**2) for x in [1, 2, 3, 4])    # generator w Pythonie 2
+
+D = {x: x*3 for x in "qwerty"}          # Python 3 i 2.7
+D = dict((x, x*3) for x in "qwerty")    # generator w Pythonie 2
+
+
+Pliki
+WPROWADZENIE
+
+Python jest dobrze przygotowany do bezpośredniej obsługi zarządzania plikami i ich przetwarzania. Zawiera kilka wbudowanych funkcji oraz dodatkowych modułów, które pomagają w zarządzaniu plikami.
+
+Obiekty plików są w Pythonie głównym interfejsem do plików zewnętrznych znajdujących się na komputerze.
+
+Tworzymy obiekt pliku (file object) za pomocą funkcji open(). Po użyciu pliku powinno się go zamknąć za pomocą wbudowanej metody close(), aby zwolnić zasoby systemowe powiązane z otwartym plikiem. Otwarte pliki są automatycznie zamykane na zakończenie przetwarzania skryptu. Po zamknięciu pliku nie można go już przetwarzać.
+
+W Pythonie rozróżnia się pomiędzy plikami tekstowymi, a plikami binarnymi. Pliki tekstowe są podzielone na wiersze. Każdy wiersz kończy się znakiem końca wiersza (zwykle "\n", newline). Pliki inne niż tekstowe to pliki binarne, które powinny być przetwarzane przez aplikacje znające ich strukturę.
+
+afile = open(file_name, mode)
+# file_name (string): nazwa pliku;
+# mode (string):
+# "r" (czytanie),
+# "w" (pisanie; kasowanie poprzedniej zawartości; utworzy plik, gdy nie istniał),
+# "a" (dopisywanie; poprzednia zawartość pozostaje), 
+# "r+" (czytanie i pisanie; poprzednia zawartość pozostaje),
+# "w+" (czytanie i pisanie; kasowanie poprzedniej zawartości),
+# "a+" (czytanie i pisanie; poprzednia zawartość pozostaje),
+# "b" (dodatek do poprzednich, tryb binarny, Windows, Macintosh),
+# "U" (dodatek do poprzednich, uniwersalny translator nowych wierszy).
+dir(afile)     # spis metod
+afile.close()
+
+Odczytywanie danych z pliku (mode "r").
+
+S = infile.read()      # przeczytanie całego pliku
+S = infile.read(5)      # przeczytanie 5 znaków
+# Przy pustym pliku S będzie równe "".
+# Pusta linia to napis równy "\n".
+
+S = infile.readline()
+# Czyta jedną linię razem z \n.
+
+L = infile.readlines()
+# Czyta wszystkie linie i przechowuje je jako listę stringów z \n na końcu.
+
+L = infile.readlines(50)
+# Czyta 50 bajtów lub więcej, aby była pełna linia!
+# To jest przydatne przy czytaniu dużych plików, aby nie wczytywać
+# całości do pamięci.
+# Taką listę stringów można zapisać do pliku przez outfile.writelines(L).
+
+Zapisywanie danych do otwartego pliku (mode "w").
+
+liczba = 52   # różne typy danych
+x = 1.2345
+napis = "abc"
+
+outfile.write("jeden\n")            # metoda zwraca None
+outfile.write(str(liczba) + "\n")     # tu trzeba dodawać '\n'
+outfile.write(str(x) + "\n")
+outfile.write(napis + "\n")
+
+outfile.write("%d\n" % liczba)      # zapis z procentem
+outfile.write("%f\n" % x)
+outfile.write("%s\n" % napis)
+
+# Tego sposobu lepiej unikać, chyba trudniej przerobić na funkcję.
+print >> outfile, liczba   # drukuje tak jak na ekran, jest '\n'
+print >> outfile, x
+print >> outfile, napis
+
+print >> outfile, "%s\t%s\t%s" % ("a1","a2","a3")
+outfile.write("%s\t%s\t%s\n" % ("a1","a2","a3"))        # tutaj trzeba dać '\n'
+outfile.write("%s\n" % "\t".join(["a1","a2","a3"]))   # sklejam przed wypisaniem
+
+outfile.flush()
+# Flush the internal I/O buffer.
+# Dopiero po flush() lub close() mamy pewność, że dane są zapisane na dysku,
+# a nie czekają w buforze na zapisanie.
+
+Różne operacje na pliku (mode "r+").
+
+afile.write("0123456789abcdefgh")
+
+# afile.seek(offset[, whence])
+# offset - ku końcowi (dodatni) lub początkowi (ujemny)
+# whence=0 (domyślnie), offset > 0, bo od początku pliku
+# whence=1, offset różny, bo liczymy od bieżącego położenia w pliku
+# whence=2, offset < 0, bo od końca pliku
+
+afile.seek(5)                 # idź do 6-tego bajtu
+N = afile.tell()              # aktualna pozycja w pliku (int lub long)
+S = afile.read(1)             # czytaj 1 bajt
+afile.seek(-3,2)              # idź do 3-go bajtu od końca
+
+PRZYKŁAD
+
+Mamy napisać funkcję wykonującą kopiowanie pliku.
+
+def copy_file(infile_name, outfile_name):
+    infile = open(infile_name, "r")
+    outfile = open(outfile_name, "w")
+    while True:
+        text = infile.read(50)      # ograniczenie
+        if text == "":
+            break           # przerywa pętlę na końcu pliku
+        outfile.write(text)
+    infile.close()
+    outfile.close()
+
+Powyższa funkcja działa dla wszystkich rodzajów plików. Dla plików tekstowych można uprościć kod przez zastosowanie iteracji po pliku.
+
+def copy_file(infile_name, outfile_name):
+    """Kopiowanie plików."""
+    infile = open(infile_name, "r")
+    outfile = open(outfile_name, "w")
+    for line in infile:
+        outfile.write(line)
+    infile.close()
+    outfile.close()
+
+def print_file(file_name):
+    """Wypisywanie zawartości pliku na stdout."""
+    afile = open(file_name, "r")
+    for line in afile:
+        print line,   # line zawiera \n, Python 2
+    afile.close()
+
+
+Zbiory
+WPROWADZENIE
+
+Zbiory są dostępne bez importu od Pythona 2.4. Są dwa rodzaje wbudowanych zbiorów: set (mutable) i frozenset (immutable, hashable). Konstrukcja zbiorów bazuje na doświadczeniach z modułem sets. Elementy zbioru muszą być hashowalne, tak jak klucze słowników. Jeżeli chcemy utworzyć zbiór zbiorów, to wewnętrzne zbiory muszą być klasy frozenset.
+
++---------------------------+------------+------------------------+
+| Operacja                  | Równoważne | Wynik                  |
++---------------------------+------------+------------------------+
+|S = set() ; S = frozenset()|            |zbiór pusty             |
+|S = set(iterable)          |            |tworzenie zbioru        |
+|S = frozenset(iterable)    |            |zbiór niezmienny        |
+|len(S)                     |            |liczebność              |
+|for item in S: pass        |            |iteracja                |
+|item in S                  |            |należenie do zbioru     |
+|item not in S              |            |nienależenie do zbioru  |
+|S1.issubset(S2)            |S1 <= S2    |czy S1 jest zawarty w S2|
+|S1.issuperset(S2)          |S1 >= S2    |czy S1 zawiera S2       |
+|S1.union(S2)               |S1 | S2     |suma zbiorów            |
+|S1.union(S2, S3)           |S1 | S2 | S3|suma zbiorów            | Python 2.6+
+|S1.intersection(S2)        |S1 & S2     |iloczyn zbiorów         |
+|S1.intersection(S2, S3)    |S1 & S2 & S3|iloczyn zbiorów         | Python 2.6+
+|S1.difference(S2)          |S1 - S2     |różnica zbiorów         |
+|S1.difference(S2, S3)      |S1 - S2 - S3|różnica zbiorów         | Python 2.6+
+|S1.symmetric_difference(S2)|S1 ^ S2     |(S1-S2)|(S2-S1)         |
+|S1.isdisjoint(S2)          |            |czy puste przecięcie    | Python 2.6+
+|S2 = S1.copy()             |            |shallow copy of S1      |
+|S2 = set(S1)               |            |shallow copy of S1      |
++---------------------------+------------+------------------------+
+
+Operacje dostępne tylko dla mutable sets, ponieważ zbiory mogą zmienić swój skład.
+
++----------------------------------+-------------+
+| Operacja                         | Równoważne  |
++----------------------------------+-------------+
+|S1.update(S2)                     |S1 |= S2     |
+|S1.update(S2, S3)                 |S1 |= S2 | S3| Python 2.6+
+|S1.intersection_update(S2)        |S1 &= S2     |
+|S1.intersection_update(S2, S3)    |S1 &= S2 & S3| Python 2.6+
+|S1.difference_update(S2)          |S1 -= S2     |
+|S1.difference_update(S2, S3)      |S1 -= S2 | S3| Python 2.6+
+|S1.symmetric_difference_update(S2)|S1 ^= S2     |
+|S.add(item)                       |             |
+|S.remove(item) [item musi należeć]|             |
+|S.discard(item)                   |             |
+|S.pop() [zbiór niepusty]          |             |
+|S.clear() [zostanie pusty]        |             |
++----------------------------------+-------------+
+
+Porównywanie dwóch zbiorów ma sens, gdy jeden zawiera się w drugim. W przeciwnym razie wyjdzie False. Zbiory nie implementują metody __cmp__().
+
+# Konstrukcja: set([iterable])
+# Budowanie zbioru z sekwencji.
+X = set("alfa")
+Y = set(["b", "e", "t", "a"])
+print X, Y
+print "iloczyn", X & Y
+print "suma", X | Y
+print "różnica", X - Y
+
+# Konstrukcja: frozenset([iterable])
+X = frozenset()       # zbiór pusty
+X = frozenset([])     # zbiór pusty
+X = frozenset(["b", "e", "t", "a"])
+X = frozenset("beta")     # jw
+# Przy mieszanych set instances wynik jest typu pierwszego.
+X = frozenset("ab") | set("bc")   # wynik to frozenset
+X = set("bc") | frozenset("ab")   # wynik to set
+# Sprawdzanie: isinstance(x, (set, frozenset))
+set('abc') == frozenset('abc')   # wynik to True
+
+Zbiory można wykorzystać do odfiltrowania duplikatów z listy.
+
+>>> L = [1, 2, 2, 2, 3, 3]
+>>> set(L)
+set([1, 2, 3])
+>>> L = list(set(L))     # [1, 2, 3]
+>>>
+
+SET COMPREHENSION
+
+Analogicznie do list i słowników od Pythona 2.7 występują zbiory składane.
+
+# UWAGA {} oznacza pusty słownik, a set() to pusty zbiór.
+>>> {1, 3, 1, 4, 5}   # równoważne set([1, 3, 1, 4, 5])
+set([1, 3, 4, 5])
+>>> {s for s in [1, 2, 1, 0]}   # set comprehension
+set([0, 1, 2])
+>>> {s**2 for s in range(10)}
+set([0, 1, 4, 9, 16, 25, 36, 49, 64, 81])
+>>> {s for s in [1, 2, 3] if s % 2}
+set([1, 3])
+>>> {(i, j) for j in range(2) for i in range(3, 5)}
+set([(3, 0), (3, 1), (4, 0), (4, 1)])
