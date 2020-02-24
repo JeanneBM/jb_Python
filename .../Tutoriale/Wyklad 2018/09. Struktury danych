@@ -1,0 +1,1246 @@
+Python (9) - struktury danych
+
+PLAN
+
+    Podstawy struktur danych
+    Listy powiązane pojedynczo
+    Klasa SingleList
+    Listy powiązane podwójnie
+    Klasa DoubleList
+    Klasa DoubleList z wartownikiem
+    Listy posortowane
+    Drzewa binarne
+    Klasa BinarySearchTree
+    Listy cykliczne
+    Sterty 
+    
+
+Podstawy struktur danych
+WPROWADZENIE
+
+Typ danych to zbiór wartości oraz operacji, jakie można na nich wykonać. Struktura danych to mechanizm organizacji informacji zapewniający wygodne i efektywne sposoby dostępu do nich i ich przetwarzanie. Klasyczne struktury danych to
+
+    tablice
+    ciągi znaków
+    listy połączone (listy powiązane)
+    drzewa 
+
+TABLICE
+
+Tablice są sztywnym zbiorem danych tego samego typu, zapisanych w jednym ciągu w pamięci i dostępnych za pośrednictwem indeksu. Do i-tego elementu tablicy A można się odwołać za pomocą konstrukcji A[i]. Dostęp do każdego elementu tablicy jest tak samo szybki. Dozwolone indeksy zwykle zaczynają się od zera (C/C++, Python) lub od jedynki (Pascal).
+CIĄGI ZNAKÓW
+
+W języku C mianem ciągu znaków (łańcucha znaków, napisu, stringu) określa się tablicę znaków o zmiennej długości. Koniec napisu zaznacza się za pomocą specjalnego znaku końca ciągu ('\0'). W Pythonie typ string jest typem wbudowanym, a napisy są niezmienne i mają określone pewne działania. W innych językach mogą występować inne implementacje. Typowe operacje na stringach: wyznaczanie długości stringu, kopiowanie stringu, porównywanie leksykograficzne, sklejanie stringów. Stringi są użyteczne, ponieważ wiele aplikacji przetwarza dane tekstowe, a ponadto stringi są zwykle efektywnie realizowane w systemach komputerowych.
+LISTY POŁĄCZONE
+
+Lista połączona jest to zbiór elementów, z których każdy jest zawarty w węźle, zawierającym dodatkowo łącze do innego węzła. Jedynym sposobem dostania się do konkretnego elementu listy jest przejście przez listę od jej samego początku. Ostatni węzeł listy możemy oznaczyć za pomocą pustego łącza, węzła-atrapy, węzła wskazującego pierwszy element listy (lista cykliczna), itp. Węzły listy (wszystkie na liście jednocześnie) mogą posiadać więcej niż jedno łącze. W listach połączonych podwójnie każdy węzeł posiada łącza do elementu poprzedniego i następnego.
+DRZEWA
+
+Drzewo jest niepustym zbiorem węzłów i krawędzi, spełniającym pewne wymagania. Wierzchołek (węzeł) jest obiektem prostym, który może przechowywać pewne dane. Krawędź to element łączący dwa wierzchołki. Ścieżka jest listą różnych wierzchołków, w której kolejne wierzchołki są połączone krawędziami. W drzewie dwa dowolne węzły łączy dokładnie jedna ścieżka. W przeciwnym razie mamy do czynienia z grafem, który nie jest drzewem.
+
+Drzewo z korzeniem to takie drzewo, w którym jeden z węzłów oznacza się jako korzeń. W informatyce termin drzewo zwykle oznacza drzewo z korzeniem. Zwykle drzewa z korzeniem rysuje się tak, aby korzeń znajdował się najwyżej. Nad każdym węzłem (oprócz korzenia) znajduje się dokładnie jeden węzeł, zwany ojcem (rodzicem). Węzły znajdujące się bezpośrednio pod danym węzłem nazywamy dziećmi (potomkami). Węzły, które nie mają potomków, nazywane są liśćmi lub węzłami końcowymi.
+
+W drzewie uporządkowanym (z korzeniem) kolejność potomków każdego węzła jest ściśle określona. Drzewo, w którym każdy węzeł musi mieć określoną liczbę potomków uporządkowanych w określony sposób, nazywane jest m-drzewem. Przykłady: drzewa binarne, drzewa trójkowe. W dalszych rozważaniach skupimy się na drzewach binarnych.
+
+Zastosowania struktur drzewiastych:
+
+    drzewo genealogiczne,
+    organizacja zawodów sportowych,
+    schemat organizacyjny dużego przedsiębiorstwa,
+    organizacja systemów plików. 
+
+Przykładowe drzewa:
+
+    drzewo BST (binarne drzewo poszukiwań)
+    drzewo AVL (Adelson-Velski, Landis, 1962)
+    drzewo czerwono-czarne (Bayer, 1972)
+    drzewo splay (Sleator, Trajan, 1985) 
+
+Algorytm DSW (Day, Stout, Warren, 1986) jest to algorytm równoważący BST [Wikipedia].
+WIKIPEDIA
+
+    https://en.wikipedia.org/wiki/List_of_data_structures
+    https://en.wikipedia.org/wiki/Linked_list
+    https://en.wikipedia.org/wiki/Skip_list
+    https://en.wikipedia.org/wiki/Tree_(data_structure)
+    https://en.wikipedia.org/wiki/Heap_(data_structure)
+    https://en.wikipedia.org/wiki/Hash_table 
+
+
+
+
+Listy powiązane pojedynczo
+WPROWADZENIE
+
+Listy powiązane składają się z szeregu elementów (węzłów) powiązanych ze sobą łączami. Python udostępnia listy jako swój typ wbudowany, a inne języki pozwalają samemu stworzyć ich odpowiednik. Węzły list powiązanych pojedynczo przechowują pewną wartość oraz zawierają referencję do następnego węzła na liście. Jedynym sposobem dostania się do konkretnego węzła jest przejście przez listę od jej samego początku. Ostatni węzeł oznacza się zgodnie z jedną przedstawionych poniżej konwencji:
+
+    za pomocą pustego łącza, które nie wskazuje żadnego węzła,
+    za pomocą węzła-atrapy,
+    za pomocą węzła wskazującego pierwszy element listy (lista cykliczna). 
+
+IMPLEMENTACJA 1
+
+Pierwszy etap ręcznej implementacji list w Pythonie to stworzenie klasy reprezentującej węzeł listy. Dostęp do listy zapewnia łącze do jej pierwszego węzła (head).
+
+class Node:
+    """Klasa reprezentująca węzeł listy jednokierunkowej."""
+
+    def __init__(self, data=None, next=None):
+        self.data = data
+        self.next = next
+
+    def __str__(self):
+        return str(self.data)   # bardzo ogólnie
+
+head = None
+# pusta lista
+
+head = Node("front")
+# lista jednoelementowa
+
+# Ręczne budowanie dłuższej listy.
+head = None                   # [], pusta lista
+head = Node(3, head)          # [3]
+head = Node(2, head)          # [2, 3]
+head = Node(4, head)          # [4, 2, 3]
+
+PRZECHODZENIE PRZEZ LISTĘ JEDNOKIERUNKOWĄ
+
+Posługiwanie się danymi zorganizowanymi w listy nazywa się przetwarzaniem list. Rozważmy funkcję traverse(), która pozwala przejść przez listę i wykonać operację visit() na każdym węźle.
+
+def traverse(node, visit):
+    """Iteracyjne przejście przez listę jednokierunkową."""
+    while node:
+        visit(node)
+        node = node.next
+
+def traverse(node, visit):
+    """Rekurencyjne przejście przez listę jednokierunkową."""
+    if node:
+        visit(node)
+        traverse(node.next, visit)
+
+Powyższy schemat powtarza się w wielu funkcjach przetwarzających listy. Rozważmy przykładowo wypisanie zawartości całej listy.
+
+def print_list(node):
+    """Iteracyjne wypisanie listy jednokierunkowej."""
+    while node:
+        print ( node )
+        node = node.next
+
+def print_forward(node):
+    """Rekurencyjne wypisanie listy jednokierunkowej."""
+    if node:
+        print ( node )
+        print_forward(node.next)
+
+def print_backward(node):
+    """Rekurencyjne wypisanie listy wstecz."""
+    if node:
+        print_backward(node.next)
+        print ( node )
+
+def count_list(node):
+    """Obliczanie liczby węzłów na liście w czasie O(N)."""
+    length = 0
+    while node:
+        length += 1
+        node = node.next
+    return length
+
+def find_list(node, data):
+    """Wyszukiwanie elementu na liście w czasie O(N)."""
+    while node:
+        if node.data == data:
+            return node   # zwracamy węzeł z danymi
+        node = node.next
+    return None
+
+def is_empty(node):
+    """Sprawdzanie, czy lista jest pusta."""
+    return node is None
+
+PRZETWARZANIE LIST
+
+Zbadamy operacje, które przebudowują listę, dlatego jako wynik muszą zwracać referencję do ewentualnie zmienionego początku listy. Napiszemy funkcje insert_head() i insert_tail(), które dodają element odpowiednio na początek i na koniec listy, a zwracają nowy początek listy.
+
+def insert_head(node, new_node):   # algorytm klasy O(1)
+    """Wstawienie nowego węzła na początek listy."""
+    new_node.next = node
+    return new_node
+
+# Zastosowanie.
+# head = insert_head(head, Node(33))
+
+def insert_tail(node, new_node):   # algorytm klasy O(N)
+    """Wstawienie nowego węzła na koniec listy."""
+    head = node
+    last = None
+    while node:
+        last = node
+        node = node.next
+    if last is None:      # lista była pusta
+        return new_node
+    else:                 # last jest ostatni
+        last.next = new_ode
+        return head   # head się nie zmienił
+
+# Zastosowanie.
+# head = insert_tail(head, Node(55))
+
+Napiszemy funkcję reverse_list(), która odwraca kolejność elementów na liście, a zwraca nowy początek listy. Realizacja tego zadania wymaga trzech zmiennych przechowujących referencje do węzłów (before, after, node). Łącze before wskazuje na fragment listy już zmodyfikowany, a łącze after wskazuje na fragment, który jeszcze nie został zmodyfikowany. Dzięki łączu node nie zgubimy połączenia z resztą listy przy zmienianiu łącza after.next.
+
+def reverse_list(node):   # zwraca nowy head
+    """Odwrócenie kolejności elementów na liście."""
+    before = None
+    after = node
+    while after:
+        node = after.next
+        after.next = before
+        before = after
+        after = node
+    return before
+
+# Zastosowanie.
+# head = reverse_list(head)
+
+Następna funkcja wykonuje sortowanie węzłów listy metodą sortowania przez wstawianie. Elementy będą ustawione od największego do najmniejszego. Algorytm nie jest zbyt wydajny, ponieważ jest klasy O(N**2), ale ma walory dydaktyczne. Charakterystyczne jest przesuwanie widełek (before, after) wzdłuż listy, aby znaleźć miejsce do wstawienia węzła pomiędzy nimi.
+
+def insertsort(node):
+    """Sortowanie listy przez wstawianie."""
+    head1 = node          # początek listy pierwotnej
+    head2 = None          # początek listy posortowanej
+    while head1:
+        node = head1            # odczepiam węzeł
+        head1 = head1.next
+        node.next = None        # czyszczę łącze
+        before = None           # robię widełki w nowej liście
+        after = head2
+        while after:
+            if after.data < node.data:
+                break
+            before = after
+            after = after.next
+        # sprawdzamy, gdzie jesteśmy
+        if before is None:      # przed początkiem listy
+            head2 = node
+        else:         # jesteśmy w głębi listy, może na końcu
+            before.next = node
+        node.next = after
+    return head2
+
+# Zastosowanie.
+# head = insertsort(head)
+
+WYKRYWANIE CYKLI
+
+https://en.wikipedia.org/wiki/Cycle_detection#Tortoise_and_hare
+
+https://www.geeksforgeeks.org/detect-loop-in-a-linked-list/
+
+Ciekawym problemem jest wykrywanie cykli na liście powiązanej. Chodzi o sytuację, kiedy ostatni węzeł listy zamiast łącza None posiada łącze do pewnego węzła ze środka listy. Problem rozwiązuje algorytm Floyda (1967), nazywany także algorytmem żółwia i zająca (ang. Floyd’s Cycle-Finding Algorithm, The Tortoise and the Hare Algorithm).
+
+Algorytm utrzymuje dwa łącza, żółwia i zająca, przy czym łącze żółwia przesuwa się o jedną pozycję, a łącze zająca o dwie pozycje. Jeżeli na liście jest cykl, to łącza żółwia i zająca spotkają się w pewnym momencie wewnątrz cyklu. To wystarczy, aby wykryć cykl. W celu znalezienia pierwszego elementu należącego do cyklu i wyznaczenia długości cyklu, należy wykonać dodatkowe czynności. Złożoność czasowa O(n), pamięciowa O(1).
+
+def floyd_detect_cycle(node):
+    """Algorytm Floyda wykrywania cyklu."""
+    tortoise = node
+    hare = node
+    while tortoise and hare and hare.next:
+        tortoise = tortoise.next
+        hare = hare.next.next
+        if tortoise == hare:
+            print ( "cycle detected" )
+            return True
+    return False
+
+
+
+Klasa SingleList
+WPROWADZENIE
+
+Istnieją pewne subtelne problemy przy implementacji list z wykorzystaniem tylko klasy Node. Przy przejściu z funkcji do metod jest problem z pustą listą. Nie można wywoływać metod, gdy węzeł jest równy None. Rozwiązaniem jest inna implementacja.
+
+Innym problemem są operacje, które są klasy O(N), co powoduje, że dla długich list będą powolne. Są to np. znajdowanie liczby elementów na liście i wstawianie elementu na koniec listy. W podejściu obiektowym możemy rozwiązać te problemy wprowadzając dodatkowe atrybuty, tzn. możemy na bieżąco uaktualniać licznik elementów, oraz możemy przechowywać łącze do końca listy.
+IMPLEMENTACJA 2
+
+Obok klasy Node wprowadzamy klasę SingleList, w której przechowujemy elementy informacyjne poprawiające wydajność operacji na listach.
+
+class Node:
+    """Klasa reprezentująca węzeł listy jednokierunkowej."""
+
+    def __init__(self, data=None, next=None):
+        self.data = data
+        self.next = next
+
+    def __str__(self):
+        return str(self.data)   # bardzo ogólnie
+
+
+class SingleList:
+    """Klasa reprezentująca całą listę jednokierunkową."""
+
+    def __init__(self):
+        self.length = 0         # nie trzeba obliczać za każdym razem
+        self.head = None
+        self.tail = None
+
+    def is_empty(self):
+        return self.length == 0
+
+    def count(self):      # tworzymy interfejs do odczytu
+        return self.length
+
+    def insert_head(self, node):
+        if self.length == 0:
+            self.head = self.tail = node
+        else:                   # dajemy na koniec listy
+            node.next = self.head
+            self.head = node
+        self.length += 1
+
+    def insert_tail(self, node):   # klasy O(N)
+        if self.length == 0:
+            self.head = self.tail = node
+        else:                   # dajemy na koniec listy
+            self.tail.next = node
+            self.tail = node
+        self.length += 1
+
+    def remove_head(self):          # klasy O(1)
+        if self.length == 0:
+            raise ValueError("pusta lista")
+        node = self.head
+        if self.head == self.tail:   # self.length == 1
+            self.head = self.tail = None
+        else:
+            self.head = self.head.next
+        node.next = None   # czyszczenie łącza
+        self.length -= 1
+        return node   # zwracamy usuwany node
+
+
+# Zastosowanie.
+alist = SingleList()
+alist.insert_head(Node(11))         # [11]
+alist.insert_head(Node(22))         # [22, 11]
+alist.insert_tail(Node(33))         # [22, 11, 33]
+print ( "length {}".format(alist.length) ) # odczyt atrybutu
+print ( "length {}".format(alist.count()) ) # wykorzystujemy interfejs
+while not alist.is_empty():   # kolejność 22, 11, 33
+    print ( "remove head {}".format(alist.remove_head()) )
+
+
+
+Listy powiązane podwójnie
+WPROWADZENIE
+
+Listy powiązane podwójne mają elementy powiązane dwoma łączami: do elementu następnego (next) i do elementu poprzedniego (prev). W łatwy sposób możemy poruszać się po liście do przodu i wstecz. Ponadto przy usuwaniu węzła musimy znać tylko łącze do niego samego, podczas gdy przy listach połączonych pojedynczo potrzebne było też łącze do węzła poprzedzającego.
+IMPLEMENTACJA 1
+
+Rozpoczniemy od implementacji klasy Node reprezentującej węzły. Obok pola danych (data) musimy przechowywać łącza prev i next. Dostęp do listy zapewnia para łączy do pierwszego i ostatniego węzła pair = [head, tail].
+
+class Node:
+    """Klasa reprezentująca węzeł listy dwukierunkowej."""
+
+    def __init__(self, data=None, next=None, prev=None):
+        self.data = data
+        self.next = next
+        self.prev = prev
+
+    def __str__(self):
+        return str(self.data)
+
+# Ręczne budowanie listy.
+pair = [None, None]
+# [], pusta lista
+
+pair[0] = pair[1] = Node("first")
+# ["first"], jeden element na liście
+
+node = Node("second")  # nowy tail
+node.prev = pair[0]
+pair[0].next = node   # łącze w head trzeba uaktualnić
+pair[1] = node
+# ["first", "second"], są dwa elementy
+
+node = Node("middle") # head i tail bez zmian
+node.prev = pair[0]
+node.next = pair[1]
+pair[0].next = node   # łącze w head trzeba uaktualnić
+pair[1].prev = node   # łącze w tail trzeba uaktualnić
+# ["first", "middle", "second"], są trzy elementy
+
+PRZECHODZENIE PRZEZ LISTĘ DWUKIERUNKOWĄ
+
+Stworzymy funkcje potrzebne do zarządzania tak określoną listą. Funkcja traverse_forward() pozwala przejść przez listę od początku do końca i wykonać operację visit() na każdym węźle. Funkcja traverse_backward() przechodzi przez listę od końca do początku.
+
+def traverse_forward(pair, visit):
+    node = pair[0]   # head
+    while node:
+        visit(node)
+        node = node.next
+
+def traverse_backward(pair, visit):
+    node = pair[1]   # tail
+    while node:
+        visit(node)
+        node = node.prev
+
+# Przykład przechodzenia od początku do końca listy.
+def print_dlist(pair):
+    node = pair[0]   # head
+    print ( "Double list elements:" )
+    while node:
+        print node
+        node = node.next
+
+def count_dlist(pair):        # algorytm klasy O(N)
+    node = pair[0]
+    length = 0
+    while node:
+        length += 1
+        node = node.next
+    return length
+
+def is_empty(pair):
+    return pair[0] is None
+
+def insert_head(pair, node):
+    if pair[0]:
+        node.next = pair[0]
+        pair[0].prev = node
+        pair[0] = node
+    else:   # lista była pusta
+        pair[0] = pair[1] = node
+
+def insert_tail(pair, node):
+    if pair[1]:
+        node.prev = pair[1]
+        pair[1].next = node
+        pair[1] = node
+    else:   # lista była pusta
+        pair[0] = pair[1] = node
+
+def remove_head(pair):        # zwraca node
+    if pair[0] is None:
+        raise Exception("pusta lista")
+    elif pair[0] is pair[1]:   # jeden element na liście
+        node = pair[0]
+        pair[0] = pair[1] = None
+        return node
+    else:
+        node = pair[0]
+        pair[0] = pair[0].next
+        pair[0].prev = None   # czyszczenie łącza
+        return node
+
+def remove_tail(pair):        # zwraca node
+    if pair[0] is None:
+        raise Exception("pusta lista")
+    elif pair[0] is pair[1]:  # jeden na liście
+        node = pair[0]
+        pair[0] = pair[1] = None
+        return node
+    else:
+        node = pair[1]
+        pair[1] = pair[1].prev
+        pair[1].next = None
+        return node
+
+Możemy napisać funkcję, która sortuje listę metodą insertsort.
+
+def insertsort(pair):     # sortowanie przez wstawianie
+    head1 = pair[0]       # początek listy pierwotnej
+    head2 = None          # początek listy posortowanej
+    tail2 = None          # koniec listy posortowanej
+    while head1:
+        node = head1  # odczepiam węzeł
+        head1 = head1.next
+        node.next = node.prev = None  # poprawiam łącza
+        if head2 is None:
+            head2 = tail2 = node
+            continue
+        after = head2
+        while after:  # szukamy miejsca wstawienia
+            if after.data < node.data:
+                break
+            after = after.next
+        # Sprawdzamy, gdzie jesteśmy.
+        if after is None:       # wstawiamy na koniec listy
+            node.prev = tail2
+            tail2.next = node
+            tail2 = node
+        elif after is head2:    # wstawiamy na początek listy
+            node.next = head2
+            head2.prev = node
+            head2 = node
+        else:                   # jesteśmy w środku listy
+            node.prev = after.prev
+            node.next = after
+            after.prev.next = node
+            after.prev = node
+    pair[0] = head2
+    pair[1] = tail2
+
+
+
+Klasa DoubleList
+IMPLEMENTACJA 2
+
+W klasie DoubleList przechowujemy łącza do początku i do końca listy oraz dla wygody zapamiętujemy liczbę elementów przechowywanych w liście.
+
+class Node:
+    """Klasa reprezentująca węzeł listy dwukierunkowej."""
+
+    def __init__(self, data=None, next=None, prev=None):
+        self.data = data
+        self.next = next
+        self.prev = prev
+
+    def __str__(self):
+        return str(self.data)
+
+
+class DoubleList:
+    """Klasa reprezentująca całą listę dwukierunkową."""
+
+    def __init__(self):
+        self.length = 0
+        self.head = None
+        self.tail = None
+
+    def is_empty(self):
+        # return self.length == 0
+        return self.head is None
+
+    def count(self):
+        return self.length
+
+    def insert_head(self, node):
+        if self.head:
+            node.next = self.head
+            self.head.prev = node     # stary head
+            self.head = node          # nowy head
+        else:         # pusta lista
+            self.head = node
+            self.tail = node
+        self.length += 1
+
+    def insert_tail(self, node):
+        if self.tail:
+            node.prev = self.tail
+            self.tail.next = node     # stary tail
+            self.tail = node          # nowy tail
+        else:         # pusta lista
+            self.head = node
+            self.tail = node
+        self.length += 1
+
+    def remove_head(self):   # zwraca node
+        if self.head is None:
+            raise ValueError("pusta lista")
+        elif self.head is self.tail:
+            node = self.head
+            self.head = None
+            self.tail = None
+            self.length = 0
+            return node
+        else:
+            node = self.head
+            self.head = self.head.next
+            self.head.prev = None   # czyszczenie
+            self.length -= 1
+            return node
+
+    def remove_tail(self):   # zwraca node
+        if self.head is None:
+            raise ValueError("pusta lista")
+        elif self.head is self.tail:
+            node = self.tail
+            self.head = None
+            self.tail = None
+            self.length = 0
+            return node
+        else:
+            node = self.tail
+            self.tail = self.tail.prev
+            self.tail.next = None   # czyszczenie
+            self.length -= 1
+            return node
+
+
+
+Klasa DoubleList z wartownikiem
+IMPLEMENTACJA 3
+
+W klasie DoubleList przechowujemy łącze do wartownika oraz dla wygody zapamiętujemy liczbę elementów przechowywanych w liście (Cormen str. 236). Wartownik pozwala w jednolity sposób usuwać węzeł z dowolnego miejsca listy (właściwie powstaje lista cykliczna). Wartownik nie przechowuje żadnych istotnych danych w atrybucie data.
+
+class Node:
+    """Klasa reprezentująca węzeł listy dwukierunkowej."""
+
+    def __init__(self, data=None, next=None, prev=None):
+        self.data = data
+        self.next = next
+        self.prev = prev
+
+    def __str__(self):
+        return str(self.data)
+
+
+class DoubleList:
+    """Klasa reprezentująca całą listę dwukierunkową."""
+
+    def __init__(self):
+        self.length = 0   # może to trzymać w polu data wartownika?
+        self.nil = Node()   # wartownik
+        self.nil.next = self.nil
+        self.nil.prev = self.nil
+
+    def is_empty(self):
+        # return self.length == 0
+        return self.nil.next == self.nil
+
+    def count(self):
+        return self.length
+
+    def insert_head(self, node):
+        node.next = self.nil.next
+        node.prev = self.nil
+        self.nil.next.prev = node
+        self.nil.next = node
+        self.length += 1
+
+    def insert_tail(self, node):
+        node.next = self.nil
+        node.prev = self.nil.prev
+        self.nil.prev.next = node
+        self.nil.prev = node
+        self.length += 1
+
+    def remove_head(self):   # zwraca node
+        if self.is_empty():
+            raise ValueError("pusta lista")
+        node = self.nil.next
+        # Teraz ogólny schemat usuwania węzła.
+        node.prev.next = node.next
+        node.next.prev = node.prev
+        self.length -= 1
+        return node
+
+    def remove_tail(self):   # zwraca node
+        if self.is_empty():
+            raise ValueError("pusta lista")
+        node = self.nil.prev
+        # Teraz ogólny schemat usuwania węzła.
+        node.prev.next = node.next
+        node.next.prev = node.prev
+        self.length -= 1
+        return node
+
+
+
+Listy posortowane
+WPROWADZENIE
+
+W pewnych zastosowaniach list możemy wymagać, aby lista była stale posortowana. Potrzebujemy funkcji insert(), która będzie wstawiała elementy do listy we właściwe miejsce. Największy element będzie znajdował się na początku listy.
+LISTY POWIĄZANE POJEDYŃCZO POSORTOWANE
+
+Funkcja insert() ma zwracać nowy początek listy.
+
+def insert(node, data):
+    before = None         # robię widełki
+    after = node          # może być None
+    while after:
+        if after.data < data:
+            break
+        before = after
+        after = after.next
+    if before is None:    # przed początkiem listy
+        return Node(data, node)
+    else:                 # jesteśmy w głębi listy, może na końcu
+        before.next = Node(data, after)
+        return node
+
+Napiszemy funkcję merge(), która będzie łączyć dwie listy posortowane w jedną listę posortowaną. Funkcja zwraca początek wspólnej listy.
+
+def merge(node1, node2):
+    # Najpierw trzeba ustalić początek listy.
+    if node1:
+        if node2:
+            if node1.data > node2.data:
+                head = node1
+                node1 = node1.next
+            else:
+                head = node2
+                node2 = node2.next
+        else:
+            return node1
+    else:
+        return node2
+    last = head           # na pewno różny od None
+    # Teraz przetwarzamy obie listy.
+    while node1 is not None and node2 is not None:
+        if node1.data > node2.data:
+            last.next = node1
+            node1 = node1.next
+        else:
+            last.next = node2
+            node2 = node2.next
+        last = last.next
+    # Jedna lista mogła zostać niepusta.
+    if node1:
+        last.next = node1
+    if node2:
+        last.next = node2
+    return head
+
+LISTY POWIĄZANE PODWÓJNIE POSORTOWANE
+
+Budujemy listę posortowaną, gdzie największy element będzie się znajdował na początku listy.
+
+def insert_sorted(pair, data):
+    if pair[0] is None:   # pusta lista
+        pair[0] = pair[1] = Node(data)
+        return
+    after = pair[0]
+    while after:          # szukamy miejsca wstawienia
+        if after.data < data:
+            break
+        after = after.next
+    if after is None:     # wstawiamy na koniec listy
+        node = Node(data)
+        node.prev = pair[1]
+        pair[1].next = node
+        pair[1] = node
+    elif after is pair[0]:     # wstawiamy na początek listy
+        node = Node(data)
+        node.next = pair[0]
+        pair[0].prev = node
+        pair[0] = node
+    else:                 # jesteśmy w srodku listy
+        node = Node(data)
+        node.prev = after.prev
+        node.next = after
+        after.prev.next = node
+        after.prev = node
+
+Napiszemy funkcję merge(), która będzie łączyć dwie listy posortowane w jedną listę posortowaną. Funkcja zwraca nową listę.
+
+def merge(pair1, pair2): pass
+
+
+
+Drzewa binarne
+WPROWADZENIE
+
+Drzewo binarne to drzewo uporządkowane z korzeniem, w którym każdy węzeł ma co najwyżej dwóch potomków, lewego i prawego. Drzewa mają strukturę rekurencyjną i dlatego wiele operacji na nich można wygodnie zapisać za pomocą funkcji rekurencyjnych.
+
+Drzewo binarne to pojęcie abstrakcyjne, więc przy przejściu do konkretnej realizacji można wybrać jedną z wielu możliwości.
+IMPLEMENTACJA 1
+
+Najczęściej występująca implementacja drzewa binarnego oparta jest na strukturach/klasach zawierających dwa łącza (lewe i prawe). Łącze może być puste, jeżeli węzeł nie ma w tym miejscu potomka. Najpierw zdefiniujemy klasę Node, która będzie reprezentować węzeł. Puste drzewo będzie reprezentowane przez puste łącze do korzenia. Aby dostać się do konkretnego węzła, musimy zacząć od wyróżnionego węzła, zwanego korzeniem (root), a następnie poruszać się w dół łączem lewym lub prawym.
+
+class Node:
+    """Klasa reprezentująca węzeł drzewa binarnego."""
+
+    def __init__(self, data=None, left=None, right=None):
+        self.data = data
+        self.left = left
+        self.right = right
+
+    def __str__(self):
+        return str(self.data)
+
+root = None           # puste drzewo
+root = Node("start")  # drzewo z jednym węzłem
+# Ręczne budowanie większego drzewa.
+root = Node(1)
+root.left = Node(2)
+root.right = Node(3)
+root.left.left = Node(4)
+root.left.right = Node(5)
+root.right.left = Node(6)
+root.right.right = Node(7)
+
+PRZECHODZENIE PRZEZ DRZEWO
+
+|        1
+|      /   \
+|    2       3
+|   / \     / \
+|  4   5   6   7
+
+Najbardziej podstawową operacją związaną z przetwarzaniem drzew jest przechodzenie przez drzewo. Operacja polega na tym, aby mając łącze do korzenia, odwiedzić systematycznie każdy węzeł drzewa. Sposoby przechodzenia przez drzewo binarne:
+
+    preorder (węzeł, lewe, prawe) [1 2 4 5 3 6 7]
+    inorder (lewe, węzeł, prawe) [4 2 5 1 6 3 7]
+    postorder (lewe, prawe, węzeł) [4 5 2 6 7 3 1]
+    poziomami [1 2 3 4 5 6 7] 
+
+Pierwsze trzy sposoby przechodzenia przez drzewo można łatwo zaimplementować rekurencyjnie. Funkcja visit() oznacza operację na węźle, np. wyświetlenie zawartości.
+
+def traverse_preorder(top, visit):
+    if top is None:
+        return
+    visit(top)
+    traverse_preorder(top.left, visit)
+    traverse_preorder(top.right, visit)
+
+def traverse_inorder(top, visit):
+    if top is None:
+        return
+    traverse_inorder(top.left, visit)
+    visit(top)
+    traverse_inorder(top.right, visit)
+
+def traverse_postorder(top, visit):
+    if top is None:
+        return
+    traverse_postorder(top.left, visit)
+    traverse_postorder(top.right, visit)
+    visit(top)
+
+Przechodzenie przez drzewo w kolejności preorder możemy zaimplementować nierekurencyjnie za pomocą stosu.
+
+def traverse_stack(top, visit):
+    if top is None:
+        return
+    stack = list()   # stos symulujemy przez listę Pythona
+    stack.append(top)
+    while stack:
+        node = stack.pop()
+        visit(node)
+        if node.right:
+            stack.append(node.right)
+        if node.left:
+            stack.append(node.left)
+
+Warto zauważyć, że zamieniając stos na kolejkę uzyskamy procedurę realizującą przechodzenie przez drzewo poziomami.
+
+from Queue import Queue
+
+def traverse_queue(top, visit):
+    if top is None:
+        return
+    Q = Queue()
+    Q.put(top)
+    while not Q.empty():
+        node = Q.get()
+        visit(node)
+        if node.left:
+            Q.put(node.left)
+        if node.right:
+            Q.put(node.right)
+
+PARAMETRY DRZEWA
+
+Rozważymy funkcje, które będą obliczały pewne interesujące parametry drzewa binarnego. Szukamy funkcji podającej ilość węzłów w drzewie binarnym. Funkcja ma prostą strukturę rekurencyjną, a argumentem jest łącze do węzła.
+
+def btree_count(top):
+    if top is None:
+        return 0
+    return btree_count(top.left) + 1 + btree_count(top.right)
+
+def btree_count_iteratively(top):
+    if top is None:
+        return 0
+    counter = 0
+    stack = list()
+    stack.append(top)
+    while stack:
+        node = stack.pop()
+        counter += 1
+        if node.left:
+            stack.append(node.left)
+        if node.right:
+            stack.append(node.right)
+    return counter
+
+Następna funkcja będzie obliczała wysokość drzewa binarnego. Tu również pojawia się rekurencja.
+
+def btree_height(top):
+    if top is None:
+        return 0
+    left = btree_height(top.left)
+    right = btree_height(top.right)
+    return 1 + max(left, right)
+
+Bardzo pożyteczną funkcją jest funkcja drukująca lub rysująca drzewo. Funkcja rejestruje wysokość drzewa i korzysta z tej informacji do tworzenia wcięć w obrazie reprezentacji drzewa.
+
+def btree_print_indented(top, level=0):
+    if top is None:
+        return
+    btree_print_indented(top.right, level+1)
+    print "{}* {}".format('   '*level, top)
+    btree_print_indented(top.left, level+1)
+
+Łatwo można stworzyć drzewo binarne do którego nowe węzły dodawane są w przypadkowy sposób. Wyszukiwanie elementów w drzewie wymaga przeglądania całego drzewa.
+
+import random
+
+# Wersja rekurencyjna wstawiania.
+def btree_random_insert(top, node):   # zwraca nowy korzeń
+    if top is None:
+        return node
+    if random.random() < 0.5:
+        top.left = btree_random_insert(top.left, node)
+    else:
+        top.right = btree_random_insert(top.right, node)
+    return top
+
+# Wersja rekurencyjna wyszukiwania.
+def btree_random_search(top, data):   # zwraca węzeł lub None
+    if top is None or top.data == data:
+        return top
+    node = btree_random_search(top.left, data)
+    if node:
+        return node
+    else:
+        return btree_random_search(top.right, data)
+
+PRZETWARZANIE DRZEW BINARNYCH
+
+Chcemy stworzyć funkcję, która będzie umieszczała elementy w drzewie binarnym w pewien uporządkowany sposób. Możemy zażądać, aby przy przeglądaniu drzewa w kolejności inorder elementy były posortowane. W ten sposób powstanie drzewo poszukiwań binarnych (binary search tree, BST). Funkcja będzie miała strukturę rekurencyjną, a argumentami funkcji będą: łącze do węzła i wstawiany element. Dodawanie elementu powoduje przebudowę drzewa, dlatego funkcja zwraca nową referencję do węzła. Przepis na taką funkcję może być następujący:
+
+    Jeżeli łącze jest puste, to tworzymy węzeł z elementem.
+    Jeżeli łącze nie jest puste, to porównujemy wstawiany element z elementem przechowywanym w węźle. Elementy mniejsze umieszczamy są w lewym podrzewie, a większe w prawym poddrzewie. 
+
+Musimy jeszcze doprecyzować przypadek, w którym wstawiany element jest równy elementowi przechowywanemu w węźle (duplikat). Mamy m.in. następujące możliwości:
+
+    Ignorowanie duplikatów. Wtedy porzucamy elementy powtarzające się. Takie zachowanie może być potrzebne, gdy tworzymy posortowaną listę wszystkich różnych wyrazów pojawiających się w danym tekście.
+    Zliczanie duplikatów. Wtedy każdy węzeł zawiera element oraz licznik powtórzeń (klasa Node musi być zmodyfikowana).
+    Wstawianie duplikatów do drzewa. Wtedy duplikat wstawiamy zawsze do lewego lub do prawego poddrzewa. To podejście jest potrzebne, kiedy poza kluczami w wężle są dodatkowe informacje. 
+
+Napiszemy funkcję ignorującą duplikaty.
+
+# Wersja rekurencyjna wstawiania.
+def bst_insert(top, node):   # zwraca nowy korzeń
+    if top is None:
+        return node
+    if node.data < top.data:
+        top.left = bst_insert(top.left, node)
+    elif node.data > top.data:
+        top.right = bst_insert(top.right, node)
+    else:
+        pass          # ignorujemy duplikaty
+    return top            # bez zmian
+
+Potrzebujemy również funkcji sprawdzającej, czy w takim posortowanym drzewie znajduje się dany element. Zwracany jest cały znaleziony wierzchołek lub None.
+
+# Wersja rekurencyjna wyszukiwania.
+def bst_search(top, data):   # zwraca węzeł lub None
+    if top is None or data == top.data:
+        return top
+    elif data < top.data:
+        return bst_search(top.left, data)
+    else:   # data > top.data
+        return bst_search(top.right, data) 
+
+# Wersja iteracyjna wyszukiwania.
+def bst_search_iteratively(top, data):   # zwraca węzeł lub None
+    while top is not None:
+        if data == top.data:
+            return top
+        elif data < top.data:
+            top = top.left
+        else:   # data > top.data
+            top = top.right
+    return None
+
+
+
+Klasa BinarySearchTree
+WPROWADZENIE
+IMPLEMENTACJA 2
+
+Badamy obiektową implementację drzewa poszukiwań binarnych z klasą BinarySearchTree. Przyjmujemy założenia:
+
+    W drzewie trzymamy elementy, które można porównywać.
+    Ignorujemy duplikaty.
+    Nie usuwamy elementów z drzewa. 
+
+class Node:
+    """Klasa reprezentująca węzeł drzewa binarnego."""
+
+    def __init__(self, data=None, left=None, right=None):
+        self.data = data
+        self.left = left
+        self.right = right
+
+    def __str__(self):
+        return str(self.data)
+
+    def insert(self, node):
+        if self.data < node.data:      # na prawo
+            if self.right:
+                self.right.insert(node)
+            else:
+                self.right = node
+        elif self.data > node.data:    # na lewo
+            if self.left:
+                self.left.insert(node)
+            else:
+                self.left = node
+        else:
+            pass    # ignoruję duplikaty
+
+    def count(self):
+        counter = 1
+        if self.left:
+            counter += self.left.count()
+        if self.right:
+            counter += self.right.count()
+        return counter
+
+    def search(self, data):
+        if self.data == data:
+            return self
+        if data < self.data:
+            if self.left:
+                return self.left.search(data)
+        else:
+            if self.right:
+                return self.right.search(data)
+        return None
+
+
+class BinarySearchTree:
+    """Klasa reprezentująca binarne drzewo poszukiwań."""
+
+    def __init__(self):
+        self.root = None
+
+    def insert(self, node):
+        if self.root:
+            self.root.insert(node)
+        else:
+            self.root = node
+
+    def count(self):
+        if self.root:
+            return self.root.count()
+        else:
+            return 0
+
+    def search(self, data):   # zwraca node lub None
+        if self.root:
+            return self.root.search(data)
+        else:
+            return None
+
+IMPLEMENTACJA 3
+
+Można rozważyć inną implementację drzewa BST, w której klasa Node ma tylko metody __init__ i __str__, a cała praca jest przeniesiona do metod w klasie BinarySearchTree.
+
+class Node:
+    """Klasa reprezentująca węzeł drzewa binarnego."""
+
+    def __init__(self, data=None, left=None, right=None):
+        self.data = data
+        self.left = left
+        self.right = right
+
+    def __str__(self):
+        return str(self.data)
+
+
+class BinarySearchTree:
+    """Klasa reprezentująca binarne drzewo poszukiwań."""
+    pass
+
+
+
+Listy cykliczne
+WPROWADZENIE
+
+Listy cykliczne powiązane pojedyńczo mają łącze ostatniego elementu skierowane na pierwszy element. Wydaje się, że ta lista nie powinna pozostawać pusta.
+PROBLEM JOSEPHUSA
+
+[Sedgewick s. 85] Załóżmy, że N osób postanowiło wybrać spośród siebie przywódcę w następujący sposób: wszyscy stają w kole, a następnie za pomocą m-sylabowej wyliczanki eliminują za każdym razem m-tą osobę z koła. Problem polega na tym, by wyznaczyć z góry, która osoba pozostanie jako jedyna w kole.
+
+Implementacja korzysta z listy cyklicznej i argumentów wiersza poleceń. W problemie Josephusa lista umożliwia szybkie usuwanie elementów z sekwencji. W sicie Eratostenesa wydajność algorytmu zależy od użycia tablic, ponieważ tablice zapewniają szybkie odnajdywanie elementów o znanym numerze.
+
+import sys
+
+class Node:
+    """Klasa reprezentująca węzeł listy jednokierunkowej."""
+
+    def __init__(self, data=None, next=None):
+        self.data = data
+        self.next = next
+
+    def __str__(self):
+        return str(self.data)   # bardzo ogolnie
+
+N = int(sys.argv[1])
+m = int(sys.argv[2])
+
+# Pierwszy węzeł na liście.
+head = Node(1)
+head.next = head                        # lista cykliczna
+
+# Wstawiamy następne liczby za head.
+node = head
+for i in range(2, N+1):
+    node.next = Node(i, head)
+    node = node.next
+
+# Wyrzucamy co m-ty element.
+while node != node.next:
+    for i in range(m-1):
+        node = node.next
+    node.next = node.next.next      # wyrzucam node.next
+print ( "zostaje {}".format(node) )
+
+Podczas budowania listy program używa dwa razy więcej przypisań niż potrzeba, ponieważ po wstawieniu każdego węzła zapewnia utrzymanie listy cyklicznej. Można zmodyfikować program tak, aby budował listę cykliczną bez dodatkowej pracy. 
+
+
+Sterty
+WPROWADZENIE
+
+Rozwiązanie wielu problemów zależy od możliwości szybkiego wybrania największego lub najmniejszego elementu ze zbioru, z którego elementy często są usuwane i do którego są wstawiane. Jednym ze sposobów rozwiązania tego problemu jest zachowanie uporządkowania zbioru, dzięki czemu element najmniejszy lub największy jest zawsze dostępny. Jednak stałe porządkowanie zbioru jest rozwiązaniem kosztownym, poza tym naszym celem nie jest trzymanie w kolejności wszystkich elementów, wobec czego robimy coś, co nie jest nam potrzebne. Lepszym rozwiązaniem jest zastosowanie stert.
+STERTY
+
+Sterty (kopce) są to drzewa (zwykle binarne) zorganizowane tak, że można szybko pobrać węzeł o największej wartości. Koszty takiego rozwiązania są mniejsze od kosztów zachowywania uporządkowania danych. Każdy węzeł dziecko ma wartość mniejszą (lub równą) od rodzica. Węzeł główny ma wartość największą w całym drzewie.
+
+Ograniczenie porządku kopcowego można nałożyć na każde drzewo, ale jest ono szczególnie wygodne w przypadku pełnego drzewa binarnego. Sterty są zrównoważone lewostronnie, czyli poziomy wypełniamy kolejno od lewej strony. Szczególnie dobrym sposobem zapisu stert jest zapisywanie ich w ciągłej tablicy. Przy założeniu, że tablica jest indeksowana od zera, rodzic elementu z pozycji i znajduje się na pozycji [(i-1)/2], gdzie [] oznacza część całkowitą. Lewe i prawe dziecko danego węzła znajdują się w miejscach (2i+1) i (2i+2). Jest to ważne przy naszej implementacji stert.
+
+Interfejs sterty ma 4 funkcje: __init__(), is_empty(), insert(), remove(). Czasem dodaje się funkcję count(). Musimy umieć porównywać elementy wkładane na stertę.
+
+Numeracja węzłów na stercie. Te numery są też indeksami do tablicy.
+
+poziom 1 |                      0
+.........|           /                    \
+poziom 2 |          1                      2
+.........|      /        \             /         \
+poziom 3 |     3          4           5           6
+.........|   /   \       /  \        /  \        /  \
+poziom 4 |  7     8     9    10    11    12    13    14
+.........| / \   / \   / \  /  \  /  \  /  \  /  \  /  \
+poziom 5 |15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30
+
+IMPLEMENTACJA 1
+
+Implementacja oparta jest na założeniu, że indeksy tablicy przechowującej elementy sterty są numerowane od zera. Na początku definiujemy funkcje, króre dla elementu o indeksie n obliczają odpowiednio: indeks rodzica (heap_parent), indeks lewego potomka (heap_left) i indeks prawego potomka (heap_right). Następnie definiujemy funkcje, które przywracają strukturę sterty, jeżeli zmienił się element o indeksie najmniejszym (fix_down) lub największym (fix_up). W końcu określamy klasę Heap z metodami wymaganymi dla stery.
+
+def heap_parent(n):
+    return (n-1)/2
+
+def heap_left(n):
+    return (2*n+1)
+
+def heap_right(n):
+    return (2*n+2)
+
+def swap(L, left, right):
+    # L[left], L[right] = L[right], L[left]
+    item = L[left]
+    L[left] = L[right]
+    L[right] = item
+
+# Naprawa kopca, gdy na pozycji ipos zwiększył się priorytet.
+def fix_up(L, ipos):
+    ppos = heap_parent(ipos)
+    # tu widać, że korzeń ma nr 0
+    while (ipos > 0) and (L[ppos] < L[ipos]):
+        swap(L, ppos, ipos)
+        # przesunięcie węzła w górę
+        ipos = ppos
+        ppos = heap_parent(ipos)
+
+# Naprawa kopca, gdy na pozycji ipos zmniejszył się priorytet.
+def fix_down(L, ipos, n):
+    # n - rozmiar tablicy, nie możemy przekroczyć
+    # UWAGA indeksy tablicy są mniejsze od n
+    while True:
+        # wybór dziecka do zamiany z bieżącym węzłem
+        lpos = heap_left(ipos)
+        rpos = heap_right(ipos)
+        if lpos < n and L[lpos] > L[ipos]:
+            mpos = lpos
+        else:
+            mpos = ipos
+        if rpos < n and L[rpos] > L[mpos]:
+            mpos = rpos
+        if mpos == ipos:
+            break      # drzewo to sterta
+        else:              # trzeba zamienić z dzieckiem
+            swap(L, mpos, ipos)
+            # przesuwam węzeł o jeden poziom w dół
+            ipos = mpos
+
+class Heap:
+    """Implementacja sterty (kopca max)."""
+
+    def __init__(self):
+        self.items = []         # tu trzymamy elementy sterty
+
+    def __str__(self):              # podglądamy stertę
+        return str(self.items)
+
+    def is_empty(self):
+        # return (self.items == [])
+        return not self.items
+
+    def insert(self, item):                   # nie zwraca wartości
+        self.items.append(item)   # dodajemy na koniec tablicy
+        # ponowne przekształcenie drzewa w stertę
+        fix_up(self.items, len(self.items)-1)
+
+    def remove(self):  # zwraca element największy
+        k = len(self.items)-1
+        # najpierw największy na koniec
+        swap(self.items, 0, k)
+        # trzeba poprawić drzewo, zaczynam od góry
+        # znowu widać, że zaczynam od korzenia nr 0
+        fix_down(self.items, 0, k)
+        return self.items.pop()
+
+    def count(self):      # liczba elementów na stercie
+        return len(self.items)
+
+Po zapisaniu kodu do osobnego modułu heap.py, możemy w dowolnym programie korzystać ze sterty.
+
+import heap
+
+aheap = heap.Heap()
+for item in [5, 10, 20, 1, 25, 22, 9]:
+    aheap.insert(item)
+# Zdejmowanie elementów ze sterty od największego do najmniejszego.
+while not aheap.is_empty():
+    print ( aheap.remove() )
+
+Jeżeli na stercie jest N elementów, to ścieżka od korzenia do najniższego poziomu ma około log(N) węzłów. Daje to dobrą wydajność kolejki priorytetowej zaimplementowanej za pomocą sterty. Operacja wstawiania elementu do sterty wymaga nie więcej niż log(N) porównań elementów. Operacja usuwania elementu maksymalnego wymaga nie więcej niż 2*log(N) porównań elementów.
+
+Konstrukcja sterty o liczności N elementów zajmuje czas proporcjonalny do N*log(N) elementów w przypadku najgorszym, jeśli każdy nowy element jest największym, jaki dotąd pojawił się na stercie. W przypadku przeciętnym, gdy napływają losowo uporządkowane elementy, czas budowy kopca jest liniowy.
+HEAPSORT
+
+Algorytm sortowania przez kopcowanie (sortowanie stogowe) wykorzystuje strukturę danych zwaną kopcem. Jest to poprawione sortowanie przez wybór. Algorytm jest klasy O(N*log(N)) i jest niestabilny. Ważną zaletą algorytmu jest działanie w miejscu, czyli bez dodatkowej pamięci. Wykorzystujemy wcześniej zdefiniowane funkcje.
+
+def heapsort(L):
+    """Sortowanie listy przez kopcowanie."""
+    n = len(L)
+    # Najpierw budujmy pierwotną stertę.
+    for k in range(heap_parent(n-1),-1,-1):
+        fix_down(L, k, n)
+    while n > 1:
+        swap(L, 0, n-1)
+        n = n - 1
+        fix_down(L, 0, n)
+
+Konstrukcja wstępująca kopca ma liniową złożoność obliczeniową, ponieważ przetwarzane kopce są w większości małe.
+
+Dla kopca o rozmiarze 7=2**3-1 mamy 2 kopce o rozmiarze 3 i jeden kopiec o rozmiarze 7. Maksymalna liczba promocji (porównań jest dwa razy więcej) wynosi 2*1+1*2=4.
+
+Dla kopca o rozmiarze 15=2**4-1 mamy 4 kopce o rozmiarze 3, dwa kopce o rozmiarze 7 i jeden kopiec o rozmiarze 15. Maksymalna liczba promocji (porównań jest dwa razy więcej) 4*1+2*2+1*3=11.
+
+Dla kopca o rozmiarze N=2**m-1 mamy oszacowanie liczby promocji
+sum_{s=1}^{m-1} s*pow(2,m-1-s) = 2**m-m-1 < N.
+
+Zachodzi twierdzenie [Sedgewick s.356], że algorytm sortowania przez kopcowanie do uporządkowania N elementów wymaga mniej niż 2*N*ln(N) porównań.
+
+Jednym ze sposobów usprawnienia algorytmu sortowania przez kopcowanie jest zbudowanie kopca opartego na tablicowej reprezentacji pełnego drzewa trynarnego (trójkowego) uporządkowanego kopcowo.
+
+Kopce nadają się do rozwiązywania problemów selekcji, czyli wybierania k największych elementów spośród N elementów, szczególnie dla małych k. Wystarczy zatrzymać algorytm sortowania przez kopcowanie po wybraniu z kopca k elementów. 
+
