@@ -1,0 +1,906 @@
+Python (6) - klasy
+PLAN
+
+    Programowanie zorientowane obiektowo
+    Tworzenie klas
+    Metody
+    Metody specjalne
+    Dziedziczenie
+    Gra w karty 
+    
+
+Programowanie zorientowane obiektowo
+WPROWADZENIE
+
+Python jest językiem do programowania zorientowanego obiektowo (OOP, object-oriented programming). Cechy takiego programowania są następujące:
+
+    Programy są zbudowane z definicji obiektów i definicji funkcji, ponadto większość obliczeń wyrażona jest w postaci operacji na obiektach.
+    Każda definicja obiektu odpowiada obiektowi lub koncepcji w świecie rzeczywistym; funkcje działające na obiektach odpowiadają sposobowi działania obiektów w świecie rzeczywistym. 
+
+Python ma cechy, które wspierają programowanie orientowane obiektowo. Nie są one konieczne do programowania, ale je ułatwiają. Nowe typy obiektów w Pythonie tworzone są za pomocą klas. Klasy obsługują dziedziczenie, czyli mechanizm dostosowywania kodu oraz jego ponownego wykorzystania. Klasy udostępniają specjalne metody protokołów, które pozwalają odpowiadać obiektom na różne rodzaje operacji, tak jak to robią obiekty typów wbudowanych (przeciążanie operatorów lub polimorfizm). Wreszcie klasy pozwalają grupować wiele komponentów działających razem w jeden zespół (kompozycja).
+
+Programowanie zorientowane obiektowo jest nie tylko technologią, ale i pewnym doświadczeniem.
+
+Podsumowanie koncepcji związanych z programowaniem zorientowanym obiektowo:
+
+    Dziedziczenie - w Pythonie oparte na wyszukiwaniu atrybutów.
+    Polimorfizm - znaczenie metody (operacji) uzależnione jest od typu (klasy) obiektu, na którym się tą operację wykonuje.
+    Hermetyzacja (enkapsulacja) - ukrywanie szczegółów implementacyjnych za interfejsem obiektu. Można modyfikować implementację interfejsu bez wpływania na użytkowników tego obiektu.
+    Kompozycja - osadzanie innych obiektów w obiekcie pojemnika.
+    Wzorce projektowe (ang. design patterns) - często wykorzystywane struktury programowania zorientowanego obiektowo. 
+
+
+
+
+Tworzenie klas
+WPROWADZENIE
+
+W matematyce punkt na płaszczyźnie można zapisać za pomocą pary dwóch współrzędnych (x, y). W Pythonie naturalnym sposobem reprezentacji będzie para liczb typu float. Chcemy taką parę traktować jako jeden złożony obiekt. Przykładowym rozwiązaniem jest lista lub krotka, ale zwykle lepsze jest zdefiniowanie nowego typu, inaczej klasy. Składnia (dwukropek i wcięcia) jest taka jak dla innych wyrażeń złożonych w Pythonie. Nazewnictwo klas powinno być typu StudlyCups.
+
+Instrukcja wykonywalna class tworzy obiekt klasy i przypisuje go do nazwy. Zakres instrukcji class staje się przestrzenią nazw atrybutów obiektu klasy. Atrybuty klasy udostępniają stan obiektu i jego zachowanie.
+
+Wywołanie obiektu klasy tworzy za każdym razem nowy obiekt instancji klasy. Każdy obiekt instancji dziedziczy atrybuty klasy oraz otrzymuje własną przestrzeń nazw. Przypisania do atrybutów self w metodach tworzą atrybuty instancji (a nie klasy).
+
+# Składnia.
+class NazwaKlasy:
+    class_docstring       # opcjonalnie
+    instrukcje
+
+class NazwaKlasy(lista_klas_nadrzędnych):
+    class_docstring       # opcjonalnie
+    instrukcje
+
+class Point:                  # instrukcja tworząca obiekt klasy
+    """Klasa odpowiadająca punktom na płaszczyźnie."""
+    pass                  # wymagana jakaś instrukcja
+
+point = Point()               # tworzenie obiektu instancji klasy
+# Uwaga: nawiasy pokazują, że jest to wywołanie klasy.
+
+# Do punktu (instancji) przypisujemy atrybuty korzystając z notacji z kropką.
+point.x = 3.4
+point.y = 5.6
+x = 7.8
+
+# Zmienne x i point.x to dwie różne wartości.
+# Instancja point jest osobną przestrzenią nazw.
+print ( "{} {}".format(x, point.x) )     # 7.8 3.4
+print ( point )                  # heksadecymalne info
+
+# Obiekt może być parametrem funkcji w zwykły sposób.
+# Nazwa point wewnątrz funkcji jest lokalna i nie koliduje
+# z globalną zmienną point.
+
+def print_point(point):
+    """Wypisz punkt."""
+    print ("({}, {})".format(point.x, point.y))
+
+# Wywołujemy funkcję dla punktu. Do funkcji przekazujemy wartość
+# zmiennej point, czyli referencję do obiektu.
+
+print_point(point)            # (3.4, 5.6)
+
+PORÓWNYWANIE OBIEKTÓW
+
+Są sytuacje, w których trzeba dobrze rozumieć co to znaczy, że dwa obiekty są "te same" czy "takie same".
+
+point1 = Point()              # pierwszy punkt
+point1.x = 3
+point1.y = 4
+
+point2 = Point()              # drugi punkt
+point2.x = 3
+point2.y = 4
+
+print ( point1 == point2 )    # False, to nie są te same obiekty, inne id
+point3 = point1               # kopiujemy referencję
+print ( point1 == point3 )    # True,  to jest porównywanie referencji
+
+# Taki typ równości nazywa się shallow equality (płytka, powierzchowna równość).
+# Aby porównać zawartość obiektów (deep equality, głęboka równość),
+# możemy napisać funkcję.
+
+def same_point(point1, point2):
+    """Porównaj punkty."""
+    return (point1.x == point2.x) and (point1.y == point2.y)
+
+print ( same_point(point1, point2) )    # True, te same wartości x i y
+print ( same_point(point1, point3) )    # True, oczywiste
+
+KOMPOZYCJA
+
+Chcemy stworzyć klasę do reprezentowania prostokąta. Zakładamy dla prostoty, że boki prostokąta są równoległe do osi X i Y. Będziemy określać lewy dolny róg prostokąta, szerokość (width) i wysokość (height).
+
+class Point:
+    """Klasa dla punktów."""
+    pass
+
+class Rectangle:
+    """Klasa dla prostokątów."""
+    pass
+
+box = Rectangle()
+box.width = 100.0
+box.height = 200.0
+box.corner = Point()          # obiekt Point jest zagnieżdżony w obiekcie Rectangle
+box.corner.x = 0.0            # określamy atrybuty punktu
+box.corner.y = 0.0
+
+# Nowe instancje klas mogą powstawać wewnątrz funkcji.
+
+def find_center(rect):        # zwraca instancję punktu
+    """Znajdź środek prostokąta.."""
+    point = Point()
+    point.x = rect.corner.x + rect.width / 2.0
+    point.y = rect.corner.y + rect.height / 2.0
+    return point          # referencja do nowego obiektu
+
+center = find_center(box)
+print_point(center)           # (50.0, 100.0)
+
+# Możemy zmieniać stan obiektu przez podstawienia jego atrybutów.
+# Zapiszemy to wewnątrz funkcji, która pozwala na powiększanie prostokąta.
+
+def grow_rect(rect, dw, dh):            # funkcja zmienia oryginał
+    """Powiększ prostokąt."""
+    rect.width = rect.width + dw
+    rect.height = rect.height + dh
+
+KOPIOWANIE OBIEKTÓW
+
+Często potrzebna jest nam operacja kopiowania obiektu, która czasem powiązana jest z tworzeniem aliasu. Istnieje moduł copy, który potrafi kopiować każdy obiekt.
+
+import copy
+
+point1 = Point()
+point1.x = 3
+point1.y = 4
+point2 = copy.copy(point1)
+print ( point1 == point2 )             # False, inne referencje
+print ( same_point(point1, point2) )   # True, te same wartości x i y
+
+Dla obiektów prostych jak Point, które nie mają zagnieżdzonych innych obiektów, zwykłe copy.copy() jest wystarczające (shallow copy). Ale dla obiektu Rectangle, który zawiera referencję do Point, copy.copy() nie robi tego, czego oczekujemy. Jeżeli stworzymy prostokąt rect1, a następnie za pomocą copy.copy() zrobimy kopię rect2, to okaże się, że rect1 i rect2 zawierają referencję do tego samego punktu (rect1.corner jest identyczny z rect2.corner). Rozwiązaniem jest głęboka kopia (deep copy). Wykorzystamy ją do przepisania funkcji grow_rect() tak, aby zwracała nowy obiekt klasy Rectangle, który jest w tym samym położeniu, ale ma nowe wymiary.
+
+def grow_rect2(rect, dw, dh):          # zwraca nowy obiekt
+    """Zwróć powiększony prostokąt."""
+    import copy
+    rect2 = copy.deepcopy(rect)
+    rect2.width = rect2.width + dw
+    rect2.height = rect2.height + dh
+    return rect2
+
+
+
+
+Metody
+WPROWADZENIE
+
+Chcemy sobie ułatwić tworzenie nowych obiektów i podstawianie atrybutów.
+
+class Point:
+    """Klasa dla punktów."""
+    pass
+
+class Rectangle:
+    """Klasa dla prostokątów."""
+    pass
+
+def set_point(point, x, y):
+    """Ustaw punkt."""
+    point.x = x
+    point.y = y
+
+def print_point(point):
+    """Wypisz punkt."""
+    print ( "({}, {})".format(point.x, point.y) )
+
+def same_point(point1, point2):
+    """Porównaj punkty."""
+    return (point1.x == point2.x) and (point1.y == point2.y)
+
+def set_rect(rect, x, y, w, h):
+    """Ustaw prostokąt."""
+    rect.width = w
+    rect.height = h
+    rect.corner = Point()
+    set_point(rect.corner, x, y)
+
+def find_center(rect):
+    """Zwróć środek prostokąta."""
+    x = rect.corner.x + rect.width/2.0
+    y = rect.corner.y + rect.height/2.0
+    center = Point()
+    set_point(center, x, y)
+    return center
+
+def find_area(rect):
+    """Oblicz pole powierzchni prostokąta."""
+    return rect.width * rect.height
+
+Obserwując klasy Point i Rectangle można zauważyć, że nie ma oczywistego związku między definicjami klas, a definicjami funkcji. Ponadto funkcje działające na instancjach klas mają przynajmniej jeden argument będący instancją klasy. Te obserwacje są motywacją dla metod. Każda metoda jest związana z klasą i ma być wywołana na instancji klasy. Metody są jak funkcje, z dwoma wyjątkami:
+
+    Metody są zdefiniowane wewnątrz klasy, aby podkreślić ich związek z klasami.
+    Składnia wywoływania metod różni się od składni zwykłych funkcji. 
+
+Nazwa self nie jest słowem kluczowym, ale na mocy ugruntowanej konwencji odnosi się do argumentu znajdującemu się najbardziej na lewo. Nazwa ta automatycznie odnosi się do przetwarzanej instancji. Nazwa other jest zwyczajowo nadawana argumentowi drugiemu licząc od lewej, kiedy metoda wykonuje pewne operacje związane z dwoma różnymi instancjami, np. dodawanie, porównywanie.
+
+class Point:                            # definicja obiektu klasy
+    """Klasa dla punktów."""            # łańcuch dokumentacyjny
+
+    def set_point(self, x, y):          # definicja metody klasy
+        """Ustaw punkt."""
+        self.x = x            # przypisanie atrybutu do instancji
+        self.y = y
+
+    def print_point(self):
+        """Wypisz punkt."""
+        print ( "({}, {})",format(self.x, self.y) )
+
+    def same_point(self, other):
+        """Porównaj punkty."""
+        return (self.x == other.x) and (self.y == other.y)
+
+pt1 = Point()
+pt1.set_point(3.4, 5.6)       # odpowiada Point.set_point(pt1, 3.4, 5.6)
+pt1.print_point()             # odpowiada Point.print_point(pt1)
+pt2 = Point()
+pt2.set_point(3.4, 5.6)
+pt2.print_point()
+print ( "porównanie {}".format(pt1.same_point(pt2)) )
+print ( "porównanie {}".format(Point.same_point(pt1, pt2)) )   # równoważne
+
+# Metodę można utworzyć poza klasą, a następnie trzeba powiązać
+# ją z klasą (na tym etapie nazwa self jest istotna).
+def show_point(self):         # tworzymy funkcję
+    """Wypisz punkt."""
+    print ( "x = {}".format(self.x) )
+    print ( "y = {}".format(self.y) )
+
+Point.show = show_point       # funkcja staje się metodą klasy
+pt1.show()                    # wywołanie metody
+Point.show(pt1)               # równoważne wywołanie
+
+
+
+
+Metody specjalne
+WPROWADZENIE
+
+W Pythonie nie ma przeciążania funkcji, bo nazwa funkcji jest referencją do obiektu. W C++ mogą być funkcje o tej samej nazwie, które różnią się typami argumentów (ale nie zwracanych wartości). W Pythonie przeciążanie operatorów robi się za pomocą metod specjalnych.
+
+A Guide to Python's Magic Methods [Python 2]
+
+https://rszalski.github.io/magicmethods/
+
+PRZECIĄŻANIE OPERATORÓW
+
+W uproszczeniu przeciążanie operatorów pozwala obiektom zapisanym za pomocą klas przechwytywać i odpowiadać na operacje, które działają na typach wbudowanych. Są to operacje dodawania, wyświetlania, tworzenia wycinków, itp. W ten sposób obiekty własne użytkownika zachowują się jak obiekty wbudowane, co powoduje powstanie bardziej spójnych i łatwiejszych do zrozumienia interfejsów.
+
+Metody zawierające w nazwie podwójne znaki podkreślenia (jak __X__) są specjalnymi punktami zaczepienia. Takie metody wywoływane są automatycznie, kiedy instancje pojawią się w operacjach wbudowanych. Klasy mogą nadpisywać większość operacji wbudowanych. Nie istnieją wartości domyślne dla metod przeciążania operatorów (i nie są one potrzebne).
+
+# Wybrane metody specjalne.
+__new__  pierwsza metoda wywoływana przy inicjalizacji obiektu,
+    rzadko definiowana jawnie, przekazuje argumenty do __init__;
+    [__new__(cls, arg1, arg2, ...): ...]
+
+__init__  konstruktor
+
+__del__  destruktor, działa gdy licznik referencji zejdzie do zera
+    i zaczyna pracować garbage collection;
+    wyrażenie del x tylko zmniejsza licznik referencji o 1;
+    wyrażenie del x _nie_ przekłada się na x.__del__();
+
+__str__  zamiana na "nieformalny" string, wywoływane przez str(x);
+    metoda działa, jeżeli obiekt jest dostępny bezpośrednio;
+
+__repr__  "oficjalna" reprezentacja obiektu przez string repr(x);
+    powinna wyglądać jak poprawne wyrażenie w Pythonie 
+    do stworzenia obiektu na nowo; 
+    zwraca wartość w sesji interaktywnej;
+    metoda działa również wtedy, gdy obiekt jest zagnieżdżony 
+    w innym obiekcie, np. jest elementem listy;
+
+__unicode__   wywoływane przez unicode(x);
+
+__format__(self, formatstr)   np. "Obiekt {}".format(x)
+
+__hash__   wywoływane przez hash(x), zwraca int
+
+# Operatory dwuargumentowe.
+__add__  dodawanie, x + y
+__sub__  odejmowanie, x - y
+__mul__  mnożenie, x * y
+__mod__  reszta z dzielenia, x % y
+__divmod__  zwraca krotkę (div, mod), divmod(x, y)
+__pow__  potęgowanie, pow(x, y) lub x ** y; powinien być opcjonalny 
+    trzeci argument, jeżeli ma być wspierane pow(x, y, z)]
+
+# Definiowanie operatora dzielenia /.
+__div__  dzielenie klasyczne (x/y)
+__floordiv__  dzielenie całkowite, x // y
+__truediv__ działa w Pythonie 2, jeżeli jest aktywne __future__.division
+
+# Reflected arithmetic operators.
+# Wersje prawe operatorów, które wywoływane są wtedy, gdy obiekt
+# po prawej stronie operatora jest naszą instancją klasy, jednak
+# obiekt z lewej strony nie jest instancją naszej klasy.
+# Wersje prawe operatorów są potrzebne dla operacji przemiennych.
+# W wersjach prawych operatorów PRAWY argument staje się self.
+# Dla działania nieinstancja + instancja mamy
+# def __radd__(self, other): ...
+# w kodzie self będzie instancją, a other nieinstancją.
+# Nieinstancja nie może definiować __add__ lub powinna zwracać
+# wyjątek NotImplemented dla naszego typu.
+
+__radd__  right add
+__rsub__  right sub
+__rmul__  right mul
+__rdiv__  right div
+__rtruediv__  right truediv
+__rfloordiv__  right
+__rmod__  reszta z dzielenia
+__rdivmod__  zwraca tuple
+__rpow__  potęgowanie
+
+# Augmented arithmetic assignments powinny być robione in-place
+# (zmieniać self) i zwracać wynik (niekoniecznie self).
+__iadd__  add (x += y)
+__isub__  sub (x -= y)
+__imul__  mul (x *= y)
+__idiv__  (x /= y)
+__itruediv__  div (x //= y)
+__ifloordiv__ (x %= y)
+__imod__
+
+# Przykład.
+alist = [2]
+alist += [5]   # zmiana obiektu!
+print ( alist )   # [2, 5]
+# To jest równoważne działaniom:
+result = alist.__iadd__([5])   # potrzebne return self
+alist = result
+
+# Jeżeli klasa nie ma metody __iadd__, operacja A += B zamieniana jest
+# na A = A + B, co działa też dla obiektów niezmiennych (str, tuple).
+
+# Przykład klasy dla obiektów zmiennych.
+class Time:
+    def __iadd__(self, other):
+        self.s += other.s
+        return self   # typowe zachowanie
+
+# Operatory bitowe.
+__lshift__(self, other)   left bitwise shift, operator <<
+__rshift__(self, other)   right bitwise shift, operator >>
+__and__(self, other)   bitowe and, operator &
+__or__(self, other)   bitowe or, operator |
+__xor__(self, other)   bitowe xor, operator ^
+Są jeszcze prawe (i augmented) wersje operatorów bitowych.
+
+# Operatory jednoargumentowe.
+__pos__  znak plus, +x
+__neg__  znak minus, -x
+__abs__  wartość bezwzględna, abs(x)
+__invert__  zwykle odwrotność lub negacja, ~x
+__complex__  implementacja complex(x)
+__int__  implementacja int(x)
+__long__  implementacja long(x)
+__float__  implementacja float(x)
+
+# Porównywanie.
+__cmp__  porównywanie (Python 2), zwraca -1|0|+1
+__len__  długość kontenera, len(x)
+__nonzero__  test prawdziwości (Python 2), jeżeli obiekt nie jest kontenerem
+__bool__  test prawdziwości (Python 3), bool(x)
+__bool__ = __nonzero__        # kod dla zachowania kompatybilności Pythona 2 i 3
+
+# Tak zwane "rich comparison" methods (Python 2.6+).
+# Jeżeli nie są zdefiniowane, wywoływane jest __cmp__
+__lt__  mniejsze, x < y
+__gt__  większe, y > y
+__eq__  równe, x == y
+__le__  mniejsze lub równe, x <= y
+__ge__  większe lub równe, x >= y
+__ne__  różne, x != y, dawniej też x <> y
+# PEP 207
+# min() and list.sort() operations only use the < operator (less).
+# max() only use the > operator.
+# 'in' and 'not in' operators and dictionary lookup only use the == operator.
+# The reflexivity rules are assumed by Python.
+# x > y jest równe y < x (interpreter może przestawić).
+
+# Emulowanie typów kontenerowych.
+__len__             # len(x)
+Długość kontenera, testy prawdziwości, jeśli nie ma __bool__.
+Metoda wymaga, aby zwracana wartość była typu int.
+
+__setattr__(self, "attr", value)   # X.attr = value
+Przypisanie atrybutu do instancji.
+
+__delattr__(self, "attr")   # del X.attr
+Usuwanie atrybutu.
+
+__getattr__(self, "attr")   # X.attr
+Funkcja wywoływana przy próbie korzystania z atrybutu,
+który nie istnieje. Można go wtedy uzupełnić, np.
+self.__dict__["attr"] = some_value
+Zwyczajnie przy próbie X.attr Python wykona
+return self.__dict__["attr"]   # kluczem jest string
+
+__getattribute__(self, "attr")   # X.attr
+Przechwytywanie atrybutu, który może istnieć lub nie.
+Może być trudne do zaimplementowania bez popadnięcia w nieskończoną pętlę.
+Należy się odwołać do klasy bazowej, np.
+super(Foo, self).__getattribute__("attr")
+
+__getitem__  indeksowanie, wycinanie (Python 3), iteracje, 
+X[key], X[i:j], pętle for oraz inne iteracje, jeśli nie ma __iter__
+def __getitem__(self, key): pass  # kod dla X[key]
+
+__setitem__  przypisanie indeksu i wycinka, 
+X[key] = value, X[i:j] = sequence
+def __setitem__(self, key, value): pass     # kod dla X[key] = value
+
+__delitem__  usuwanie indeksu i wycinka,
+del X[key], del X[i:j]
+
+__contains__  test przynależności
+item in X (dowolny iterator)
+
+# Wspomaganie kopiowania z modułem copy.
+__copy__(self)  płytka kopia
+Y = copy.copy(X)
+
+__deepcopy__(self, memo)  głęboka kopia (słownik memo)
+Y = copy.deepcopy(X, memo)
+
+PRZECHWYTYWANIE WYWOŁAŃ
+
+Przechwytywanie wywołań instancji realizuje metoda __call__. Dzięki temu klasy mogą emulować funkcje, ale z dodatkowymi możliwościami, jak zachowywanie stanu między wywołaniami.
+
+class Printer:
+    """Klasa reprezentująca obiekt wyświetlający."""
+
+    def __init__(self, counter=0):
+        """Utwórz obiekt."""
+        self.counter = counter  # licznik wywołań funkcji
+
+    def __call__(self, *arguments, **keywords):
+        """Obsługa wywołania."""
+        self.counter += 1
+        print ( "Wywołanie: {} {}".format(arguments, keywords) )
+
+X = Printer()
+X(1, 2)                       # Wywołanie: (1, 2) {}
+X(1, 2, x=3, y=4)             # Wywołanie: (1, 2) {"x":3, "y":4}
+print ( X.counter )           # odczyt licznika wywołań funkcji
+
+ATRYBUTY KLASY
+
+Czasem potrzebna jest znajomość liczby istniejących instancji danej klasy. Rozwiązaniem jest atrybut klasy, który na bieżąco zwiększa wartość o jeden przy tworzeniu instancji, a także zmniejsza wartość o jeden przy niszczeniu instancji. Atrybut klasy istnieje w przestrzeni nazw klasy, więc potrzebna jest odpowiednia kwalifikacja przy odnoszeniu się do niego.
+
+class Point:
+    """Klasa dla punktów."""
+    counter = 0                     # atrybut klasy
+
+    def __init__(self, x=0, y=0):
+        """Konstuktor punktu."""
+        self.x = x
+        self.y = y
+        Point.counter += 1
+        print ("init: counter = {}".format(Point.counter))
+
+    def __str__(self):
+        """Postać napisowa punktu."""
+        return "({}, {})".format(self.x, self.y)
+
+    def __repr__(self):
+        """Reprezentacja punktu."""
+        return "Point({}, {})".format(self.x, self.y)
+
+    def __add__(self, other):       # pt1 + pt2
+        """Dodawanie punktów jako wektorów."""
+        return Point(self.x + other.x, self.y + other.y)
+
+    def __del__(self):
+        """Destruktor punktu."""
+        Point.counter -= 1
+        print ("del: counter = {}".format(Point.counter))
+
+print "counter =", Point.counter        # na starcie counter=0
+pt1 = Point(3.4, 5.6)                   # counter=1
+pt2 = Point(4.5, 2.1)                   # counter=2
+print ( "metoda __str__ {} {}".format(pt1, pt2) )
+print ( "metoda __add__ {}".format(pt1 + pt2) )   # counter wzrasta do 3 i od razu wraca do 2
+
+# Każda instancja ma łącze do swojej klasy.
+print ( pt1.__class__ )
+print ( pt1.__dict__.keys() )           # przestrzeń nazw instancji
+
+del pt1                                 # counter=1
+del pt2                                 # counter=0
+print ( dir(Point) )                    # przestrzeń nazw klasy
+print ( Point.__dict__.keys() )         # przestrzeń nazw klasy
+
+Każda klasa czy instancja ma atrybut __dict__, który jest słownikiem przestrzeni nazw obiektu (podobnie jak dla modułu). Klasy mają również atrybut __bases__ będący krotką ich klas nadrzędnych.
+RICH COMPARISONS
+
+W Pythonie 3 nie ma metody __cmp__, tylko stosuje się rich comparisons. W Pythonie 2.6+ rich comparisons mają wyższy priorytet, niż metoda __cmp__, ale generalnie nie należy łączyć tych dwóch metod określających porównywanie obiektów.
+
+Why Python need rich comparison?
+Ładne przykłady z NumPy i the SQLAlchemy project.
+
+http://stackoverflow.com/questions/20989750/why-python-need-rich-comparison
+
+PEP 207 - Rich Comparisons.
+
+https://www.python.org/dev/peps/pep-0207/
+
+Total ordering class decorator (Python recipe).
+
+http://code.activestate.com/recipes/576685/
+
+
+
+Dziedziczenie
+WPROWADZENIE
+
+Klasy służą jako fabryki generujące wiele obiektów instancji, ale również pozwalają na modyfikacje za pomocą wprowadzania nowych komponentów (klas podrzędnych) w miejsce modyfikowania istniejących komponentów w miejscu. Python pozwala klasom na dziedziczenie po innych klasach, umożliwiając tworzenie hierarchii klas specjalizujących jakieś zachowanie za pomocą redefiniowania atrybutów.
+
+Klasy nadrzędne są wymieniane w nawiasach w nagłówku instrukcji class. Instancje klasy podrzędnej dziedziczą atrybuty po wszystkich klasach nadrzędnych.
+
+class C1:                     # nowy obiekt klasy
+    pass
+
+class C2:                     # nowy obiekt klasy
+    message = "GvR"           # atrybut klasy C2
+
+class C3(C1, C2):             # dziedziczenie wielokrotne
+
+    def __init__(self, who):
+        """Konstruktor instancji klasy C3."""
+        self.name = who
+
+# C3 to klasa podrzędna.
+# C1 i C2 to klasy nadrzędne.
+
+I1 = C3("Adam")               # instancja klasy C3
+I2 = C3("Bogdan")             # instancja klasy C3
+
+print ( I1.name )             # kolejność przeszukiwania: I1, C3, C1, C2
+# Tu przeszukiwanie zakończy się na I1,
+# ponieważ name jest atrybutem instancji.
+
+print ( I1.message )          # kolejność przeszukiwania: I1, C3, C1, C2
+# Tu przeszukiwanie dotrze aż do klasy C2.
+I1.message = "Python"         # atrybut tylko instancji I1
+print ( I1.message )          # Python, odczyt atrybutu instancji I1
+print ( I2.message )          # GvR, dochodzimy do atrybutu klasy C2
+print ( C2.message )          # GvR, odczytanie wprost atrybutu klasy
+
+print ( C3.__bases__ )        # krotka klas nadrzędnych
+
+Jeżeli obiekt pochodzi z instrukcji class, to wyrażenie obiekt.atrybut uruchamia w Pythonie wyszukiwanie. Python przeszukuje drzewo połączonych obiektów, szukając pierwszego wystąpienia atrybutu. Najpierw szuka w obiekcie, a następnie we wszystkich klasach powyżej niego, od dołu do góry i od lewej do prawej.
+WYWOŁYWANIE METOD KLAS NADRZĘDNYCH
+
+class FirstClass:
+    """Przykładowa pierwsza klasa."""
+
+    def __init__(self, x):
+        """Konstruktor instancji klasy FirstClass."""
+        instrukcje
+
+class SecondClass(FirstClass):
+    """Przykładowa druga klasa, dziedziczona z pierwszej."""
+
+    def __init__(self, x, y):
+        """Konstruktor instancji klasy SecondClass."""
+        # Wywołanie kostruktora klasy nadrzędnej.
+        FirstClass.__init__(self, x)
+        instrukcje            # nowe działania inicjalizacyjne
+
+KLASY W MODUŁACH
+
+Klasy są atrybutami w modułach. Nazwa klasy jest zmienną przechowującą referencję do obiektu klasy.
+
+# Moduł persons.py
+"""Moduł z narzędziami do opisu osób."""     # docstring
+
+class Person:
+    """Klasa reprezentująca osoby."""
+
+    def __init__(self, who):
+        """Konstruktor osoby."""
+        self.name = who
+
+value = 2012
+
+# Kod testujący moduł.
+if __name__ == "__main__":
+    adam = Person("Adam")
+    print ( adam.name )
+
+# Moduł główny
+
+import persons                          # import modułu
+
+student = persons.Person("Anna")        # tworzenie instancji
+print ( student.name )                  # Anna, atrybut instancji
+print ( persons.value )                 # 2012, potrzebna kwalifikacja
+
+INTROSPEKCJA W PYTHONIE
+
+# Poznane narzędzia.
+instancja.__class__           # łącze do klasy
+instancja.__class__.__name__  # nazwa klasy
+instancja.__dict__.keys()     # przestrzeń nazw instancji (tylko atrybuty instancji)
+dir(instancja)                # jw + odziedziczone atrybuty z klas
+
+klasa.__dict__.keys()         # przestrzeń nazw klasy
+klasa.__bases__               # krotka klas nadrzędnych
+
+SPOWOLNIONE TYPOWANIE
+
+Przykład z książki: Joel Spolsky, Sztuka pisania oprogramowania. Wybór i redakcja Joel Spolsky, Helion.
+
+# Budujemy hierarchię klas.
+class Pet:
+    """Klasa dla ulubieńców."""
+
+    def speak(self):
+        pass  # odkładamy definicję na później
+
+class Cat(Pet):
+    """Klasa dla kotów."""
+
+    def speak(self):
+        print ( "miau!" )
+
+class Dog(Pet):
+    """Klasa dla psów."""
+
+    def speak(self):
+        print ( "hau!" )
+
+# Klasa nie wywiedziona z Pet.
+class Person:
+    """Klasa dla osób."""
+
+    def speak(self):
+        print ( "witam!" )
+
+    def drive(self):
+        print ( "piii!" )
+
+# Zwykła funkcja, a nie metoda.
+def command(pet):
+    pet.speak()
+
+pets = [Cat(), Dog(), Person()]   # konstruktory
+
+# Przykład polimorfizmu Pythona.
+# Funkcja oczekuje określonego interfejsu (metody speak),
+# a nie określonego typu argumentu.
+for pet in pets:
+    command(pet)
+
+    Testowanie kodu następuje na etapie wykonania.
+    Błąd zostanie zaraportowany w postaci wyjątku.
+    Pomyślna kompilacja programu (C/C++) gwarantuje poprawność składniową, ale nie dowodzi poprawnego działania programu.
+    Bruce Eckel: niezbędne jest rygorystyczne testowanie, a nie rygorystyczna kontrola typów.
+    Przetestowany program w Pythonie jest tak samo solidny, jak jego odpowiednik w C++ czy Javie. 
+
+
+
+Gra w karty
+WPROWADZENIE
+
+Referencja: Allen B. Downey, Jeffrey Elkner and Chris Meyers, How to Think Like a Computer Scientist [różne wersje dostępne w sieci].
+
+Gra Old Maid jest przykładem zastosowania dziedziczenia. Celem gry jest pozbycie się wszystkich kart z ręki. Karty odkładamy w parach, a parę tworzą dwie czarne (Trefl, Pik) lub dwie czerwone (Karo, Kier) karty o tym samym numerze. Gracze w koło ciągną od siebie karty i odkładają pary aż zostanie jeden gracz z jedną kartą bez pary (na początku gry usuwa się z talii królową trefl). W poniższym programie komputer symuluje grę wszystkich graczy.
+
+# Implementacja w Pythonie 2.7 (__cmp__).
+
+class Card:
+    """Klasa reprezentująca karty do gry."""
+    # Te listy poniżej są widoczne w metodach tej klasy.
+    # Numery i kolory kart są zakodowane (mapowane) w dwóch listach.
+    suit_list = ["trefl", "karo", "kier", "pik"]
+    rank_list = ["puste","As","2","3","4","5","6","7","8","9","10","Walet","Dama","Krol"]
+
+    def __init__(self, suit=0, rank=0):
+        """Konstruktor karty."""
+        self.suit = suit
+        self.rank = rank
+
+    def __str__(self):
+        """Zwróć postać napisową karty."""
+        # siódemka kier ma postać "7 Kier"
+        return "{} {}".format(Card.rank_list[self.rank], Card.suit_list[self.suit])
+
+    def __repr__(self):
+        """Zwróć reprezentację napisową."""
+        # siódemka kier ma postać "Card(2, 7)"
+        return "Card({}, {})".format(self.suit, self.rank)
+
+    def __cmp__(self, other):
+        """Porównaj karty."""
+        # Sprawdzamy kolory kart.
+        if self.suit > other.suit:
+            return 1
+        if self.suit < other.suit:
+            return -1
+        # Kolory te same, sprawdzamy numery.
+        if self.rank > other.rank:
+            return 1
+        if self.rank < other.rank:
+            return -1
+        return 0      # remis
+
+
+class Deck:
+    """Klasa reprezentująca talię."""
+
+    def __init__(self):
+        """Stwórz całą talię kart."""
+        self.cards = []
+        for suit in range(4):
+            for rank in range(1, 14):
+                self.cards.append(Card(suit, rank))
+
+    def __str__(self):
+        """Zwróć postać napisową talii kart."""
+        s = ""
+        for i in range(len(self.cards)):
+            s = s + " " * i + str(self.cards[i]) + "\n"
+        return s
+
+    def shuffle(self):
+        """Tasuj talię."""
+        import random
+        n_cards = len(self.cards)
+        for i in range(n_cards):
+            j = random.randrange(i, n_cards)
+            self.cards[i], self.cards[j] = self.cards[j], self.cards[i]
+
+    def remove_card(self, card):
+        """Unicestwianie karty."""
+        if card in self.cards:
+            self.cards.remove(card)
+            return True
+        else:
+            return False
+
+    def pop_card(self):
+        """Rozdanie (wydanie na zewnatrz) jednej karty."""
+        return self.cards.pop()   # pop() usuwa ostatni element z listy
+
+    def is_empty(self):
+        """Test czy talia jest pusta."""
+        return self.cards == []
+
+    def deal(self, hands, n_cards=999):
+        """Rozdaj karty do rąk."""
+        # Domyślnie rozdaje wszystkie karty do dostępnych rąk.
+        # hands to lista lub tuple rąk.
+        n_hands = len(hands)
+        for i in range(n_cards):
+            if self.is_empty():
+                break
+            card = self.pop_card()    # weź kartę
+            hand = hands[i % n_hands] # do której reki
+            hand.add_card(card)       # dodaj kartę
+
+
+class Hand(Deck):             # DZIEDZICZENIE z klasy Deck
+    """Klasa reprezentująca rękę gracza."""
+    # Ręka to odmiana talii, każda metoda talii działa także dla ręki.
+
+    def __init__(self, name=""):
+        """Konstruktor ręki."""
+        self.cards = []
+        self.name = name        # nazwa ręki, domyślnie pusta
+
+    def __str__(self):
+        """Zwróć postać napisową ręki."""
+        # To nadpisze metodę __str__ odziedziczoną z Deck.
+        s = "Ręka " + self.name
+        if self.is_empty(): 
+            s = s + " jest pusta\n"
+        else:
+            s = s + " zawiera\n"
+        # Korzystamy z przestrzeni nazw Deck.
+        return s + Deck.__str__(self)
+
+    def add_card(self, card):
+        """Dodanie karty do ręki."""
+        self.cards.append(card)
+
+
+class CardGame:
+    """Ogólna klasa dla gier karcianych."""
+    # W tej klasie chcemy mieć wspólne cechy różnych gier.
+
+    def __init__(self):
+        """Konstruktor gry karcianej."""
+        # Mamy tu nie tylko inicjalizację atrybutu, ale konkretne obliczenia.
+        # Ogólnie gra ma dwa atrybuty: deck, hands.
+        self.deck = Deck()
+        self.deck.shuffle()     # tasowanie talii
+        self.hands = []
+
+    def print_hands(self):
+        """Wypisz ręce graczy."""
+        for hand in self.hands:
+            print ( hand )
+
+
+class OldMaidHand(Hand):    # tworzymy rękę do naszej gry
+
+    # Metoda __init__ jest dziedziczona z klasy Hand.
+    def remove_matches(self):
+        count = 0
+        # Kopiujemy karty, bo Python może zgłupieć, gdy pętla jest po liście,
+        # która się zmienia (usuwamy karty).
+        original_cards = self.cards[:]
+        for card in original_cards:
+            match = Card(3 - card.suit, card.rank)
+            if match in self.cards:
+                self.cards.remove(card)
+                self.cards.remove(match)
+                print ( "Ręka {}: {} tworzy parę z {}".format(self.name, card, match) )
+                count = count + 1
+        return count
+
+
+class OldMaidGame(CardGame):         # tworzymy naszą grę
+
+    def play(self, names):
+        # Usuwamy królową trefl.
+        self.deck.remove_card(Card(0, 12))
+        # Tworzymy rekę każdego gracza jako atrybuty gry.
+        for name in names:
+            self.hands.append(OldMaidHand(name))
+        # Rozdajemy karty do rąk.
+        self.deck.deal(self.hands)
+        print ( "---- Rozdano karty" )
+        self.print_hands()
+        # Usuwamy początkowe pary.
+        matches = self.remove_all_matches()
+        print ( "---- Pary usunięte, początek gry" )
+        self.print_hands()
+        # Gramy dopóki nie będzie sparowanych 50 kart.
+        turn = 0
+        n_hands = len(self.hands)
+        while matches < 25:         # 25 par to 50 kart
+            matches = matches + self.play_one_turn(turn)
+            turn = (turn + 1) % n_hands
+        print ( "---- Koniec gry" )
+        self.print_hands()
+
+    def remove_all_matches(self):
+        count = 0
+        for hand in self.hands:
+            count = count + hand.remove_matches()
+        return count
+
+    def play_one_turn(self, i):
+        if self.hands[i].is_empty(): return 0
+        neighbor = self.find_neighbor(i)
+        picked_card = self.hands[neighbor].pop_card()
+        self.hands[i].add_card(picked_card)
+        print ( "Ręka {} pobiera {}".format(self.hands[i].name, picked_card) )
+        count = self.hands[i].remove_matches()
+        self.hands[i].shuffle()
+        return count
+
+    def find_neighbor(self, i):
+        n_hands = len(self.hands)
+        for next in range(1, n_hands):
+            neighbor = (i + next) % n_hands
+            if not self.hands[neighbor].is_empty():
+                return neighbor
+
+game = OldMaidGame()
+game.play(["Adam", "Bogdan", "Cezary"])
+
