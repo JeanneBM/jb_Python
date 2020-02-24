@@ -33,3 +33,41 @@ wiersz_nagłówka:                         # obowiązkowy dwukropek
 # Może to być wygodne w trybie interaktywnym.
 
 if x > y: print x                        # print x to wyrażenie
+
+-------------------------------------------------------------------------------------------------
+
+# Składnia.
+
+if test1:
+    instrukcje
+elif test2:                   # opcjonalne, może być więcej sekcji elif
+    instrukcje
+else:                         # opcjonalne (jeden raz), jeśli nic nie pasuje
+    instrukcje
+
+-------------------------------------------------------------------------------------------------
+
+# Niech n będzie pewną liczbą całkowitą.
+if n < 0:
+    print ( "liczba ujemna!" )
+elif n % 2 == 0:              # sprawdzamy inną możliwość
+    print ( "{} {}".format(n, "liczba parzysta") )
+else:                         # to jest sekcja opcjonalna
+    print ( "{} {}".format(n, "liczba nieparzysta") )
+    
+-------------------------------------------------------------------------------------------------
+
+# Porównanie C i Pythona.
+# W C else należy do ostatniego (najbliższego) if, ale generalnie
+# dla uniknięcia pomyłki w rozumieniu lepiej wstawić nawiasy klamrowe.
+# W Pythonie wcięcia decydują o logice.
+if x:
+    if y:
+        instrukcja1
+else:   # powiązane z if x
+    instrukcja2
+    
+-------------------------------------------------------------------------------------------------
+
+
+
