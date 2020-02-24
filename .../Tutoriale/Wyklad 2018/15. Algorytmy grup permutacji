@@ -1,0 +1,625 @@
+Python (15) - algorytmy grup permutacji
+PLAN
+
+    Grupy abstrakcyjne
+    Grupy permutacji
+    Klasa Perm
+    Klasa Group (wersja 1)
+    Silne generatory
+    Klasa Group (wersja 2)
+    Kostka Rubika 
+    
+
+Grupy abstrakcyjne
+WPROWADZENIE
+
+Badaniem własności grup zajmuje się teoria grup, która jest działem matematyki.
+DEFINICJA GRUPY
+
+Niech G będzie zbiorem niepustym, a * działaniem w G. Parę (G,*) nazywamy grupą, jeżeli spełnione są warunki:
+(i) działanie * jest łączne, czyli dla każdego a, b, c z G mamy (a*b)*c = a*(b*c) [można więc oznaczać a*b*c].
+(ii) istnieje element neutralny (jednostkowy) e w G taki, że dla każdego a z G mamy e*a = a*e = a.
+(iii) dla każdego a z G istnieje element odwrotny ~a taki, że a*(~a) = (~a)*a = e.
+
+Jeżeli działanie * jest przemienne (a*b = b*a), to grupę (G,*) nazywamy przemienną (abelową). Często działanie w grupie abelowej oznacza się znakiem plus, a samą grupę przez (G,+).
+
+Twierdzenie. Niech (G,*) będzie grupą. Wtedy zachodzi:
+(i) dla każdego a z G mamy ~(~a) = a.
+(ii) dla każdego a, b z G mamy ~(a*b) = (~b)*(~a).
+
+Rząd grupy G jest to liczba elementów w grupie. Oznaczenie: g lub |G|.
+
+Podgrupa (subgroup) H grupy G jest to para (H,*), gdzie H jest podzbiorem G, * to działanie w G, a (H,*) jest grupą. H jest podgrupą właściwą, jeżeli 1 < |H| < |G|.
+HOMOMORFIZM
+
+Homomorfizm dwóch grup (group homomorphism) [f: G w G'; f(a*b) = f(a)*f(b) dla każdego a, b z G]. Jądro homomorfizmu [Ker(f) = f^{-1}({e'})]. Izomorfizm = homomorfizm + bijekcja.
+
+Twierdzenie Cayley'a: Każda grupa G rzędu n jest izomorficzna z pewną podgrupą grupy symetrycznej S_n.
+WARSTWY (COSETS)
+
+Niech G to grupa, a A i B zbiory zawarte w G. Określamy
+AB := {ab: a należy do A, b należy do B},
+~A := {~a: a należy do A}.
+Jeżeli b należy do G, to
+bA := {b}A,
+Ab := A{b}.
+
+Dla niepustego A mamy własności:
+(i) AG = GA = G,
+(ii) ~G = G,
+(iii) eA = Ae = A.
+
+Niech H podgrupa G. Można zdefiniować relację równoważności:
+a~~b wtw a(~b) należy do H.
+Stąd dostaniemy klasy równoważności
+[a] = [b: b~~a] = [b: b(~a) należy do H] = [b: b należy do Ha] = Ha (warstwa prawostronna; zbiór).
+Podobnie można zdefiniować inną relację równoważności
+a~~b wtw (~a)b należy do H.
+Stąd dostaniemy klasy równoważności [a] = aH (warstwa lewostronna). Można rozłożyć G na rozłączne warstwy o równej długości G = H + aH + bH + ... + pH (dla grupy G skończonej). The cosets of any subgroup H form a partition of G.
+
+Twierdzenie Lagrange'a. Rząd podgrupy H jest podzielnikiem rzędu grupy G.
+PODGRUPA NIEZMIENNICZA, GRUPA ILORAZOWA
+
+Podgrupa H grupy G jest podgrupą niezmienniczą (dzielnikiem normalnym, normal subgroup), jeżeli aH = Ha dla każdego a należącego do G [równość w sensie zbiorów!]. Jeżeli H jest dzielnikiem normalnym, to dla każdego a z G zachodzi aH(~a) = H [tak można sprawdzać].
+
+W zbiorze warstw można wprowadzić działanie [a]*[b] = [ab]. Wtedy para (G/H,*) to grupa ilorazowa (quotient group or factor group), a jej rząd to |G|/|H|.
+KLASY ELEMENTÓW SPRZĘŻONYCH
+
+    W grupie G określamy relację równoważności (przydaje się przy reprezentacjach):
+    a~~b wtw istnieje c z G takie, że cb(~c) = a (a jest sprzężone do b).
+    Możemy podzielić grupę G na rozłączne klasy równoważności.
+    Element komutujący ze wszystkimi elementami grupy G stanowi odrębną klasę (np. element jednostkowy e) [a = cb(~c) = bc(~c) = be = b, ten sam element].
+    Wszystkie elementy klasy elementów sprzężonych mają ten sam rząd.
+    Ilość elementów w klasie elementów sprzężonych jest podzielnikiem rzędu grupy G. 
+
+STRUKTURY GRUPOWE
+
+Liczby struktur grupowych danego rzędu. Widać, że najczęściej mamy grupy C_n i D_n, iloczyny proste grup niższego rzędu, ale również pojawiają się nowe struktury grupowe. Ile jest grup prostych, to rozstrzyga twierdzenie.
+
++----+------+---------------------------------------------+
+|Rząd|Liczba| Przykłady, [n]=nieabelowa                   |
++----+------+---------------------------------------------+
+|  1 |    1 |C_1                                          |
+|  2 |    1 |C_2                                          |
+|  3 |    1 |C_3=A_3                                      |
+|  4 |    2 |C_4, D_2=C_2xC_2                             |
+|  5 |    1 |C_5                                          |
+|  6 |    2 |C_6=C_3xC_2, D_3[n]                          |
+|  7 |    1 |C_7                                          |
+|  8 |    5 |C_8, D_2xC_2, C_4xC_2, D_4[n], Kwaterniony[n]|
+|  9 |    2 |C_9, C_3xC_3                                 |
+| 10 |    2 |C_10=C_5xC_2, D_5[n]                         |
+| 11 |    1 |C_11                                         |
+| 12 |    5 |C_12, C_6xC_2, D_6[n], A_4[n], G_12[n]       |
++----+------+---------------------------------------------+
+D_2xC_2 = C_2xC_2xC_2
+C_12 = C_4xC_3
+C_6xC_2 = C_3xC_2xC_2
+D_6 = D_3xC_2 nieabelowa
+G_12 grupa nieabelowa opisana w książce Jamesa i Liebecka
+
+REPREZENTACJE GRUP
+
+Reprezentacją grupy G nazywamy homomorfizm D z grupy G w grupę macierzy kwadratowych [D(a*b) = D(a)*D(b) dla a, b z G]. Rozmiar reprezentacji D to rozmiar macierzy. 
+
+
+Grupy permutacji
+WPROWADZENIE
+
+Dlaczego grupy permutacji są interesujące?
+
+    Grupy permutacji są najstarszym typem reprezentacji grup.
+    Grupy permutacji pełnią w matematyce szczególną rolę. Pojawiają się w bardzo różnorodnych działach matematyki. Są z jednej strony niemal najprostszymi grupami nieprzemiennymi, ale też są wystarczająco złożone, aby zawierać wszystkie grupy skończone.
+    Algorytmy grup permutacji pełnią ważną rolę konia pociągowego systemów algebry symbolicznej obliczających grupy.
+    Permutacje są obecne w fizyce. 
+
+PERMUTACJE
+
+Definicja. Permutacją (bez powtórzeń) zbioru n-elementowego X nazywamy dowolną bijekcję p: X w X. Zwykle X to zbiór liczb naturalnych od 1 do n, choć w implementacjach komputerowych czasem X to zbiór liczb naturalnych/całkowitych od 0 do n-1.
+
+Dla permutacji określamy mnożenie *, które rozumiemy jako składanie funkcji, (p*q)(i) = p(q(i)).
+
+Permutacje zbioru n-elementowego X tworzą grupę symetryczną Sym(X), oznaczaną też S_n. Rząd grupy S_n wynosi |S_n| = n!
+
+Każdą podgrupę grupy symetrycznej nazywamy grupą permutacji.
+
+Podgrupa alternująca Alt(X) [A_n], zawiera permutacje parzyste z grupy Sym(X) [S_n]. Dla n większego lub równego 5, grupa A_n jest prosta i jest to jedyna podgrupa niezmiennicza S_n. Rząd grupy alternującej wynosi |A_n| = n!/2.
+
+Twierdzenie Cayley'a. Każda grupa G rzędu n jest izomorficzna z pewną podgrupą grupy symetrycznej S_n.
+CYKLE
+
+Cykl długości 2 to transpozycja.
+
+Każda transpozycja może być wyrażona jako iloczyn transpozycji liczb sąsiednich (adjacent transpositions) poprzez formułę rekurencyjną
+(i, i+v) = (i+1, i+v) * (i, i+1) * (i+1, i+v).
+
+Znak permutacji to liczba (-1)^n, gdzie n jest liczbą transpozycji, na którą rozkłada się dana permutacja. Cykl długości k ma parzystość (-1)^(k+1).
+GRUPA S_2
+
+    S_2 = {(), (0,1)}, grupa cykliczna rzędu 2. 
+
+GRUPA S_3
+
+    S_3 = {(), (0,1), (0,2), (1,2), (0,1,2), (0,2,1)}.
+    Rząd grupy wynosi |S_3| = 3! = 6.
+    Grupa S_3 jest izomorficzna z C_3v i D_3.
+    Podział S_3 na klasy elementów sprzężonych (Byron ładnie robi przekształcenia na cyklach):
+    Cl_1 = {()},
+    Cl_2 = {(0,1,2), (0,2,1)} - cykle potrójne (parzyste permutacje),
+    Cl_3 = {(0,1), (0,2), (1,2)} - cykle podwójne (nieparzyste permutacje).
+    Podgrupa cykliczna rzędu 3 to
+    A_3 = Cl_1 + Cl_2 = {(), (0,1,2), (0,2,1)}.
+    A_3 jest to dzielnik normalny, zawiera pełne klasy elementów sprzężonych. 
+
+
+
+Klasa Perm
+WPROWADZENIE
+
+Permutacja liczb od 0 do N-1 będzie instancją klasy Perm. Wewnętrznie przechowujemy permutację jako listę o długości N.
+IMPLEMENTACJA
+
+# Moduł perms.py
+
+class Perm:
+    """Klasa reprezentująca permutacje."""
+
+    def __init__(self, size, data=None):
+        """Konstruktor permutacji."""
+        self.size = size
+        if data:
+            if self.size != len(data):
+                raise ValueError("different size and len(data)")
+            self.data = data
+        else:
+            self.data = range(self.size)
+
+    def __str__(self):
+        """Napis odpowiadający liście wewnętrznej w permutacji."""
+        return str(self.data)
+
+    def __repr__(self):
+        """Reprezentacja napisowa permutacji."""
+        return "Perm({0}, data={1})".format(self.size, self.data)
+
+    def __mul__(self, other):
+        """Mnożenie dwóch permutacji."""
+        if self.size != other.size:
+            raise ValueError("different size")
+        new_perm = Perm(self.size)
+        for i in range(new_perm.size):
+            new_perm.data[i] = self.data[other.data[i]]
+        return new_perm
+
+    def __invert__(self):
+        """Zwraca permutację odwrotną (~perm)."""
+        new_perm = Perm(self.size)
+        for i in range(new_perm.size):
+            new_perm.data[self.data[i]] = i
+        return new_perm
+
+    def label(self):
+        """Tworzenie etykiety dla permutacji, nie działa dla size > 36."""
+        if self.size > 36:
+            raise ValueError("problem with labels")
+        letters = "0123456789abcdefghijklmnopqrstuvwxyz"
+        tmp = []
+        for item in self.data:
+            tmp.append(letters[item])
+        return "".join(tmp)
+
+    def is_identity(self):
+        """Zwraca True, jeżeli permutacja jest identycznością."""
+        return all(self.data[i] == i for i in range(self.size))
+
+    def __cmp__(self, other):   # tylko Python 2
+        """Porównywanie permutacji (leksykograficzne)."""
+        return cmp(self.data, other.data)   # porównywanie list (szybsze)
+
+    def max(self):
+        """Return the highest element moved by the perm."""
+        j_max = 0
+        for j in range(self.size):
+            if self.data[j] != j:
+                j_max = j
+        return j_max
+
+    def min(self):
+        """Return the lowest element moved by the perm."""
+        j_min = 0     # zero bedzie tez dla identycznosci
+        for j in range(self.size):
+            if self.data[j] != j:
+                j_min = j
+                break
+        return j_min
+
+    def __hash__(self):
+        """Hashable perms."""
+        return hash(tuple(self.data))
+
+class TestPerm(unittest.TestCase):
+
+    def setUp(self):
+        self.N = 4
+        self.E = Perm(self.N)
+        self.H = Perm(self.N, [1, 3, 0, 2])
+
+    def test_init(self):
+        self.assertEqual(self.H, Perm(self.N, data=[1, 3, 0, 2]))
+        # assertRaises(exception, callable, ...)
+        self.assertRaises(ValueError, lambda: Perm(2, data=[0, 1, 2]))
+
+    def test_repr(self):
+        self.assertEqual(repr(self.E), "Perm(4, data=[0, 1, 2, 3])")
+        self.assertEqual(repr(self.H), "Perm(4, data=[1, 3, 0, 2])")
+
+    def test_label(self):
+        self.assertEqual(self.E.label(), "0123")
+        self.assertEqual(self.H.label(), "1302")
+
+    def test_identity(self):
+        self.assertTrue(self.E.is_identity())
+        self.assertFalse(self.H.is_identity())
+
+    def test_mul(self):
+        self.assertEqual(self.E * self.E, self.E)
+        self.assertEqual(self.E * self.H, self.H)
+        self.assertNotEqual(self.H * self.H, self.H)
+        # assertRaises(exception, callable, ...)
+        self.assertRaises(ValueError, lambda: Perm(2) * Perm(1))
+
+    def test_invert(self):
+        self.assertEqual(~self.E, self.E)
+        self.assertEqual(~self.H, Perm(self.N, [2, 0, 3, 1]))
+        self.assertEqual(self.H * (~self.H), self.E)
+
+    def test_cmp(self):
+        self.assertFalse(self.H == self.E)
+        self.assertTrue(self.E < self.H)
+        self.assertTrue(self.H < self.H * self.H)
+
+    def test_min_max(self):
+        self.assertEqual(self.H.min(), 0)
+        self.assertEqual(self.H.max(), 3)
+        self.assertEqual(self.E.min(), 0)
+        self.assertEqual(self.E.max(), 0)
+
+    def test_hash(self):
+        aset = set()
+        aset.add(self.E)
+        aset.add(self.E)  # ignored
+        self.assertEqual(len(aset), 1)
+        aset.add(self.H)
+        aset.add(self.H)  # ignored
+        self.assertEqual(len(aset), 2)
+
+    def tearDown(self): pass
+
+# Przykład zastosowania.
+
+N = 4                         # permutacje liczb od 0 do 3
+E = Perm(N)                   # identyczność
+H = Perm(N, [1, 3, 0, 2])
+print ( "identity {} {}".format(E.is_identity(), H.is_identity()) )   # True, False
+print ( "str {} {}".format(E, H) )                      # [0, 1, 2, 3] [1, 3, 0, 2]
+print ( "label {} {}".format(E.label(), H.label()) )    # 0123, 1302
+print ( "invert {} {} {}".format(H, ~H, H*(~H)) )
+print ( "cmp {}".format(H < H*H) )                 # True
+
+
+
+Klasa Group (wersja 1)
+WPROWADZENIE
+
+W pierwszej wersji grupa będzie zbiorem, w którym przechowywane będą instancje klasy Perm. Klasa Group będzie dziedziczyć z klasy set.
+
+Implementacja działa tylko dla małych grup permutacji, ale prezentuje wiele aspektów programowania w Pythonie.
+IMPLEMENTACJA
+
+from perms import Perm
+
+class Group(set):
+    """Klasa reprezentująca grupę permutacji."""
+
+    def __init__(self, size):
+        """Tworzenie trywialnej grupy permutacji rzedu 1."""
+        self.size = size        # rozmiar permutacji w grupie
+        self.add(Perm(self.size))
+
+    # __str__ dziedziczone z set
+
+    # __contains__ dziedziczone z set
+
+    order = set.__len__            # rzad grupy
+
+    def insert(self, perm):
+        """Wstawianie permutacji do grupy."""
+        if self.size != perm.size:
+            raise ValueError("different size")
+        if perm in self:
+            return
+        old_order = self.order()
+        self.add(perm)
+        perms_added = set()               # dodawane perms
+        perms_added.add(perm)
+        perms_generated = set()               # nowo powstale perms
+        new_order = self.order()
+        while new_order > old_order:
+            old_order = new_order
+            for perm1 in perms_added:
+                for perm2 in self:
+                    perm3 = perm1 * perm2
+                    if perm3 not in self:
+                        perms_generated.add(perm3)
+            self.update(perms_generated)
+            perms_added = perms_generated
+            perms_generated = set()
+            new_order = self.order()
+
+    def listperms(self):
+        """Zwraca liste permutacji z grupy."""
+        return list(self)
+
+    def iterperms(self):
+        """Iterator po permutacjach z grupy."""
+        return iter(self)
+
+    def is_trivial(self):
+        """Test if the group is trivial."""
+        return len(self) == 1
+
+# Przykład zastosowania.
+
+N = 4
+G = Group(N)
+# Dodajemy dwa obroty.
+R1 = Perm(N, [1, 0, 3, 2])
+R2 = Perm(N, [2, 3, 0, 1])
+G.insert(R1)
+G.insert(R2)
+print ( G )                                # dziedziczone po słownikach
+print ( "order {}".format(G.order()) )                # 4, rząd grupy D_2
+print ( "contains {}".format(Perm(N) in G) )          # True
+print ( "contains {}".format(Perm(N, [1, 0, 2, 3]) in G) )   # False
+print ( "listperms {}".format(G.listperms()) )
+for perm in G.iterperms():
+    print ( "{} {}".format(perm, perm.label()) )
+
+
+
+Silne generatory
+WPROWADZENIE
+
+P(k) to zbiór permutacji, w których liczby na pozycjach większych od k są na swoich miejscach, czyli permutują się liczby od 0 do k. W tym podejściu permutacje różnej długości rozszerzamy do odpowiedniej wspólnej długości.
+
+Sigma(k) to zbiór permutacji s_kj (s[k] = j), 0 <= j <= k. Z definicji s_kk = (). Wybór permutacji s_kj dla danej grupy nie jest jednoznaczny.
+
+Gamma(k) to zbiór permutacji, które dają się zapisać w postaci s_kj*...*s_00.
+
+T(k) to zbiór generatorów dla Gamma(k).
+
+Układ transwersalny dla Gamma(n) to suma zbiorów Sigma(k) dla k od 0 do n.
+
+Silne generatory dla Gamma(n) to suma zbiorów T(k) dla k od 0 do n.
+
+Rząd grupy obliczamy mnożąc liczebności zbiorów Sigma(k) uzyskanych dla danej grupy.
+PRZYNALEŻNOŚĆ DO GRUPY
+
+Niech t należy do P(k), oraz t[k] = j. Czy t należy do Gamma(k)? Tak, jeżeli (~s_kj * t) należy do Gamma(k-1).
+
+Przykład.
+Dana jest permutacja t = (0,1,2,4)(3,5), która należy do P(5).
+t = [1, 2, 4, 5, 0, 3] w zapisie macierzowym (5 na 3).
+Jak wygenerować zbiory T(k) i Sigma(k)?
+
+Podstawiamy s_53 = t.
+T(5) = {t} silny generator.
+
+Obliczamy t*t = (0,2)(1,4), t*t należy do P(4).
+t*t = [2, 4, 0, 3, 1, 5] w zapisie macierzowym (5 na 5, 4 na 1).
+Podstawiamy s_41 = t*t.
+T(4) = {t*t} silny generator.
+
+Obliczamy t*t*t = (0,2)(1,4)*(0,1,2,4)(3,5) = (0,4,2,1)(3,5).
+t*t*t = [4, 0, 1, 5, 2, 3] w zapisie macierzowym (5 na 3).
+s_53 już jest ustawione.
+Sprawdzamy, czy t*t*t jest już uwzględnione w zbiorach Sigma(k).
+(~s_53)*t*t*t = (0,2)(1,4) = t*t = s_41, czyli
+t*t*t = s_53*s_41, potrafimy wyrazić t*t*t przez s_kj.
+t*t*t*t = (), nie ma nowych permutacji.
+
+Rozwiązanie:
+T(5) = {t}
+T(4) = {t*t}
+Sigma(5) = {s_50=None, s_51=None, s_52=None, s_53=t,    s_54=None, s_55=()} liczebność 2
+Sigma(4) = {s_40=None, s_41=t*t,  s_42=None, s_43=None, s_44=()} liczebność 2
+Sigma(3) = {s_30=None, s_31=None, s_32=None, s_33=()} liczebność 1
+Sigma(2) = {s_20=None, s_21=None, s_22=()} liczebność 1
+Sigma(1) = {s_10=None, s_11=()} liczebność 1
+Sigma(0) = {s_00=()} liczebność 1
+Rząd grupy wynosi 2*2 = 4, grupa cykliczna C_4.
+
+Przykład.
+Dane są permutacje p = (0,1,2) z P(2) i t = (1,2,3) z P(3).
+Wygenerować zbiory T(k) i Sigma(k).
+
+Rozwiązanie.
+p = (0,1,2), p*p = (0,2,1), p*p*p = ().
+t = (1,2,3), t*t = (1,3,2), t*t*t = ().
+p*p*t = (0,2,1)*(1,2,3) = (0,2,3).
+T(3) = {t}
+T(2) = {p}
+Sigma(3) = {s_30=p*p*t, s_31=t,   s_32=t*t, s_33=()} liczebność 4
+Sigma(2) = {s_20=p,     s_21=p*p, s_22=()} liczebność 3
+Sigma(1) = {s_10=None,  s_11=()} liczebność 1
+Sigma(0) = {s_00=()} liczebność 1
+Rząd grupy 4*3 = 12, grupa alternująca A_4.
+
+Rząd grupy symetrycznej S_N wynosi N! Przy użyciu zbiorów Sigma(k) należy pamiętać tylko N*(N+1)/2 permutacji s_kj [oraz N-1 silnych generatorów z T(k)], które odzwierciedlają strukturę grupy. 
+
+
+Klasa Group (wersja 2)
+WPROWADZENIE
+
+D. E. Knuth, Efficient representation of perm groups, arXiv.
+
+Przedstawiona implementacja jest działającą wersją roboczą.
+IMPLEMENTACJA
+
+Podana implementacja przy pierwszym przebiegu wyznacza zwykle zbyt dużą liczbę silnych generatorów. Dlatego warto uzyskane silne generatory wstawić jeszcze raz do algorytmu, w kolejności rosnącego perm.max().
+
+from perms import Perm
+
+class Group:
+    """The class defining a perm group."""
+
+    def __init__(self, size):
+        """Load up a Group instance."""
+        self.size = size        # rozmiar permutacji w grupie
+        # Inicjalizacja struktur.
+        self.Sigma = [(k+1) * [None] for k in range(self.size)]
+        # Lista Sigma[k] zawiera co najmniej identycznosc.
+        for k in range(self.size):
+            self.Sigma[k][k] = Perm(self.size)   # identycznosc sigma_kk
+        # Silne generatory.
+        self.all_Sigma = [Perm(self.size)]   # E tez dodam raz
+        self.all_T = []
+
+    def __str__(self):
+        """Return a string representation of the group."""
+        t = len(self.all_T)
+        return "Group({}) with {} strong generators".format(self.size, t)
+
+    def order(self):
+        """Return the group order."""
+        result = 1
+        for k in range(self.size):
+            result = result * sum(1 for perm in self.Sigma[k] if perm)
+        return result
+
+    def __contains__(self, perm):
+        """ Test if the perm belongs to the group."""
+        k = self.size - 1         # start od samej gory
+        while k > 0:
+            j = perm.data[k]
+            if self.Sigma[k][j] is None:
+                return False
+            perm = ~self.Sigma[k][j] * perm
+            k = k - 1
+        return True
+
+    def insert(self, perm):
+        """The perm inserted into the group generates new 
+        perms in order to satisfy the group properties."""
+        if self.size != perm.size:
+            raise ValueError("wrong size of the perm")
+        self.alg_A(perm.max(), perm)
+
+    def alg_A(self, k, perm):
+        """Append the perm to the strong generators."""
+        if perm in self:
+            return
+        j = perm.data[k]
+        if self.Sigma[k][j] is not None:
+            perm2 = ~self.Sigma[k][j] * perm
+            # Trzeba sie upewnic, jakiego rzedu jest perm.
+            self.alg_A(perm2.max(), perm2)
+            return
+        self.all_T.append(perm)
+        for item in self.all_Sigma:
+            # Trzeba sie upewnic, jakiego rzedu jest perm.
+            perm2 = perm * item
+            self.alg_B(perm2.max(), perm2)
+
+    def alg_B(self, k, perm):
+        """Update the Sigma."""
+        if perm in self:
+            return
+        j = perm.data[k]
+        if self.Sigma[k][j] is None:
+            self.Sigma[k][j] = perm
+            self.all_Sigma.append(perm)
+            for item in self.all_T:
+                # Trzeba sie upewnic, jakiego rzedu jest perm.
+                perm2 = item * perm
+                k_max = perm2.max()
+                if k_max != k:
+                    self.alg_A(k_max, perm2)
+                else:
+                    self.alg_B(k_max, perm2)
+            return
+        item = ~self.Sigma[k][j] * perm
+        # Trzeba sie upewnic, jakiego rzedu jest perm.
+        # Tu na pewno k_max < k.
+        self.alg_A(item.max(), item)
+
+    def iterperms(self):
+        """The generator for perms from the group."""
+        a = [0] * self.size
+        while True:
+            # M2. Odwiedziny.
+            if all(self.Sigma[k][a[k]] is not None for k in range(self.size)):
+                perm = Perm(self.size)
+                for k in range(self.size):
+                    perm = self.Sigma[k][a[k]] * perm
+                yield perm
+            # M3. Przygotowanie do dodania jedynki.
+            j = self.size - 1
+            # M4. Przeniesienie, jesli trzeba.
+            while a[j] == j and j >= 0:
+                a[j] = 0
+                j = j - 1
+            # M5. Zwiekszenie, o ile nie koniec.
+            if j < 0:
+                break
+            else:
+                a[j] = a[j] + 1
+
+    def is_trivial(self):
+        """Test if the group is trivial."""
+        return self.order() == 1
+
+
+
+Kostka Rubika
+WPROWADZENIE
+RZĄD GRUPY KOSTKI RUBIKA
+
+Kostka Rubika 2x2x2 - 3674160 (3.7e6), 3 zwykłe generatory.
+
+Kostka Rubika 3x3x3 - 43252003274489856000 (4.3e19), 6 zwykłych generatorów.
+
+Kostka Rubika 4x4x4 - 707195371192426622240452051915172831683411968000000000 (7.1e53), 9 zwykłych generatorów.
+KOSTKA RUBIKA 2x2x2
+
+
++-----+ Siatka kostki, nieruchomy róg oznaczony przez X.
+| 1  2|
+| X  3|
++-----+-----+-----+-----+
+| X  4| 7  8|11 12|15  X|
+| 5  6| 9 10|13 14|16 17|
++-----+-----+-----+-----+
+|18 19|
+|20  0|
++-----+
+Generatory zwykłe grupy.
+N = 21
+# Y1 = (2,13,19,4)(3,11,0,6)(7,8,10,9)
+# Z1 = (5,9,13,16)(6,10,14,17)(18,19,0,20)
+# X1 = (1,16,0,8)(2,15,20,10)(11,12,14,13)
+Y1 = Perm(self.N, [6, 1, 13, 11, 2, 5, 3, 8, 10, 7, 9, 0, 12, 19, 14, 15, 16, 17, 18, 4, 20])
+Z1 = Perm(self.N, [20, 1, 2, 3, 4, 9, 10, 7, 8, 13, 14, 11, 12, 16, 17, 15, 5, 6, 19, 0, 18])
+X1 = Perm(self.N, [8, 16, 15, 3, 4, 5, 6, 7, 1, 9, 2, 12, 14, 11, 13, 20, 0, 17, 18, 19, 10])
+
+|T(11)| = 2, |Sigma(11)| = 6,
+|T(13)| = 1, |Sigma(13)| = 9,
+|T(15)| = 1, |Sigma(15)| = 12,
+|T(18)| = 1, |Sigma(18)| = 15,
+|T(19)| = 1, |Sigma(19)| = 18,
+|T(20)| = 1, |Sigma(20)| = 21.
+Jest 7 silnych generatorów (3 zwykłe generatory grupy).
+|G| = 6*9*12*15*18*21 = 3674160.
+
+
+
