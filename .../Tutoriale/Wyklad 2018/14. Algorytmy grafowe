@@ -1,0 +1,1137 @@
+Python (14) - algorytmy grafowe
+PLAN
+
+    Rodzaje grafów
+    ADT dla grafów
+    Reprezentacja grafów
+    Grafy bez wag w Pythonie (dict+list)
+    Grafy z wagami w Pythonie (dict+list)
+    Grafy z wagami w Pythonie (dict+dict)
+    Przeszukiwanie grafów
+    Wyznaczanie ścieżek
+    Sortowanie topologiczne
+    Kolorowanie grafów
+    Sieci przepływowe
+    Zbiory niezależne
+    Zbiory dominujące
+    Skojarzenia 
+    
+
+Rodzaje grafów
+WPROWADZENIE
+
+W wielu problemach spotykamy się z sytuacją, w której mamy do czynienia z pewnym zbiorem elementów, ale też z pewnym układem połączeń między parami tych elementów. Wtedy mogą pojawić się naturalne pytania. Czy istnieje droga między dwoma wyróżnionymi elementami, wykorzystująca istniejące połączenia? Ile elementów jest osiągalnych z wyróżnionego elementu? Jaka jest najkrótsza droga pomiędzy parą wyróżnionych elementów? Do modelowania takich sytuacji używamy abstrakcyjnych obiektów zwanych grafami (ang. graphs). Badaniem własności grafów zajmuje się teoria grafów, która jest działem matematyki i informatyki.
+
+Przykłady zastosowań grafów.
+
+    Mapy - połączenia drogowe, kolejowe, lotnicze między miastami.
+    Dokumenty hipertekstowe.
+    Obwody elektryczne.
+    Planowanie - procesy produkcyjne, prace budowlane.
+    Transakcje - sieci rozmów telefonicznych, transakcje kupna-sprzedaży.
+    Sieci - sieci komputerowe, badanie odporności na uszkodzenia.
+    Struktura programu - struktura wywołań funkcji.
+    Relacje między ludźmi - zależności służbowe w firmie, znajomi na portalach społecznościowych. 
+
+Kilka uwag ogólnych.
+
+    Grafy spotykane w praktycznych zastosowaniach mogą być ogromne, stąd wielka rola wydajnych algorytmów.
+    Wydajność algorytmów zależy nie tylko od własności zbioru elementów grafu, ale także od własności zbioru połączeń między tymi elementami, oraz od globalnych własności grafu, które są implikowane przez te połączenia.
+    Trudno jest precyzyjnie zdefiniować modele grafów, jakie możemy spotkać w rzeczywistości. 
+
+PODSTAWOWE DEFINICJE
+
+Grafem G nazywamy parę (V,E), gdzie V to niepusty i skończony zbiór wierzchołków, a E to skończony zbiór krawędzi, czyli par wierzchołków z VxV. Symbolem |V| będziemy oznaczać liczbę wierzchołków, a symbolem |E| liczbę krawędzi. W zapisie z O() będziemy pomijać linie pionowe, czyli zamiast O(|V|+|E|) zapiszemy O(V+E). Wyróżnia się dwa główne typy grafów:
+
+    Graf skierowany (ang. directed graph, digraph). Krawędź (a,b) ma kierunek od a do b, czyli jest to para uporządkowana. Na rysunku istnieje strzałka od a do b. Inne oznaczenia to a-b lub ab.
+    Graf nieskierowany (ang. undirected graph). Krawędź (a,b) jest równoważna krawędzi (b,a), czyli pary wierzchołków nie są uporządkowane. Na rysunku istnieje linia bez strzałek pomiędzy a i b. Można przyjąć, że w grafie nieskierowanym zawsze jednocześnie istnieją pary uporządkowane (a,b) i (b,a).
+    Formalnie można wprowadzić relację równoważności w zbiorze par z VxV: (a,b)R(c,d) wtw (a=c i b=d) lub (a=d i b=c). Wtedy dostaniemy klasy równoważności par które będą krawędziami; pętla [(a,a)]_R = {(a,a)}; dla a!=b mamy [(a,b)]_R = {(a,b), (b,a)}. 
+
+NAZEWNICTWO
+
+    Wierzchołek (vertex; vertices), węzeł (node; używane dla reprezentacji grafu), punkt (point).
+    Krawędź (edge), linia (line), łuk (arc; w grafach skierowanych), wiązanie (link; używane do struktur danych).
+    Podgrafem (ang. subgraph) nazywamy taki podzbiór wierzchołków i krawędzi danego grafu, który tworzy graf.
+    Dwa grafy są izomorficzne (ang. isomorfic), jeżeli w wyniku zamiany etykiet wierzchołków w jednym grafie otrzymamy układ krawędzi identyczny jak w drugim. Rozstrzygnięcie, czy dwa grafy są izomorficzne, czy nie, jest skomplikowanym problemem obliczeniowym. 
+
+GRAFY SKIEROWANE
+
+    Pętla (ang. self-loop) jest to krawędź łącząca wierzchołek z samym sobą, czyli krawędź typu (a,a).
+    Graf prosty (ang. simple graph) nie ma pętli i krawędzi wielokrotnych. Mówimy po prostu graf (bez przymiotników), choć niektórzy autorzy przez graf rozumieją ogólnie multigraf.
+    Krawędź (a,b) jest wychodząca z wierzchołka a i wchodząca do wierzchołka b.
+    Stopień wejściowy wierzchołka (ang. indegree) jest liczbą krawędzi do niego wchodzących. Stopień wyjściowy wierzchołka (ang. outdegree) jest liczbą krawędzi wychodzących z niego. Stopniem wierzchołka w grafie skierowanym nazywamy liczbę będącą sumą jego stopni: wejściowego i wyjściowego.
+    Cormen pisze (str. 1194), że jeżeli w grafie istnieje krawędź (a,b) to wierzchołek b jest sąsiedni względem wierzchołka a. W grafie skierowanym nie jest to relacja symetryczna i chyba jest to trochę mylące.
+    Cormen pisze (str. 1196), że dla danego grafu skierowanego możemy rozważyć jego wersję nieskierowaną. Wtedy z krawędzi "usuwamy skierowanie", a jeżeli początkowo istnieją dwie krawędzie skierowane (a,b) i (b,a), to stapiają się w jedną krawędź nieskierowana (a,b)==(b,a). 
+
+GRAFY NIESKIEROWANE
+
+    Cormen na str. 1193 nie dopuszcza pętli (a,a) dla grafu nieskierowanego. Może to wynikać z tego, ze krawędzie są zdefiniowane jako zbiory dwóch różnych wierzchołków (zbiory, aby nie było uporządkowania wierzchołków).
+    Wierzchołki a i b są względem siebie sąsiednie (ang. adjacent), jeżeli istnieje krawędź (a,b)==(b,a), która je łączy. Krawędź jest wtedy incydentna (ang. incident) z tymi wierzchołkami. Relacja sąsiedztwa jest symetryczna (a jest sąsiedni do b i b jest sąsiedni do a).
+    Stopień wierzchołka grafu (ang. degree or valency) jest to liczba krawędzi incydentnych z tym wierzchołkiem.
+    Cormen pisze (str. 1195), że dla danego grafu nieskierowanego możemy mówić o jego wersji skierowanej. Jest to graf skierowany, gdzie każda krawędź nieskierowana (a,b)==(b,a) jest zastąpiona dwoma krawędziami skierowanymi (a,b) i (b,a).
+    Multigraf (ang. multigraph) jest podobny do grafu nieskierowanego [Cormen str. 1196], ale zawiera wielokrotne krawędzie (ang. parallel edges). 
+
+ŚCIEŻKI I CYKLE
+
+    Ścieżka lub droga (ang. path) długości k w grafie G=(V,E) jest to ciąg (zwykle różnych) wierzchołków (v_0,v_1,...,v_k) takich, że krawędzie (v_{i-1},v_i) należą do E dla i=1,2,...,k. Jest to ścieżka z wierzchołka v_0 do wierzchołka v_k. Ścieżka długości zero to ciąg jednoelementowy (v_0) - zawsze istnieje. W ogólności wierzchołki i krawędzie na ścieżce mogą się powtarzać. Mówimy, że ścieżka zawiera wierzchołki i krawędzie. [notacja a-b-c-d]
+    Jeżeli istnieje ścieżka P z a do b, to mówimy, że wierzchołek b jest osiągalny z wierzchołka a po ścieżce P.
+    Podścieżka ścieżki P jest ciągiem jej kolejnych wierzchołków.
+    Ścieżka prosta (ang. simple path) to ścieżka, w której nie ma powtarzających się wierzchołków (wszystkie wierzchołki są różne).
+    Cykl (ang. cycle) jest to ścieżka (v_0,v_1,...,v_k), w której pierwszy i ostatni wierzchołek są takie same, v_0=v_k [notacja a-a, a-b-c-a]. Cykl nazywamy prostym, jeżeli wierzchołki v_1,...,v_k są różne.
+    Ścieżka cykliczna (cyclic path) to cykl [Wikipedia].
+    Dwie ścieżki są rozłączne (ang. disjoint), jeżeli nie posiadają żadnych wspólnych wierzchołków (ewentualnie poza wierzchołkami końcowymi). 
+
+WYBRANE KLASY GRAFÓW
+
+    Graf pusty lub graf zerowy N_n (ang. null graph) to graf, którego zbiór krawędzi jest pusty, |V|=n, |E|=0. W implementacji grafów można przyjąć, że pusty graf to para składająca się z pustego zbioru wierzchołków i pustego zbioru krawędzi. W teorii zwykle nie zezwala się na istnienie pustych grafów, tzn. zakłada się, że przynajmniej zbiór wierzchołków musi być niepusty.
+    Graf regularny stopnia n (graf n-regularny) to graf nieskierowany, w którym każdy wierzchołek ma taki sam stopień n.
+    Graf pełny K_n (ang. complete graph) to graf prosty NIESKIEROWANY, w którym dla każdej pary wierzchołków istnieje krawędź je łącząca. Jeżeli graf pełny ma |V|=n wierzchołków, to posiada |E|=n(n-1)/2 krawędzi. Graf pełny jest grafem regularnym stopnia n-1. Dopełnienie (ang. complement) grafu G to graf pełny z takim samym zbiorem wierzchołków jak G, lecz z którego usunięto wszystkie krawędzie należące do G.
+    Graf spójny (ang. connected graph) to graf NIESKIEROWANY [Cormen], w którym dla każdej pary wierzchołków istnieje ścieżka, która je łączy. Jeżeli graf nie jest spójny, to zbudowany jest ze spójnych składowych (ang. connected components), z których każda jest maksymalnym podgrafem spójnym.
+    Można pokazać, że dla grafu nieskierowanego spójnego G=(V,E) zachodzi zależność |E| >= |V|-1.
+    Graf SKIEROWANY jest silnie spójny (ang. strongly connected) [Cormen], jeżeli każde dwa wierzchołki są osiągalne jeden z drugiego. Silnie spójne składowe grafu skierowanego są klasami abstrakcji relacji "są wzajemnie osiągalne" w zbiorze wierzchołków. Graf skierowany jest silnie spójny, jeżeli ma tylko jedną silnie spójną składową.
+    Graf dwuspójny (ang. biconnected graph) to graf nieskierowany spójny, który pozostanie spójny po usunięciu dowolnego wierzchołka i krawędzi incydentnych do niego. Pojawia się przy obliczaniu współczynników wirialnych [2013_Wheatley].
+    Graf dwudzielny (ang. bipartite graph) to graf NIESKIEROWANY, którego wierzchołki można podzielić na dwa podzbiory, przy czym wszystkie krawędzie łączą wierzchołki jednego podzbioru z wierzchołkami drugiego.
+    Graf eulerowski to graf, w którym istnieje cykl Eulera, czyli cykl przechodzący przez wszystkie krawędzie, przez każdą dokładnie jeden raz.
+    Graf hamiltonowski to graf, w którym istnieje cykl Hamiltona, czyli cykl przechodzący przez wszystkie wierzchołki, przez każdy dokładnie jeden raz [jest związek z problemem komiwojażera].
+    Graf planarny (ang. planar graph) to graf, który może być narysowany na płaszczyźnie tak, aby jego krawędzie nie przecinały się.
+    Graf acykliczny to graf, w którym nie ma cykli. Graf nieskierowany acykliczny to drzewo lub las (suma drzew). DAG (ang. directed acyclic graph) to graf skierowany acykliczny.
+    Graf cykliczny C_n (ang. cycle graph) to graf spójny, regularny stopnia 2, zawierający n wierzchołków (|V|=|E|=n). Liczba chromatyczna 2 (n parzyste) lub 3 (n nieparzyste).
+    Graf liniowy P_n (ang. path graph, linear graph) to graf otrzymany z grafu cyklicznego C_n przez usunięcie jednej krawędzi, |V|=n, |E|=n-1.
+    Graf koło W_n (ang. wheel graph) pto graf powstający z grafu C_{n-1} przez połączenie każdego wierzchołka z nowym wierzchołkiem v. |V|=n, |E|=2n-2. 
+
+DRZEWA
+
+Drzewo (tree) to acykliczny graf nieskierowany spójny. Drzewo rozpinające (spanning tree) grafu spójnego jest podgrafem, który zawiera wszystkie wierzchołki grafu i jest jednocześnie pojedyńczym drzewem.
+
+Graf G o |V| wierzchołkach jest drzewem wtedy i tylko wtedy, gdy spełnia któryś z czterech poniższych warunków:
+
+    G posiada |V|-1 krawędzi i nie zawiera cykli.
+    G posiada |V|-1 krawędzi i jest spójny.
+    Dokładnie jedna ścieżka prosta łączy każdą parę różnych wierzchołków należących do G.
+    G jest spójny, ale usunięcie jakiejkolwiek krawędzi rozspaja go. 
+
+LEMAT O PODAWANIU RĄK
+
+Dla grafu nieskierowanego zachodzi lemat [Cormen str. 1197]:
+\sum_{v \in V} degree(v) = 2 * |E|.
+
+Dla grafu skierowanego zachodzi lemat:
+\sum_{v \in V} indegree(v) = |E| = \sum_{v \in V} outdegree(v). 
+
+
+ADT dla grafów
+WPROWADZENIE
+
+Poniżej podana jest propozycja interfejsu ADT dla grafu z wagami, skierowanego lub nieskierowanego. W implementacji macierzy sąsiedztwa wierzchołkami grafu są liczby od 0 do n-1 i właściwie wierzchołki już są utworzone (zwykle się ich nie usuwa). W innych implementacjach pythonowych wierzchołki mogą być liczbami, stringami, czy innymi obiektami hashowalnymi, z porządkiem liniowym. Tutaj pojawia się problem z kompatybilnością różnych implementacji, jeżeli przewidujemy usuwanie wierzchołków.
+
+Interfejs korzysta z obiektów krawędzi, które odpowiadają krawędziom skierowanym ważonym. Jeżeli graf jest nieskierowany, to krawędzie o przeciwnych kierunkach są równoważne.
+
+class Edge:
+    """Klasa dla krawędzi skierowanej z wagą."""
+
+    def __init__(self, source, target, weight=1):
+        """Konstruktor krawędzi.."""
+        self.source = source
+        self.target = target
+        self.weight = weight
+
+    def __repr__(self):
+        """Zwraca reprezentacje napisowa krawędzi.."""
+        if self.weight == 1:
+            return "Edge(%s, %s)" % (
+                repr(self.source), repr(self.target))
+        else:
+            return "Edge(%s, %s, %s)" % (
+                repr(self.source), repr(self.target), repr(self.weight))
+
+    def __cmp__(self, other):
+        """Porównywanie krawędzi."""
+        if self.weight > other.weight:
+            return 1
+        if self.weight < other.weight:
+            return -1
+        if self.source > other.source:
+            return 1
+        if self.source < other.source:
+            return -1
+        if self.target > other.target:
+            return 1
+        if self.target < other.target:
+            return -1
+        return 0
+
+    def __hash__(self):
+        """Krawędzie są hashowalne."""
+        #return hash(repr(self))
+        return hash((self.source, self.target, self.weight))
+
+    def __invert__(self):
+        """Zwraca krawędź o przeciwnym kierunku."""
+        return Edge(self.target, self.source, self.weight)
+
+class Graph:
+    """Klasa dla grafu ważonego, skierowanego lub nieskierowanego."""
+
+    def __init__(self, n, directed=False):
+        self.n = n                      # kompatybilność
+        self.directed = directed        # bool, czy graf skierowany
+
+    def v(self): pass                   # zwraca liczbę wierzchołków
+
+    def e(self): pass                   # zwraca liczbę krawędzi
+
+    def is_directed(self):              # bool, czy graf skierowany
+        return self.directed
+
+    def add_node(self, node): pass      # dodaje wierzchołek
+
+    def has_node(self, node): pass      # bool
+
+    def del_node(self, node): pass      # usuwa wierzchołek
+
+    def add_edge(self, edge): pass      # wstawienie krawędzi
+
+    def has_edge(self, edge): pass      # bool
+
+    def del_edge(self, edge): pass      # usunięcie krawędzi
+
+    def weight(self, edge): pass        # zwraca wagę krawędzi
+
+    def iternodes(self): pass           # iterator po wierzchołkach
+
+    def iteradjacent(self, node): pass  # iterator po wierzchołkach sąsiednich
+
+    def iteroutedges(self, node): pass  # iterator po krawędziach wychodzących
+
+    def iterinedges(self, node): pass   # iterator po krawędziach przychodzących
+
+    def iteredges(self): pass           # iterator po krawędziach
+
+    def copy(self): pass                # zwraca kopię grafu
+
+    def transpose(self): pass           # zwraca graf transponowany
+
+    def complement(self): pass          # zwraca dopełnienie grafu
+
+    def subgraph(self, nodes): pass     # zwraca podgraf indukowany
+
+PROSTY ADT DLA GRAFÓW DO WYKŁADU
+
+Mogą być implementacje dict+list (graf bez wag) lub dict+dict (graf ważony). Krawędź to będzie 2-krotka (source, target) lub 3-krotka z wagą (source, target, weight).
+
+node_list = list(graph)
+
+node in graph   # bool, czy wierzchołek należy do grafu
+
+len(graph)    # liczba wierzchołków grafu
+
+len(graph[node])   # stopień wierzchołka (graf nieskierowany)
+
+for node in graph:   # iterator po wierzchołkach
+    print "wierzchołek", node
+
+for target in graph[source]:   # iterator po sąsiadach
+    print source, "sąsiaduje z", target
+
+target in graph[source]   # bool, czy jest sąsiadem
+
+for source in graph:   # iteracja po krawędziach bez wag
+    for target in graph[source]:
+        print "krawędź", (source, target)
+
+sum(len(graph[node]) for node in graph)
+# liczba krawędzi dla grafu skierowanego
+
+graph[source][target]   # waga dla implementacji dict+dict
+
+[node for node in graph if not graph[node]]
+# lista wierzcholkow izolowanych
+
+sorted(len(graph[node]) for node in graph)
+# posortowana lista stopni wierzcholkow grafu nieskierowanego
+
+
+
+Reprezentacja grafów
+WPROWADZENIE
+
+Dla grafów można zdefiniować podstawowe interfejsy ADT, czyli abstrakcyjnych typów danych, które będą używane przy analizowaniu algorytmów grafowych. Z drugiej strony, do reprezentacji grafu można wykorzystać różne struktury danych, takie jak macierz sąsiedztwa, lista sąsiedztwa, lista krawędzi.
+
+Graf skierowany
+
+0 --o 1
+o   / o
+|  /  |
+| o   |
+2 --o 3
+
+    Macierz sąsiedztwa (adjacency-matrix). Graf przedstawiamy jako tablicę kwadratową A, gdzie wiersze i kolumny są numerowane wierzchołkami. Jeżeli istnieje krawędź (a,b), to A[a,b] wynosi 1 (True). W przeciwnym wypadku A[a,b] wynosi 0 (False). Reprezentacja ta jest wydajna dla grafów gęstych z dużą liczbą krawędzi. Wykorzystanie pamięci jest rzędu O(V*V). Do takiej tablicy łatwo można wpisywać wagi dla każdej krawędzi. Reprezentacja jest też przydatna w sytuacji, gdy chcemy szybko sprawdzić istnienie krawędzi między dwoma wierzchołkami [Cormen].
+
+    graph = [
+    [0, 1, 0, 0],
+    [0, 0, 1, 0],
+    [1, 0, 0, 1],
+    [0, 1, 0, 0]]   # wagi (lub bity 0/1)
+
+    Listy sąsiedztwa (adjacency-list). Każdemu wierzchołkowi a przyporządkowujemy listę wierzchołków, do których można dojść z wierzchołka a. Reprezentacja ta jest wydajna dla rzadkich grafów z małą liczbą krawędzi. Wykorzystanie pamięci jest rzędu O(V+E). W przypadku grafów z wagami, na liście sąsiedztwa można przechowywać wierzchołek końcowy łącznie z wagą krawędzi, która do niego prowadzi.
+
+    graph = [[1], [2], [0, 3], [1]]   # bez wag (styl C++)
+    graph = {0: [1], 1: [2], 2: [0, 3], 3: [1]}   # bez wag (styl GvR)
+    graph = {0: set([1]), 1: set([2]), 2: set([0, 3]), 3: set([1])}   # bez wag (zbiory)
+    graph = {0: {1: 1}, 1: {2: 1}, 2: {0: 1, 3: 1}, 3: {1: 1}} # wagi (dict+dict)
+    graph = {0: {1: Edge(0, 1, 1)}, 
+    1: {2: Edge(1, 2, 1)}, 
+    2: {0: Edge(2, 0, 1), 3: Edge(2, 3, 1)}, 
+    3: {1: Edge(3, 1, 1)}} # wagi
+
+    Lista krawędzi. Zapamiętujemy listę krawędzi grafu. Wykorzystanie pamięci jest rzędu O(E). W tym podejściu nie zapiszemy pustych wierzchołków.
+
+    graph = [(0, 1), (1, 2), (2, 0), (2, 3), (3, 1)]   # bez wag
+    graph = [(0, 1, 1), (1, 2, 1), (2, 0, 1), (2, 3, 1), (3, 1, 1)] # wagi
+    graph = [Edge(0, 1, 1), Edge(1, 2, 1), Edge(2, 0, 1), Edge(2, 3, 1), Edge(3, 1, 1)] # wagi
+
+    Macierz incydencji. Graf przedstawiamy jako tablicę prostokątną M, gdzie wiersze są numerowane wierzchołkami, a kolumny krawędziami. W kolumnie odpowiadającej danej krawędzi -1 oznacza wierzchołek początkowy, a +1 wierzchołek końcowy. Dla grafu nieskierowanego oba końce krawędzi oznacza się przez 1. Pętlę można zaznaczyć przez 2 w danym wierzchołku. Wykorzystanie pamięci jest rzędu O(V*E).
+
+    graph = [
+    [-1, 0, 1, 0, 0],
+    [ 1,-1, 0, 0, 1],
+    [ 0, 1,-1,-1, 0],
+    [ 0, 0, 0, 1,-1]]   # bez wag
+    # Chyba wygodniej byłoby mieć macierz transponowaną.
+
+
+
+Grafy bez wag w Pythonie (dict+list)
+WPROWADZENIE
+
+W języku Python grafy możemy wygodnie przedstawić za pomocą słowników i list [GvR, http://www.python.org/doc/essays/graphs/]. Graf będzie słownikiem, w którym kluczami będą wierzchołki (liczby, napisy, itp.). Każdemu kluczowi będzie odpowiadać lista zawierająca wierzchołki połączone krawędzią z danym wierzchołkiem. Pusty graf będzie reprezentowany przez pusty słownik. W podanej implementacji graf nieskierowany możemy potraktować jak graf skierowany, ale nie na odwrót. Dlatego tam, gdzie to jest istotne, będziemy zaznaczać, że graf jest nieskierowany.
+
+PRZYKŁAD. Rozważmy graf skierowany o wierzchołkach od A do F i krawędziach (A,B), (A,C), (B,C), (B,D), (C,D), (D,C), (E,C). Możemy go zapisać jako słownik
+
+graph = {"A":["B","C"], "B":["C","D"], "C":["D"], "D":["C"], "E":["C"], "F":[]}
+
+POMOCNICZE FUNKCJE
+
+Określamy funkcje pomagające we właściwej budowie grafu w Pythonie.
+
+graph = {}                    # pusty graf (dowolny)
+directed_graph = {}           # pusty graf skierowany
+undirected_graph = {}         # pusty graf nieskierowany
+
+Dodawanie wierzchołka do grafu bez duplikatów.
+
+def add_node(graph, node):
+    """Wstawia wierzchołek do grafu."""
+    if node not in graph:
+        graph[node] = []
+
+Dodawanie krawędzi do grafu skierowanego bez duplikatów. Na początku próbujemy uzupełniać brakujące wierzchołki. Następnie uzupełniamy listę sąsiedztwa. Krawędź grafu przedstawiamy jako krotkę dwuelementową.
+
+def add_edge_directed(graph, edge):
+    """Dodaje krawędź do grafu skierowanego."""
+    source, target = edge
+    add_node(graph, source)
+    add_node(graph, target)
+    # Możemy wykluczyć pętle.
+    if source == target:
+        raise ValueError("pętle są zabronione")
+    if target not in graph[source]:
+        graph[source].append(target)
+
+Dodawanie krawędzi do grafu nieskierowanego bez duplikatów. Krawędź nieskierowana występuje jako dwie krawędzie skierowane.
+
+def add_edge_undirected(graph, edge):
+    """Dodaje krawędź do grafu nieskierowanego."""
+    source, target = edge
+    add_node(graph, source)
+    add_node(graph, target)
+    # Możemy wykluczyć pętle.
+    if source == target:
+        raise ValueError("pętle są zabronione")
+    if target not in graph[source]:
+        graph[source].append(target)
+    if source not in graph[target]:
+        graph[target].append(source)
+
+Listowanie wierzchołków i krawędzi.
+
+def list_nodes(graph):
+    """Zwraca listę wierzchołków grafu."""
+    return graph.keys()
+
+def list_edges(graph):
+    """Zwraca listę krawędzi (2-krotek) grafu skierowanego bez wag."""
+    L = []
+    for source in graph:
+        for target in graph[source]:
+            L.append((source, target))
+    return L
+
+def print_graph(graph):
+    """Wypisuje postać grafu skierowanego bez wag na ekranie."""
+    for source in graph:
+        print source, ":",
+        for target in graph[source]:
+            print target,
+        print
+
+
+
+Grafy z wagami w Pythonie (dict+list)
+WPROWADZENIE
+
+Graf będzie słownikiem, w którym kluczami będą wierzchołki (liczby, napisy, itp.). Każdemu kluczowi będzie odpowiadać lista krotek, zawierająca wierzchołki połączone krawędzią z danym wierzchołkiem, oraz wagi krawędzi prowadzących do danego wierzchołka. Pusty graf będzie reprezentowany przez pusty słownik. W podanej implementacji graf nieskierowany możemy potraktować jak graf skierowany, ale nie na odwrót. Dlatego tam, gdzie to jest istotne, będziemy zaznaczać, że graf jest nieskierowany.
+
+PRZYKŁAD. Rozważmy graf skierowany o wierzchołkach od A do F i krawędziach (A, B, 1), (A, C, 2), (B, C, 3), (B, D, 4), (C, D, 5), (D, C, 6), (E, C, 7). Możemy go zapisać jako słownik.
+
+graph = {"A": [("B", 1), ("C", 2)], 
+"B": [("C", 3), ("D", 4)], 
+"C": [("D", 5)], 
+"D": [("C", 6)], 
+"E": [("C", 7)], 
+"F": []}
+
+POMOCNICZE FUNKCJE
+
+Określamy funkcje pomagające we właściwej budowie grafu w Pythonie.
+
+graph = {}                    # pusty graf (dowolny)
+directed_graph = {}           # pusty graf skierowany
+undirected_graph = {}         # pusty graf nieskierowany
+
+Dodawanie wierzchołka do grafu bez duplikatów.
+
+def add_node(graph, node):
+    """Wstawia wierzchołek do grafu."""
+    if node not in graph:
+        graph[node] = []
+
+Dodawanie krawędzi do grafu skierowanego bez duplikatów. Na początku próbujemy uzupełniać brakujące wierzchołki. Następnie uzupełniamy listę sąsiedztwa. Krawędź grafu przedstawiamy jako krotkę trzyelementową.
+
+def add_edge_directed(graph, edge):
+    """Dodaje krawędź do grafu skierowanego."""
+    source, target, weight = edge
+    add_node(graph, source)
+    add_node(graph, target)
+    # Możemy wykluczyć pętle.
+    if source == target:
+        raise ValueError("pętle są zabronione")
+    if (target, weight) not in graph[source]:
+        graph[source].append((target, weight))
+
+Dodawanie krawędzi do grafu nieskierowanego bez duplikatów. Krawędź nieskierowana występuje jako dwie krawędzie skierowane.
+
+def add_edge_undirected(graph, edge):
+    """Dodaje krawędź do grafu nieskierowanego."""
+    source, target, weight = edge
+    add_node(graph, source)
+    add_node(graph, target)
+    # Możemy wykluczyć pętle.
+    if source == target:
+        raise ValueError("pętle są zabronione")
+    if (target, weight) not in graph[source]:
+        graph[source].append((target, weight))
+    if (source, weight) not in graph[target]:
+        graph[target].append((source, weight))
+
+Listowanie wierzchołków i krawędzi.
+
+def list_nodes(graph):
+    """Zwraca listę wierzchołków grafu."""
+    return graph.keys()
+
+def list_edges(graph):
+    """Zwraca listę krawędzi (3-krotek) grafu skierowanego ważonego."""
+    L = []
+    for source in graph:
+        for (target, weight) in graph[source]:
+            L.append((source, target, weight))
+    return L
+
+def print_graph(graph):
+    """Wypisuje postać grafu skierowanego ważonego na ekranie."""
+    for source in graph:
+        print source, ":",
+        for (target, weight) in graph[source]:
+            print "{}({})".format(target, weight),
+        print
+
+
+Grafy z wagami w Pythonie (dict+dict)
+WPROWADZENIE
+
+Graf będzie słownikiem, w którym kluczami będą wierzchołki (liczby, napisy, itp.). Każdemu kluczowi będzie odpowiadać słownik, zawierający wierzchołki połączone krawędzią z danym wierzchołkiem, oraz wagi krawędzi prowadzących do danego wierzchołka. Pusty graf będzie reprezentowany przez pusty słownik. W podanej implementacji graf nieskierowany możemy potraktować jak graf skierowany, ale nie na odwrót. Dlatego tam, gdzie to jest istotne, będziemy zaznaczać, że graf jest nieskierowany.
+
+PRZYKŁAD. Rozważmy graf skierowany o wierzchołkach od A do F i krawędziach (A, B, 1), (A, C, 2), (B, C, 3), (B, D, 4), (C, D, 5), (D, C, 6), (E, C, 7). Możemy go zapisać jako słownik.
+
+graph = {"A":{"B":1, "C":2}, 
+"B":{"C":3, "D":4}, 
+"C":{"D":5}, 
+"D":{"C":6}, 
+"E":{"C":7}, 
+"F":{}}
+
+POMOCNICZE FUNKCJE
+
+Określamy funkcje pomagające we właściwej budowie grafu w Pythonie.
+
+graph = {}                    # pusty graf (dowolny)
+directed_graph = {}           # pusty graf skierowany
+undirected_graph = {}         # pusty graf nieskierowany
+
+Dodawanie wierzchołka do grafu bez duplikatów.
+
+def add_node(graph, node):
+    """Wstawia wierzchołek do grafu."""
+    if node not in graph:
+        graph[node] = {}
+
+Dodawanie krawędzi do grafu skierowanego bez duplikatów. Na początku próbujemy uzupełniać brakujące wierzchołki. Następnie uzupełniamy krawędzie. Krawędź grafu przedstawiamy jako krotkę trzyelementową.
+
+def add_edge_directed(graph, edge):
+    """Dodaje krawędź do grafu skierowanego."""
+    source, target, weight = edge
+    add_node(graph, source)
+    add_node(graph, target)
+    # Możemy wykluczyć pętle.
+    if source == target:
+        raise ValueError("pętle są zabronione")
+    if target not in graph[source]:
+        graph[source][target] = weight
+
+Dodawanie krawędzi do grafu nieskierowanego bez duplikatów. Krawędź nieskierowana występuje jako dwie krawędzie skierowane.
+
+def add_edge_undirected(graph, edge):
+    """Dodaje krawędź do grafu nieskierowanego."""
+    source, target, weight = edge
+    add_node(graph, source)
+    add_node(graph, target)
+    # Możemy wykluczyć pętle.
+    if source == target:
+        raise ValueError("pętle są zabronione")
+    if target not in graph[source]:
+        graph[source][target] = weight
+    if source not in graph[target]:
+        graph[target][source] = weight
+
+Listowanie wierzchołków i krawędzi.
+
+def list_nodes(graph):
+    """Zwraca listę wierzchołków grafu."""
+    return graph.keys()
+
+def list_edges(graph):
+    """Zwraca listę krawędzi (3-krotek) grafu skierowanego ważonego."""
+    L = []
+    for source in graph:
+        for target in graph[source]:
+            L.append((source, target, graph[source][target]))
+    return L
+
+def print_graph(graph):
+    """Wypisuje postać grafu skierowanego ważonego na ekranie."""
+    for source in graph:
+        print source, ":",
+        for target in graph[source]:
+            print "{}({})".format(target, graph[source][target]),
+        print
+
+
+Przeszukiwanie grafów
+WPROWADZENIE
+
+Wiele własności grafów można poznać, sprawdzając systematycznie każdy jego wierzchołek i każdą jego krawędź. Rozważymy różne sposoby przeszukiwania grafów.
+PRZESZUKIWANIE W GŁĄB
+
+Rozważmy następujący problem: chcemy odwiedzić wszystkie wierzchołki grafu po to, aby wykonać na każdym jakąś operację. Funkcja traverse_dfs() realizuje przechodzenie w głąb przez graf (depth-first search, DFS) i ma strukturę rekurencyjną. Zaczynamy od dowolnego węzła start, odwiedzamy go, a następnie rekurencyjnie odwiedzamy każdy nieodwiedzony węzeł dołączony do węzła start. Odwiedzimy na pewno wszystkie węzły, jeżeli graf jest nieskierowany i spójny.
+
+Zbiór krawędzi, które przejdziemy metodą przechodzenia w głąb, tworzy drzewo rozpinające grafu.
+
+def visit(node):     # pewna operacja na wierzchołku
+    print "odwiedzamy", node
+
+def traverse_dfs(graph, start, visit, visited=None):
+    # Przy pierwszym wywołaniu funkcji traverse_dfs
+    # tworzymy pustą listę węzłów odwiedzonych.
+    if visited is None:
+        visited = []
+    # Odwiedzamy wszystkie węzły dołączone do węzła start.
+    visit(start)
+    visited.append(start)
+    for node in graph[start]:
+        if node not in visited:
+            traverse_dfs(graph, node, visit, visited)
+
+Jeżeli graf jest drzewem, rekurencyjne przeszukiwanie grafu w głąb zaczynające się od korzenia jest równoważne przechodzeniu przez drzewo w porządku preorder.
+
+W reprezentacji list sąsiedztwa czas przeszukiwania grafu w głąb jest O(V+E).
+
+Zamiast korzystania z rekurencji możemy określić metodę przechodzenia przez graf używającą jawnego stosu, podobnie jak przy przechodzeniu przez drzewo binarne metodą preorder.
+
+import Queue   # moduł z biblioteki standardowej Pythona 2
+
+def traverse_stack(graph, start, visit):
+    # Przechodzenie w głąb z jawnym stosem.
+    stack = Queue.LifoQueue()
+    visited = []
+    stack.put(start)
+    while not stack.empty():
+        start = stack.get()
+        if start not in visited:
+            visit(start)
+            visited.append(start)
+            for node in graph[start]:
+                if node not in visited:
+                    stack.put(node)
+
+Podejście ze stosem ma tę wadę, że na stosie może się znaleźć kilka elementów odpowiadającym temu samemu węzłowi. Dzieje się tak nawet wtedy, gdy przed umieszczeniem węzła na stosie sprawdzamy, czy został już odwiedzony. Rozwiązaniem jest implementacja stosu, która uniemożliwia umieszczanie na stosie dwóch takich samych elementów przez zastosowanie reguły zastępowania starego elementu nowym. Wtedy wielkość stosu można ograniczyć do liczby wierzchołków V.
+
+Należy zwrócić uwagę, że kolejność odwiedzania wierzchołków w podejściu rekurencyjnym i podejściu ze stosem na ogół jest różna. Różnica wynika z kolejności pobierania elementów z listy sąsiedztwa.
+
+# Wersja wyznaczająca drzewo DFS w postaci słownika.
+
+def traverse_dfs(graph, source, parent=None, pre_action=None, post_action=None):
+    if parent is None:
+        parent = {source: None}
+    if pre_action:
+        pre_action(source)
+    for target in graph[source]:
+        if target not in parent:
+            parent[target] = source
+            traverse_dfs(graph, target, parent, pre_action, post_action)
+    if post_action:
+        post_action(source)
+    return parent
+
+# Wyznaczenie kolejności odwiedzanych i przetworzonych wierzchołków.
+preorder = []
+postorder = []
+parent = traverse_dfs(graph, source,
+    pre_action=lambda node: preorder.append(node),
+    post_action=lambda node: postorder.append(node))
+
+PRZESZUKIWANIE WSZERZ
+
+Funkcja traverse_bfs() realizuje przechodzenie wszerz (breadth-first search, BFS) i wykorzystuje kolejkę do przechowywania wierzchołków. Algorytm przechodzi przez graf we wszystkich kierunkach. Przed przejściem z danego węzła do kolejnego odwiedza wszystkie połączone z nim węzły.
+
+import Queue   # moduł z biblioteki standardowej Pythona 2
+
+def traverse_bfs(graph, start, visit):
+    queue = Queue.Queue()
+    visited = []
+    queue.put(start)
+    while not queue.empty():
+        start = queue.get()
+        if start not in visited:
+            visit(start)
+            visited.append(start)
+            for node in graph[start]:
+                if node not in visited:
+                    queue.put(node)
+
+W tym podejściu w kolejce również może się znaleźć kilka elementów odpowiadającym temu samemu węzłowi. Rozwiązaniem jest stosowanie reguły pomijania nowego powtarzającego się elementu. Wtedy wielkość kolejki można ograniczyć do liczby wierzchołków V.
+
+# Wersja wyznaczająca drzewo BFS w postaci słownika.
+
+import Queue     # Python 2
+
+def traverse_bfs(graph, source, pre_action=None, post_action=None):
+    parent = {source: None}   # before queue.put
+    queue = Queue.Queue()
+    queue.put(source)
+    if pre_action:   # when queue.put
+        pre_action(source)
+    while not queue.empty():
+        source = queue.get()
+        for target in graph[source]:
+            if target not in parent:
+                parent[target] = source   # before queue.put
+                queue.put(target)
+                if pre_action:   # when queue.put
+                    pre_action(target)
+        if post_action:
+            post_action(source)
+    return parent
+
+# Wyznaczenie kolejności odwiedzanych wierzchołków.
+order = []
+parent = traverse_bfs(graph, source,
+    pre_action=lambda node: order.append(node))
+
+
+
+Wyznaczanie ścieżek
+WPROWADZENIE
+
+Napiszmy funkcję wyznaczającą śieżkę pomiędzy dwoma wierzchołkami w grafie. Argumenty funkcji to graf, wierzchołki początkowy i końcowy. Funkcja zwraca listę różnych wierzchołków (bez cykli) łącznie z początkowym i końcowym. Jeżeli funkcja nie może znaleźć ścieżki, wtedy zwraca None. Algorytm wykorzystuje technikę algorytmów z powrotami (backtracking): sprawdza każdą możliwość aż znajdzie rozwiązanie.
+
+def find_path(graph, start, end, path=[]):
+    path = path + [start]       # powstaje nowa lista!
+    if start == end:
+        return path
+    for node in graph[start]:
+        if node not in path:
+            newpath = find_path(graph, node, end, path)
+            if newpath:
+                return newpath
+    return None
+
+Stosunkowo łatwo możemy zmienić funkcję tak, aby zwracała listę wszystkich ścieżek bez cykli pomiędzy dwoma wierzchołkami.
+
+def find_all_paths(graph, start, end, path=[]):
+    path = path + [start]       # powstaje nowa lista!
+    if start == end:
+        return [path]
+    paths = []
+    for node in graph[start]:
+        if node not in path:
+            newpaths = find_all_paths(graph, node, end, path)
+            for newpath in newpaths:
+                paths.append(newpath)
+    return paths
+
+Inny wariant funkcji daje najkrótszą ścieżkę pomiędzy wierzchołkami (najkrótszą w sensie liczby krawędzi należących do ścieżki).
+
+def find_shortest_path(graph, start, end, path=[]):
+    path = path + [start]       # powstaje nowa lista!
+    if start == end:
+        return path
+    shortest = None
+    for node in graph[start]:
+        if node not in path:
+            newpath = find_shortest_path(graph, node, end, path)
+            if newpath:
+                if not shortest or len(newpath) < len(shortest):
+                    shortest = newpath
+    return shortest
+
+NAJKRÓTSZE ŚCIEŻKI W GRAFACH WAŻONYCH SKIEROWANYCH
+
+W grafach ważonych długość ścieżki jest rozumiana jako suma wag (długości) krawędzi. Cormen dodatkowo przyjmuje, że grafy są skierowane, co pozwala na istnienie różnych wag w zależności od kierunku przechodzenia od wierzchołka do wierzchołka. Rozważa się dwa rodzaje problemów.
+
+    1. Najkrótsze ścieżki z jednym źródłem.
+    2. Najkrótsze ścieżki między wszystkimi parami wierzchołków. 
+
+
+Sortowanie topologiczne
+WPROWADZENIE
+
+[Knuth] Sortowanie topologiczne polega na zanurzeniu porządku częściowego (~<) w porządku liniowym, tj. na utworzeniu takiego ciągu elementów a[], że jeśli a[j] ~< a[k], to j < k.
+
+Zbiór elementów z porządkiem częściowym może być zapisany w grafie skierowanym nie zawierającym cykli (DAG, ang. Directed Acyclic Graph). Sortowanie topologiczne wierzchołków polega na ich liniowym uporządkowaniu w taki sposób, że jeżeli istnieje krawędź skierowana (a,b), to wierzchołek a znajdzie się przed wierzchołkiem b. Zwykle wierzchołki grafu acyklicznego można posortować topologicznie na jeden lub więcej sposobów (jest gwarancja istnienia co najmniej jednego rozwiązania).
+
+Przykłady porządku częściowego [Knuth].
+
+    W matematyce: relacja "mniejsze lub równe" w zbiorze liczb naturalnych, relacja zawierania się zbiorów.
+    Sieci PERT i zbiór zadań do wykonania.
+    Budowanie leksykonu pojęć technicznych, gdzie definicje nie zawierają haseł, które jeszcze nie zostały zdefiniowane.
+    Zestaw pakietów oprogramowania w systemach uniksopodobnych, które do instalacji wymagają obecności innych pakietów. 
+
+SPECYFIKACJA
+
+SPECYFIKACJA
+Problem sortowania topologicznego.
+
+DANE WEJŚCIOWE
+Dany jest zbiór V liczb naturalnych od 0 do V-1 (wierzchołków)
+i E par tych liczb (krawędzi, połączeń)
+opisujących porządek częściowy w zbiorze liczb.
+
+DANE WYJŚCIOWE
+Ciąg liczb od 0 do V-1 posortowany topologicznie.
+
+Podstawowe algorytmy sortowania topologicznego to:
+
+    Usuwanie wierzchołków "niezależnych".
+    Zastosowanie DFS. 
+
+USUWANIE WIERZCHOŁKÓW "NIEZALEŻNYCH"
+
+[Tytuł z Wikipedii] Algorytm polega na wybraniu wierzchołka, który nie ma poprzednika. Inaczej mówiąc, wybieramy wierzchołek o stopniu wchodzącym 0. W grafie acyklicznym musi istnieć co najmniej jeden taki wierzchołek. Wierzchołek umieszczamy na pierwszym miejscu ciągu wynikowego, usuwamy go ze zbioru wierzchołków i usuwamy krawędzie z niego wychodzące. Powtarzamy proces dla zbioru pozostałych wierzchołków. Rozwiązaniem jest ciąg kolejno usuwanych wierzchołków.
+IMPLEMENTACJA
+
+Wersja dla grafów GvR bez otoczki obiektowej.
+
+import Queue
+
+def topsort_queue(graph):
+    # Słownik z liczbą poprzedników wierzchołka 
+    # (stopień wejściowy wierzchołka).
+    in_edges = dict((node, 0) for node in graph)
+    for source in graph:
+        for target in graph[source]:
+            in_edges[target] += 1
+    # Zakończyło się wczytywanie danych.
+    # Tworzymy kolejkę wierzchołków nie mających poprzedników.
+    sorted_nodes = list()
+    queue = Queue.Queue()
+    # Do kolejki idą pierwsze wierzchołki bez poprzedników.
+    for node in graph:
+        if in_edges[node] == 0:
+            queue.put(node)
+    while not queue.empty():
+        source = queue.get()   # weź wierzchołek z kolejki
+        sorted_nodes.append(source)   # wstaw wierzchołek do rozwiązania
+        # Usuwamy wszystkie krawędzie wychodzące z wierzchołka.
+        for target in graph[source]:
+            # Usuwamy poprzednika węzła target.
+            in_edges[target] -= 1
+            # Jeżeli zero, to wstawiamy do kolejki.
+            if in_edges[target] == 0:
+                queue.put(target)
+    return sorted_nodes
+
+WYKORZYSTANIE DFS
+
+Algorytm polega na stworzeniu listy wierzchołków grafu odwiedzanych podczas wykonywania algorytmu DFS w kolejności ich czasu przetworzenia. Po odwróceniu kolejności wierzchołków na liście dostaniemy wierzchołki posortowane topologicznie. Czas działania jest O(V+E), bo tyle trwa DFS.
+
+def topsort_dfs(graph):
+    sorted_nodes = list()
+    for source in graph:
+        if source not in sorted_nodes:
+            traverse_dfs(graph, source,
+                post_action=lambda node: sorted_nodes.append(node))
+    sorted_nodes.reverse()
+    return sorted_nodes
+
+
+Kolorowanie grafów
+WPROWADZENIE
+
+Kolorowanie grafu (ang. graph coloring) polega na przypisaniu określonym elementom składowym grafu (wierzchołkom, krawędziom lub ścianom) wybranych kolorów (etykiet) według ściśle określonych reguł. W praktyce zamiast kolorów stosuje się kolejne liczby całkowite, zaczynając od zera lub jedynki.
+KOLOROWANIE WIERZCHOŁKÓW
+
+[ Petersen graph ]
+
+Kolorowanie wierzchołków grafu (ang. vertex coloring) polega na przyporządkowaniu wierzchołkom kolorów w taki sposób, aby każda krawędź miała końce różnych kolorów (takie kolorowanie wierzchołkowe jest legalne, dozwolone).
+
+Graf jest k-kolorowalny wierzchołkowo, jeżeli istnieje legalne kolorowanie wierzchołków wykorzystujące k kolorów. Kolorowanie optymalne wierzchołków grafu zawiera najmniejszą możliwą liczbę kolorów, którą nazywamy liczbą chromatyczną. Problem kolorowania wierzchołków jest NP-trudny. Problem decyzyjny polegający na określeniu, czy graf jest k-kolorowalny wierzchołkowo jest NP-zupełny dla k > 3.
+
+Łatwo jest stwierdzić, czy graf jest 2-kolorowalny wierzchołkowo (grafy dwudzielne). Wystarczy przeszukać graf algorytmem BFS lub DFS, przydzielając na przemian dwa kolory. Problem kolorowania wierzchołkowego (i kilka innych) może być rozwiązany w czasie wielomianowym dla grafu doskonałego (ang. perfect graph).
+
+Algorytm dokładny kolorowania wierzchołków ma wykładniczą złożoność czasową, dlatego używa się go jedynie dla małych grafów (kilkanaście wierzchołków).
+
+Najprostszy algorytm zachłanny nie przydzieli wierzchołkom więcej niż D+1 kolorów (D to największy stopień wierzchołka w grafie). Twierdzenie mówi, że jeżeli odrzucimy grafy pełne i grafy cykliczne, to powinno wystarczyć D kolorów (Brooks, 1941). Często jednak wystarczy o wiele mniej kolorów. Każdy graf planarny jest 4-kolorowalny wierzchołkowo (Appel, Haken, 1976).
+
+Algorytmy przybliżone kolorowania wierzchołków można podzielić na kilka grup:
+
+    Algorytmy sekwencyjne, przydzielające kolory w sposób zachłanny.
+    Algorytmy sekwencyjne z wymianą kolorów, która uruchamiana jest wtedy, gdy w następnym kroku zachłannym potrzebny jest nowy kolor.
+    Algorytmy zbiorów niezależnych - korzysta się z faktu, że kolorowanie wierzchołków prowadzi do podziału na zbiory niezależne, każdemu kolorowi odpowiada osobny zbiór niezależny. 
+
+# Kolorowanie zachłanne.
+
+def greedy_color(graph, color, source):
+    """Przydziel najniższy możliwy kolor."""
+    n = len(graph)
+    used = [False] * n   # czy kolor wykorzystany
+    for target in graph[source]:
+        if color[target] is not None:
+            used[color[target]] = True
+    for i in xrange(n):   # sprawdzam kolejne kolory
+        if not used[i]:
+            color[source] = i
+            break
+    return i
+
+def us_node_coloring(graph):
+    """Unordered Sequential Node Coloring."""
+    color = dict((node, None) for node in graph)
+    for source in graph:
+        greedy_color(graph, color, source)
+    return color
+
+# Zastosowanie dla grafu G.
+# Dostajemy słownik z kolorami (liczby 0, 1, ...).
+color = us_node_coloring(G)
+
+# Testowanie kolorowania wierzchołków.
+
+import unittest
+
+class TestNodeColoring(unittest.TestCase):
+
+    def setUp(self):
+        self.G = dict()
+        self.edges = []   # wstawiamy 3-krotki, graf ważony
+        # Wstawiamy wierzchołki i krawędzie do G.
+
+    def test_us_node_coloring(self):
+        color = us_node_coloring(self.G)
+        # Czy wszystkie wierzchołki mają kolor?
+        for node in self.G:
+            self.assertNotEqual(color[node], None)
+        # Czy kolory są różne?
+        for edge in self.edges:
+            source, target, weight = edge
+            self.assertNotEqual(color[source], color[target])
+
+KOLOROWANIE KRAWĘDZI
+
+[ Petersen graph ]
+
+Kolorowanie krawędzi grafu (ang. edge coloring) polega na przyporządkowaniu krawędziom kolorów w taki sposób, aby dla każdego wierzchołka stykające się w nim krawędzie miały różne kolory (takie jest kolorowanie krawędziowe legalne, dozwolone).
+
+Graf jest k-kolorowalny krawędziowo, jeżeli istnieje legalne kolorowanie krawędzi wykorzystujące k kolorów. Optymalne kolorowanie krawędzi multigrafu to legalne kolorowanie, przy którym wykorzystano najmniejszą możliwą liczbę kolorów, nazywaną indeksem chromatycznym. Problem kolorowania krawędzi jest w ogólności NP-trudny, ale np. dla grafów dwudzielnych istnieją algorytmy wielomianowe znajdujące optymalne kolorowanie.
+
+Twierdzenie Visinga (1964) mówi, że indeks chromatyczny dowolnego grafu prostego wynosi D lub D+1. Przykładowo dla grafu dwudzielnego indeks chromatyczny wynosi D.
+
+Kolorowanie krawędzi można zapisać w formie kolorowania wierzchołków grafu krawędziowego, ale zwykle lepiej jest pozostać przy oryginalnym sformułowaniu problemu. Algorytmy przybliżone rozwiązujące problem kolorowania krawędzi mają przydzielić krawędziom co najwyżej D+1 kolorów.
+
+# Testowanie kolorowania krawędzi.
+
+import unittest
+
+class TestEdgeColoring(unittest.TestCase):
+
+    def setUp(self):
+        self.G = dict()
+        self.edges = []   # wstawiamy 3-krotki, graf ważony
+        # Wstawiamy wierzchołki i krawędzie do G.
+
+    def test_edge_coloring(self):
+        color = edge_coloring(self.G)
+        # Czy wszystkie krawędzie mają kolor?
+        for edge in self.edges:
+            self.assertNotEqual(color[edge], None)
+        # Czy kolory krawędzi przy każdym wierzchołku są różne?
+        # Zapisujemy kolory krawędzi dochodzących do wierzchołków.
+        D = dict((node, set()) for node in self.G)
+        for edge in self.edges:
+            source, target, weight = edge
+            D[source].add(color[edge])
+            D[target].add(color[edge])
+        for node in self.G:
+            self.assertEqual(len(D[node]), len(self.G[node]))
+
+KOLOROWANIE ŚCIAN
+
+Kolorowanie ścian można sprowadzić do problemu kolorowania wierzchołków grafu dualnego.
+PROBLEM M KOLOROWANIA GRAFU
+
+Algorytm z powrotami rozwiązujący problem m kolorowania grafu, czyli problem poprawnego pokolorowania wierzchołków grafu z wykorzystaniem co najwyżej m kolorów.
+
+# 0 --- 1 --- 2 nie jest dwudzielny, bo sa trojkaty
+# |   / |   / |
+# |  /  |  /  |
+# | /   | /   |
+# 3 --- 4 --- 5
+
+N = 6           # number of nodes
+
+import sys
+recursionlimit = sys.getrecursionlimit()
+sys.setrecursionlimit(max(N*2, recursionlimit))
+
+graph = dict()
+edges = [(0, 1, 1), (0, 3, 1), (1, 3, 1), (1, 4, 1), 
+    (1, 2, 1), (2, 4, 1), (2, 5, 1), (3, 4, 1), (4, 5, 1)]
+for edge in edges:
+    add_edge_undirected(graph, edge)
+
+node_list = list(graph)
+color = dict((node, None) for node in graph)
+
+def is_safe(source, c):
+    """Czy kolor moze byc uzyty dla wierzcholka?"""
+    for target in graph[source]:   # petla po sasiadach
+        if color[target] == c:
+            return False
+    return True
+
+def graph_color(k, k_colors):   # szukanie wszystkich rozwiazan
+    """Node coloring with k colors using backtracking."""
+    node = node_list[k]
+    for c in range(k_colors):
+        if is_safe(node, c):
+            color[node] = c   # zapisuje
+            if k+1 < N:
+                graph_color(k+1, k_colors)
+            else:
+                print color   # rysuj rozwiazanie
+            color[node] = None   # wymazuje
+
+# Znajduje wszystkie rozwiazania.
+#graph_color(0, k_colors=4)   # duzo rozwiazan
+graph_color(0, k_colors=3)   # 6 rozwiazan
+#graph_color(0, k_colors=2)   # nie ma rozwiazan
+
+
+
+Sieci przepływowe
+WPROWADZENIE
+
+Grafy ważone mogą być wykorzystywane do badania przepływu pewnej substancji pomiędzy ustalonymi punktami. Może to być przepływ cieczy, towarów, pojazdów. Formalnie definiuje się sieć przepływową (ang. flow network) jako graf skierowany o nieujemnych wagach (przepustowościach) krawędzi. Krawędzie przeciwne są zabronione. Sieć zawiera dwa wyróżnione wierzchołki: źródło (ang. source) i ujście (ang. sink). źródło ma jedynie krawędzie wychodzące, a ujście jedynie krawędzie wchodzące. W pozostałych wierzchołkach zachodzi zachowanie przepływu, czyli szybkość wpływania musi być równa szybkości wypływania.
+
+Cormen przyjmuje założenie, że każdy wierzchołek sieci przepływowej leży na pewnej ścieżce od źródła do ujścia.
+MAKSYMALNY PRZEPŁYW
+
+Najprostszym problemem pojawiającym się w sieciach przepływowych jest problem maksymalnego przepływu. Wybrane algorytmy rozwiązujące ten problem [Cormen]:
+
+    Algorytm Forda-Fulkersona, wykorzystuje sieć residualną i ścieżki powiększające.
+    Algorytm Edmondsa-Karpa, działa w czasie O(V * (E ** 2)).
+    Algorytmy typu "prześlij i przemianuj", działają w czasie O((V ** 2) * E).
+    Algorytm "przemianuj i przesuń na początek", działa w czasie O(V ** 3). 
+
+
+
+Zbiory niezależne
+WPROWADZENIE
+
+Zbiór niezależny (ang. independent set) grafu nieskierowanego G=(V,E) jest to podzbiór S zbioru wierzchołków V, taki że żadne dwa wierzchołki z S nie są połączone krawędzią z E. Maksymalny zbiór niezależny (ang. maximal independent set) nie jest podzbiorem większego zbioru niezależnego. Największy zbiór niezależny (ang. maximum independent set) jest zbiorem niezależnym o największej liczności w G. Problem znalezienia największego zbioru niezależnego jest NP-trudny.
+
+# Testowanie zbioru niezależnego.
+
+import unittest
+
+def find_independent_set(graph):
+    pass
+
+class TestIndependentSet(unittest.TestCase):
+
+    def setUp(self):
+        self.G = dict()
+        self.edges = []   # wstawiamy 3-krotki, graf ważony
+        # Wstawiamy wierzchołki i krawędzie do G.
+
+    def test_independent_set(self):
+        iset = find_independent_set(self.G)
+        for edge in self.edges:
+            source, target, weight = edge
+            self.assertFalse(source in iset and target in iset)
+
+ALGORYTM Z POWROTAMI
+
+# 0 --- 1 --- 2 nie jest dwudzielny, bo sa trojkaty
+# |   / |     |
+# |  /  |     | Niezalezne: 0, 4, 2 (najlepszy)
+# | /   |     |
+# 3 --- 4 --- 5
+
+N = 6           # number of nodes
+
+import sys
+recursionlimit = sys.getrecursionlimit()
+sys.setrecursionlimit(max(N*2, recursionlimit))
+
+# Definicja prostego grafu spojnego.
+graph = dict()
+edges = [(0, 1, 1), (0, 3, 1), (1, 3, 1), (1, 4, 1), 
+    (1, 2, 1), (2, 5, 1), (3, 4, 1), (4, 5, 1)]
+for edge in edges:
+    add_edge_undirected(graph, edge)
+
+node_list = list(graph)
+used = dict((node, 0) for node in graph)   # pokrycie wierzcholka
+tmp_set = set()        # kandydat na najwiekszy zbior niezalezny
+independent_set = set()   # najwiekszy zbior niezalezny
+
+def add_iset(source):
+    """Add a source to iset."""
+    tmp_set.add(source)
+    used[source] += 1
+    for target in graph[source]:
+        used[target] += 1
+
+def remove_iset(source):
+    """Remove a source from iset."""
+    tmp_set.remove(source)
+    used[source] -= 1
+    for target in graph[source]:
+        used[target] -= 1
+
+def graph_iset(k):
+    """Try to add a node k to an iset."""
+    global independent_set, tmp_set, node_list, N
+    node = node_list[k]
+    if used[node] > 0:   # moge wstawiac tylko ze nie nalezy
+        if k < N-1:
+            graph_iset(k+1)
+        else:
+            if len(tmp_set) > len(independent_set):
+                independent_set = set(tmp_set)
+    else:   # used[node]==0
+        # Najpierw sprawdzam mozliwosc, ze nalezy do iset.
+        add_iset(node)
+        if k < N-1:
+            graph_iset(k+1)
+        else:
+            if len(tmp_set) > len(independent_set):
+                independent_set = set(tmp_set)
+        remove_iset(node)
+        # Teraz sprawdzam mozliwosc, ze nie nalezy do iset.
+        if k < N-1:
+            graph_iset(k+1)
+        else:
+            if len(tmp_set) > len(independent_set):
+                independent_set = set(tmp_set)
+
+# Uruchomienie poszukiwania najwiekszego zbioru niezaleznego.
+graph_iset(0)
+
+
+
+Zbiory dominujące
+WPROWADZENIE
+
+Zbiór dominujący (ang. dominating set) grafu nieskierowanego G=(V,E) jest to podzbiór S zbioru wierzchołków V, taki że każdy wierzchołek z V, który nie należy do S, ma co najmniej jednego sąsiada w S. Problem znalezienia najmniejszego zbioru dominującego jest trudny.
+
+# Testowanie zbioru dominującego.
+
+import unittest
+
+def find_dominating_set(graph):
+    pass
+
+class TestDominatingSet(unittest.TestCase):
+
+    def setUp(self):
+        self.G = dict()
+        self.edges = []   # wstawiamy 3-krotki, graf ważony
+        # Wstawiamy wierzchołki i krawędzie do G.
+
+    def test_dominating_set(self):
+        dset = find_dominating_set(self.G)
+        neighbors = set(dset)
+        for source in dset:
+            neighbors.update(self.G[source])
+        self.assertEqual(len(neighbors), len(self.G))
+
+
+
+Skojarzenia
+WPROWADZENIE
+
+Skojarzenie (ang. matching) w grafie nieskierowanym G=(V,E) jest to taki podzbiór krawędzi M, że każdy wierzchołek z V jest końcem co najwyżej jednej krawędzi z M. Czasem używana jest nazwa zbiór niezależny krawędzi (ang. independent edge set). Skojarzenie jest maksymalne (ang. maximal matching), jeżeli nie jest podzbiorem żadnego innego skojarzenia. Skojarzenie jest największe (najliczniejsze) (ang. maximum matching), jeżeli w grafie nie istnieje skojarzenie o większej liczbie krawędzi. Skojarzenie jest doskonałe (ang. perfect matching), kiedy każdy wierzchołek grafu jest końcem pewnej krawędzi należącej do tego skojarzenia. Skojarzenie doskonałe może istnieć tylko dla grafu o parzystej liczbie wierzchołków. Skojarzenie doskonałe jest maksymalne i największe.
+
+W grafach ważonych rozważa się problem skojarzenia o najmniejszej wadze.
+
+Istnieje kilka sposobów zaimplementowania skojarzenia. Może to być zbiór krawędzi albo słownik, w którym klucze to wierzchołki grafu. a wartości to wierzchołki lub None.
+
+# Testowanie skojarzenia.
+# Skojarzenie to słownik mate, który dla krawędzi (source, target)
+# należącej do skojarzenia zawiera
+# mate[source] = target
+# mate[target] = source
+# mate[node] = None, jeżeli node nie jest końcem krawędzi ze skojarzenia.
+
+import unittest
+
+def find_matching(graph):
+    pass
+
+class TestMatching(unittest.TestCase):
+
+    def setUp(self):
+        self.G = dict()
+        self.edges = []   # wstawiamy 3-krotki, graf ważony
+        # Wstawiamy wierzchołki i krawędzie do G.
+
+    def test_matching(self):
+        mate = find_matching(self.G)
+        for source in mate:
+            if mate[source] is not None:
+                target = mate[source]
+                self.assertEqual(mate[target], source)
+
+
