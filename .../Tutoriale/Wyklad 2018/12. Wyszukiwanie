@@ -1,0 +1,594 @@
+Python (12) - wyszukiwanie
+PLAN
+
+    Podstawy wyszukiwania
+    Wyszukiwanie liniowe
+    Wyszukiwanie binarne
+    Wyszukiwanie max lub min
+    Jednoczesne wyszukiwanie max i min
+    Wyszukiwanie mediany
+    Wyszukiwanie mody
+    Wyszukiwanie lidera
+    
+
+Podstawy wyszukiwania
+WPROWADZENIE
+
+Wyszukanie konkretnego fragmentu informacji w wielkich zbiorach uprzednio zapamiętanych danych jest operacją podstawową, nazywaną wyszukiwaniem, będącą nieodłączną częścią wielu prac komputerowych [Sedgewick]. Dane są podzielone na elementy (rekordy), z których każdy zawiera klucz wykorzystywany przy wyszukiwaniu.
+
+Zbiór danych może być w pewnych przypadkach nieuporządkowany, a w innych przypadkach całkowicie uporządkowany (posortowany). Często wykorzystuje się częściowe uporządkowanie zbioru w pewnych strukturach danych (drzewa binarne, kopce), aby przyspieszyć operację wyszukiwania. Ważnym czynnikiem występującym w zastosowaniach jest zmienność zawartości zbioru z danymi (elementy są dodawane lub usuwane ze zbioru). Dlatego interesują nas dynamiczne struktury danych, zmieniające się w czasie pracy. Chcemy, aby operacje na zbiorze danych wykonywały się możliwie szybko. Wybór optymalnej struktury danych zależy od spodziewanego wzorca działań na zbiorze (czy występują częste modyfikacje zbioru, czy często powtarzają się zapytania z takimi samymi kluczami, itp.).
+
+Tablica symboli (słownik) jest strukturą danych zawierającą elementy z kluczami, która umożliwia dwa podstawowe działania: wstawienie nowego elementu i zwrot elementu z podanym kluczem.
+STATYSTYKI POZYCYJNE
+
+W zbiorze n-elementowym i-ty najmniejszy element nazywamy i-tą statystyką pozycyjną [Cormen str. 210]. Minimum zbioru jest jego pierwszą statystyką pozycyjną (i=1). Maksimum zbioru jest jego n-tą statystyką pozycyjną.
+DRZEWA BINARNE
+
+Wiele algorytmów wyszukiwania opiera się na drzewie poszukiwań binarnych, które chcemy utrzymywać w stanie zrównoważenia.
+
+    Randomizowane drzewa poszukiwań binarnych.
+    Rozchylane drzewa poszukiwań binarnych (operacja splay).
+    Drzewa poszukiwań 2-3-4.
+    Drzewa czerwono-czarne.
+    Drzewa AVL. 
+
+SELEKCJA
+
+Problem selekcji (wyboru) to problem wyznaczania k-tej co do wielkości wśród n liczb.
+
+SPECYFIKACJA
+Problem wyboru.
+
+DANE WEJŚCIOWE
+Zbiór A (parami różnych) n liczb oraz liczba k taka, że
+1 <= k <= n.
+
+DANE WYJŚCIOWE
+Element zbioru A większy od dokładnie k-1 innych elementów zbioru A.
+
+Dla niektórych wartości k (1 lub n) problem jest bardzo prosty i wymaga jedynie wyznaczenia minimalnej lub maksymalnej wartości w A, co możemy zrobić w czasie O(n). Bardziej skomplikowanym problemem jest znajdowanie mediany (k=n/2). Szybkie znajdowanie mediany pozwoliłoby np. poprawić algorytm sortowania quicksort tak, aby nawet w pesymistycznym przypadku działał w czasie O(n*log(n)).
+
+Wybrane algorytmy wyszukiwania.
+
+    Wyszukiwanie liniowe.
+    Wyszukiwanie binarne.
+    Wyszukiwanie max lub min.
+    Jednoczesne wyszukiwanie max i min.
+    Wyszukiwanie mediany.
+    Wyszukiwanie mody.
+    Wyszukiwanie lidera.
+    Sortowanie przez kopcowanie zatrzymane po wybraniu k-tego elementu. 
+
+
+Wyszukiwanie liniowe (sekwencyjne)
+WPROWADZENIE
+
+SPECYFIKACJA
+Problem: 
+Wyszukiwanie zadanego elementu w nieuporządkowanym ciągu liczb.
+
+DANE WEJŚCIOWE
+Ciąg n liczb umieszczonych w tablicy L. 
+Wyróżniony element y.
+
+DANE WYJŚCIOWE
+Pozycja (indeks) elementu y w ciągu L.
+Jeżeli element y nie znajduje się w tablicy, 
+to należy to zasygnalizować.
+
+Wyszukiwanie liniowe (ang. linear search), zwane również sekwencyjnym (ang. sequential search), polega na przeglądaniu kolejnych elementów ciągu L. Jeżeli poszukiwany element nie występuje w ciągu L, to algorytm może to zasygnalizować zwracając wartość, która nie jest prawidłowym indeksem. W C/C++ jest to zwykle -1. W Pythonie algorytm może zwrócić wartość None.
+
+Często chcemy znaleźć wszystkie wystąpienia elementu w ciągu. W takim przypadku algorytm na wejściu powinien otrzymywać dodatkowo pozycję (indeks) elementu, od którego ma rozpocząć wyszukiwanie. Pozycję tę przy kolejnym przeszukiwaniu podajemy zawsze o 1 większą od ostatnio znalezionej. Dzięki temu nowe poszukiwanie rozpocznie się tuż za poprzednio znalezionym elementem.
+IMPLEMENTACJA
+
+def linear_search(L, left, right, y):
+    """Wyszukiwanie liniowe w ciągu."""
+    i = left
+    while i <= right:
+        if y == L[i]:
+            return i
+        i += 1
+    return None
+
+ZŁOŻONOŚĆ
+
+Jeżeli element jest w ciągu na miejscu k, to
+
+T(n, k) = Ta + (k-1) * (2*Tc + Ta) + 2*Tc = k * (2*Tc + Ta).
+
+Jeżeli elementu nie ma w ciągu, to
+
+T(n, None) = Ta + n * (2*Tc + Ta) + Tc = Tc * (2*n + 1) + Ta * (n+1).
+
+Ta - czas instrukcji podstawiania
+Tc - czas instrukcji porównania
+p - prawdopodobieństwo, że element jest w ciągu
+p/n - prawdopodobieństwo, że element jest na miejscu k
+(1-p) - prawdopodobieństwo, że elementu nie ma w ciągu
+
+Badamy przypadek średni (typowy).
+
+T(n) = \sum_A P(A)*T(A),
+T(n) = \sum_{k=1,...,n} (p/n) * T(n, k) + (1-p) * T(n, None),
+T(n) = (p/n) * (2*Tc + Ta) * \sum_{k=1,...,n} k + (1-p) * T(n, None),
+T(n) = (p/2) * (n+1) * (2*Tc + Ta) + (1-p) * [Tc * (2*n+1) + Ta * (n+1)].
+
+Jeżeli p=1, to
+
+T(n) = (n+1) * (Tc + Ta/2) = O(n).
+
+Jeżeli p=0 (wariant pesymistyczny), to
+
+T(n) = Tc * (2*n + 1) + Ta * (n+1) = O(n).
+
+WYSZUKIWANIE LINIOWE Z WARTOWNIKIEM
+
+Jeżeli do rozważanego ciągu liczb można dołączyć jeszcze jeden element, to można przyspieszyć algorytm wyszukiwania liniowego. Do zbioru dodaje się na koniec element równy poszukiwanemu, aby wyeliminować jeden test w pętli while sprawdzający koniec zbioru. Jeżeli w procesie wyszukiwania dotrzemy do wartownika, to znaczy że elementu poszukiwanego nie ma w zbiorze.
+
+Opisana metoda wyszukiwania nosi nazwę wyszukiwania liniowego z wartownikiem (ang. search with sentinel).
+
+def linear_search(L, left, right, y):
+    """Wyszukiwanie liniowe z wartownikiem."""
+    last = L[right]
+    L[right] = y   # ustawiamy wartownika na końcu zakresu
+    i = left
+    while L[i] != y:
+        i += 1
+    L[right] = last   # przywracanie ostatniego elementu
+    if i < right or y == last:
+        return i
+    else:
+        return None
+
+
+Wyszukiwanie binarne
+WPROWADZENIE
+
+SPECYFIKACJA
+Problem:
+Wyszukiwanie zadanego elementu w rosnącym ciągu liczb.
+
+DANE WEJŚCIOWE
+Uporządkowany rosnąco ciąg n liczb umieszczonych w tablicy L. 
+Wyróżniony element y.
+
+DANE WYJŚCIOWE
+Pozycja (indeks) elementu y w ciągu L.
+Jeżeli element y nie znajduje się w tablicy, 
+to należy to zasygnalizować.
+
+Zbadamy problem wyszukiwania danego elementu y na liście uporządkowanej rosnąco L w zadanym przedziale indeksów od left do right. Rozwiązaniem jest algorytm wyszukiwania binarnego (ang. binary search), inaczej wyszukiwania przez połowienie.
+
+Podamy rekurencyjny opis algorytmu. Najpierw sprawdzamy, czy przedział indeksów nie jest pusty. Następnie porównujemy y z elementem środkowym L[k], gdzie k = (left+right)/2. Jeżeli y jest równe L[k], to zwracamy indeks k. Jeżeli y jest mniejsze od L[k], to stosujemy algorytm do przedziału indeksów od left do (k-1). Jeżeli y jest większe od L[k], to stosujemy algorytm do przedziału indeksów od (k+1) do right. Po znalezieniu elementu funkcja zwraca jego indeks. W przypadku niepowodzenia funkcja zwraca wartość, która nie jest prawidłowym indeksem tablicy. W języku C/C++ jest to zwykle -1, w Pythonie wartość None.
+IMPLEMENTACJA
+
+def binary_search(L, left, right, y):
+    """Wyszukiwanie binarne w wersji iteracyjnej."""
+    while left <= right:
+        k = (left+right)/2
+        if y == L[k]:
+            return k
+        if y > L[k]:
+            left = k+1
+        else:
+            right = k-1
+    return None
+
+ZŁOŻONOŚĆ
+
+Niech n = 2^k, 
+T(1) = Tx, 
+T(n) = Tx + T(n/2). 
+T(2^k) = Tx + T(2^{k-1}) = k*Tx + T(1) = (k+1)*Tx.
+
+Liczba porównań jest rzędu O(log(n)).
+
+BISEKCJA W PYTHONIE
+
+import bisect
+# L to posortowania lista elementów.
+
+bisect.bisect_left(L, x, lo=0, hi=len(L))
+# Zwraca indeks i, gdzie spełnione są warunki
+# all(val < x for val in L[lo:i])
+# all(val >= x for val in L[i:hi])
+
+bisect.bisect_right(L, x, lo=0, hi=len(L))
+bisect.bisect(L, x, lo=0, hi=len(L))
+# Zwraca indeks i, gdzie spełnione są warunki
+# all(val <= x for val in L[lo:i])
+# all(val > x for val in L[i:hi])
+
+bisect.insort_left(L, x, lo=0, hi=len(L))
+# L.insert(bisect.bisect_left(L, x, lo, hi), x)
+
+bisect.insort_right(L, x, lo=0, hi=len(L))
+bisect.insort(L, x, lo=0, hi=len(L))
+# L.insert(bisect.bisect_right(L, x, lo, hi), x)
+
+
+
+Wyszukiwanie max lub min
+WPROWADZENIE
+
+SPECYFIKACJA
+Problem: 
+Wyszukiwanie największego elementu w nieuporządkowanym ciągu liczb.
+
+DANE WEJŚCIOWE
+Ciąg n liczb umieszczonych w tablicy L. 
+
+DANE WYJŚCIOWE
+Pozycja (indeks) elementu największego w ciągu L.
+
+Zadanie znajdowania elementu maksymalnego (minimalnego) jest typowym zadaniem wyszukiwania, które rozwiązujemy przy pomocy algorytmu wyszukiwania liniowego. Za tymczasowy maksymalny (minimalny) element przyjmujemy pierwszy element zbioru. Następnie element tymczasowy porównujemy z kolejnymi elementami. Jeśli któryś z porównywanych elementów jest większy (mniejszy) od elementu tymczasowego, to za nowy tymczasowy element maksymalny (minimalny) przyjmujemy porównywany element zbioru. Gdy cały zbiór zostanie przeglądnięty, w elemencie tymczasowym otrzymamy element maksymalny (minimalny) w zbiorze. Algorytm jest optymalny (Ira Pohl, 1972).
+
+Możliwe są dwa podejścia: zwracamy indeks największego elementu (dane w tablicy) lub zwracamy sam element największy (dane w tablicy lub w pliku). Jeżeli dostęp do danych jest sekwencyjny, to lepiej jest zwracać sam element największy (a raczej jego kopię).
+
+Zajmiemy się implementacją funkcji zwracającej indeks największego elementu na liście (w zadanym przedziale indeksów). Dla zbioru n liczb musimy wykonać (n-1) porównań. Wyszukiwanie elementu najmniejszego jest analogiczne.
+IMPLEMENTACJA
+
+def find_max(L, left, right):
+    """Wyszukiwanie indeksu elementu największego."""
+    k = left
+    i = left + 1
+    while i <= right:
+        if L[i] > L[k]:
+            k = i
+        i += 1
+    return k
+
+def find_min(L, left, right):
+    """Wyszukiwanie indeksu elementu najmniejszego."""
+    k = left
+    i = left + 1
+    while i <= right:
+        if L[i] < L[k]:
+            k = i
+        i += 1
+    return k
+
+# Pythonowa symulacja wyszukiwania elementu największego w pliku.
+def find_max(afile):
+    best = None
+    for item in afile:
+        if best is None:
+            best = item
+        elif item > best:
+            best = item
+    return best
+
+SELECTSORT
+
+Algorytm wyszukiwania liniowego jest wykorzystywany w algorytmie sortowania przez wybór. W sposób ciągły wybieramy najmniejszy element z coraz mniejszego zbioru danych. 
+
+
+Jednoczesne wyszukiwanie max i min
+WPROWADZENIE
+
+SPECYFIKACJA
+Problem: 
+Jednoczesne wyszukiwanie elementu największego i najmniejszego
+w nieuporządkowanym ciągu liczb.
+
+DANE WEJŚCIOWE
+Ciąg n liczb umieszczonych w tablicy L. 
+
+DANE WYJŚCIOWE
+Para indeksów dla elementu najmniejszego i elementu największego w ciągu L.
+
+Chcemy jednocześnie odnaleźć elementy najmniejszy i największy w podanym zbiorze n elementowym. Metoda siłowa polega na znalezieniu najpierw elementu najmniejszego, a następnie największego. Tak działa pierwsza wersja funkcji minimax, która zwraca parę indeksów - dla elementu minimalnego i maksymalnego. Liczba wykonywanych porównań wynosi 2n-2.
+
+def minimax(L, left, right):
+    """Wyszukiwanie elementu najmniejszego i największego.
+    Zastosowanie metody siłowej."""
+    mini = find_min(L, left, right)
+    maxi = find_max(L, left, right)
+    return (mini, maxi)             # zwraca krotkę indeksów
+
+Lepszym podejściem jest algorytm minimax. Postępujemy wg zasady dziel i zwyciężaj (divide and conquer).
+
+    Dzielimy badany zbiór na dwa podzbiory A i B w następujący sposób. Z badanego zbioru pobieramy elementy parami, a następnie mniejszy z pary wstawiamy do zbioru A, a większy do zbioru B. Jeżeli n jest nieparzyste, to ostatni element dołączamy do obu zbiorów A i B.
+    Znajdujemy element najmniejszy w zbiorze A.
+    Znajdujemy element największy w zbiorze B. 
+
+ZŁOŻONOŚĆ
+
+Dla n = 2k liczba porównań wynosi
+P = k+2(k-1) = 3k-2 = (3n-4)/2.
+
+Dla n = 2k+1 liczba porównań wynosi
+P = k+2k = 3k = (3n-3)/2.
+
+Złożoność algorytmu jest rzędu 3n/2.
+
+IMPLEMENTACJA
+
+def minimax(L, left, right):
+    """Wyszukiwanie elementu najmniejszego i największego.
+    Zastosowanie metody dziel i zwyciężaj."""
+    if left == right:     # tylko jeden element w zbiorze
+        return (left, left)
+    # co najmniej 2 elementy
+    if L[left] > L[left+1]:
+        maxi = left
+        mini = left+1
+    else:
+        maxi = left+1
+        mini = left
+    k = left+2            # już może nie istnieć!
+    while k < right:   # pobieramy pary
+        if L[k] > L[k+1]:
+            if L[k] > L[maxi]:
+                maxi = k
+            if L[k+1] < L[mini]:
+                mini = k+1
+        else:
+            if L[k+1] > L[maxi]:
+                maxi = k+1
+            if L[k] < L[mini]:
+                mini = k
+        k = k+2
+    if k == right:        # nieparzysta liczba elementów
+        if L[k] > L[maxi]:
+            maxi = k
+        if L[k] < L[mini]:
+            mini = k
+    return (mini, maxi)
+
+
+
+Wyszukiwanie mediany
+WPROWADZENIE
+
+Mediana zbioru jest środkowym elementem tego zbioru po jego uporządkowaniu. Jeżeli zbiór zawiera nieparzystą liczbę n elementów, to ma jeden element środkowy na pozycji i=(n+1)/2 i jest on medianą tego zbioru. Jeżeli zbiór zawiera parzystę liczbę n elementów, to zbiór ma dwie mediany na pozycjach i=n/2 (mediana dolna) oraz i=n/2+1 (mediana górna). W praktyce za medianę przyjmuje się na ogół medianę dolną.
+
+Prosta metoda znajdowania mediany polega na posortowaniu zbioru i wybraniu elementu środkowego. Lepszy algorytm jest opisany w [BK1982].
+
+Nie wiadomo dokładnie, ile porównań jest potrzebnych do znalezienia mediany. W pracy [BFPRT1973] podano dolne ograniczenie równe 3n/2-2 porównań. Bent i John [BJ1985] podali dolną granicę 2n porównań. Górną granicę 3n podali Schonhage, Paterson i Pippenger [SPP1976].
+
+Wybrane algorytmy znajdowania mediany.
+
+    Algorytm Hoare'a, pomysł podobny jak w quicksort. Złożoność pesymistyczna O(n**2), średnia złożoność O(n). Inna nazwa algorytmu to quickselect.
+    Algorytm magicznych piątek (Blum, Floyd, Pratt, Rivest, Tarjan, 1973). Złożoność pesymistyczna O(n). Inna nazwa algorytmu to mediana median (ang. median of medians).
+    Algorytm selekcji Floyda-Rivesta (1975), złożoność pesymistyczna O(n), liczba porównań n + min(k, n-k) + O(n^(1/2)), co dla mediany daje O(3n/2) porównań. 
+
+MEDIANA KROCZĄCA
+
+Dla pewnego strumienia danych liczbowych możemy chcieć na bieżąco raportować element środkowy z ostatnich n elementów ze strumienia. Jest to mediana krocząca, którą chcemy obliczać w czasie O(log n), gdzie n jest szerokością okna danych. Zalecaną strukturą danych w tym przypadku jest indeksowana lista z przeskokami.
+
+https://en.wikipedia.org/wiki/Skip_list
+ALGORYTM HOARE'A
+
+Algorytm jest oparty na tym samym pomyśle, co algorytm sortowania quicksort. Wersja wg Cormena.
+
+def swap(L, left, right):
+    """Zamiana miejscami elementów."""
+    tmp = L[left]
+    L[left] = L[right]
+    L[right] = tmp
+
+def partition(L, left, right):
+    """Zwraca indeks elementu rozdzielającego."""
+    # Element rozdzielający to ostatni z prawej,
+    # dlatego na końcu trzeba go przerzucić do środka.
+    # Będzie on na docelowej pozycji ze względu na sortowanie.
+    x = L[right]   # element rozdzielający
+    i = left
+    for j in range(left, right):
+        if L[j] <= x:
+            swap(L, i, j)
+            i += 1
+    swap(L, i, right)
+    return i
+
+def quicksort(L, left, right):
+    """Sortowanie szybkie wg Cormena str. 169."""
+    if left >= right:
+        return
+    pivot = partition(L, left, right)
+    # pivot jest na swoim miejscu
+    quicksort(L, left, pivot - 1)
+    quicksort(L, pivot + 1, right)
+
+def select(L, left, right, k):
+    """Selekcja na bazie Cormena."""
+    if (right-left+1) < k:
+        raise ValueError("k is too large")
+    if left == right and k == 1:
+        return L[left]
+    pivot = partition(L, left, right)
+    # pivot jest na swoim miejscu
+    k2 = pivot - left + 1
+    if k == k2:
+        return L[pivot]
+    elif k < k2:
+        return select(L, left, pivot - 1, k)
+    else:
+        return select(L, pivot + 1, right, k - k2)
+
+Algorytm selekcji Hoare'a ma pesymistyczną złożoność O(n**2), tak jak quicksort. Ale średnia liczba porównań nie przekracza 4n, co daje średnią złożoność O(n). Zauważmy, że w algorytmie selekcji tylko jedno zadanie jest wykonywane rekurencyjnie, a w quicksort są to dwa zadania.
+ALGORYTM MAGICZNYCH PIĄTEK
+
+Algorytm stosuje technikę "dziel i zwyciężaj". Kluczowy jest dobry wybór punktu podziału, przy którym stała część elementów będzie poniżej i powyżej niego. Takim dobrym punktem podziału jest mediana zbioru.
+
+def select_five(L, left, right, k):
+    # 1. Jeżeli jest mało elementów, to sortuj.
+    # p powinno być co najmniej 5, aby ustawiło sie i > 0.
+    p = 5   # może być kilkadziesiąt
+    if (right-left+1) < p:
+        insertsort(L, left, right)
+        return left+k-1   # zwracam indeks
+    # 2. Podziel listę na 5-elementowe podzbiory, najwyżej jeden 4-elementowy.
+    # 3. Posortuj podzbiory.
+    left2 = left
+    right2 = left + 4
+    i = left   # pierwszy wolny
+    while right2 <= right:
+        insertsort(L, left2, right2)
+        # Przerzucamy mediany na początek tablicy.
+        swap(L, i, left2+2)
+        i += 1
+        left2 += 5
+        right2 += 5
+    # Tu można posortować zbiory mniej niż 5-elementowe.
+    if right2 == right+1 or right2 == right+2:
+        insertsort(L, left2, right)
+        swap(L, i, left2+1)
+        i += 1
+    # 5. Wyznaczamy medianę median rekurencyjnie.
+    median_idx = select_five(L, left, i-1, (i-left+1)/2)
+    # 6. Dalej jak Hoare, mediana będzie punktem podziału.
+    swap(L, median_idx, right)   # element podzialu na prawo
+    pivot = partition(L, left, right)
+    k2 = pivot - left + 1
+    if k == k2:
+        return pivot   # zwracam indeks
+    elif k < k2:
+        return select_five(L, left, pivot-1, k)
+    else:
+        return select_five(L, pivot+1, right, k-k2)
+
+Niech T(n) oznacza złożoność czasową algorytmu. Wykonanie algorytmu składa się z trzech etapów. (1) Znajdowanie median piątek w czasie O(n). (2) Znajdowanie rekurencyjne mediany median w czasie T(n/5). (3) Wykonania rekurencyjnego w czasie T(3n/4). To ostatnie oszacowanie wynika z faktu, że przynajmniej 1/4 elementów jest nie większa od mediany median M (lewa górna ćwiartka), a więc 3/4 elementów jest większa lub równa M. Podobnie przynajmniej 1/4 elementów jest nie mniejsza od M (prawa dolna ćwiartka), czyli 3/4 elementów jest mniejsza lub równa M. Wygodnie jest to pokazać na rysunku.
+
+. elementy mniejsze lub równe M (mediana median)
+. [nie mniej niż n/4]]
+. ( )  ( )  ( )  ( )  ( )| ( )  ( )  ( )  ( )
+. |/\  |/\  |/\  |/\  |/\| |/\  |/\  |/\  |/\
+. ( )  ( )  ( )  ( )  ( )| ( )  ( )  ( )  ( )
+. |/\  |/\  |/\  |/\  |/\| |/\  |/\  |/\  |/\
+.                    +---|--------------------
+. ( )<=( )<=( )<=( )<=(M)<=( )<=( )<=( )<=( )
+. -------------------|---+
+. |/\  |/\  |/\  |/\ ||/\  |/\  |/\  |/\  |/\
+. ( )  ( )  ( )  ( ) |( )  ( )  ( )  ( )  ( )
+. |/\  |/\  |/\  |/\ ||/\  |/\  |/\  |/\  |/\ elementy większe lub równe M
+. ( )  ( )  ( )  ( ) |( )  ( )  ( )  ( )  ( ) [nie mniej niż n/4]
+
+Całkowite oszacowanie ma postać T(n) <= O(n) + T(n/5) + T(3n/4), co daje rozwiązanie postaci T(n) = O(n). Kluczowa jest nierówność 1/5 + 3/4 = 19/20 < 1.
+
+Zamiast podziału na zbiory 5-elementowe mozna zrobić podziały na zbiory 7-elementowe, co nie zmieni idei algorytmu. Istotne jest uzyskanie oszacowania T(n) <= O(n) + T(an) + T(bn), gdzie a+b < 1, co daje całkowity czas T(n) = O(n/(1-a-b)). Na koniec zauważmy, że w typowych przypadkach szybszy jest quickselect ze względu na prostszy kod.
+REFERENCJE
+
+    [BK1982] L. Banachowski, A. Kreczmar, Elementy analizy algorytmów, Wydawnictwa Naukowo-Techniczne, Warszawa 1982.
+    [BJ1985] W. Bent, J. W. John, Finding the median requires 2n comparisons. In: Proceedings of the 17th Annual ACM Symposium on Theory of Computing, pp. 213-216 (1985).
+    [SPP1976] A. Schonhage, M. Paterson, N. Pippenger, Finding the median. Journal of Computer and System Sciences 13, 184-199 (1976). [Abstract: An algorithm is described which determines the median of n elements using in the worst case a number of comparisons asymptotic to 3n.]
+    [BFPRT1973] M. Blum, R. W. Floyd, V. R. Pratt, R. L. Rivest, R. E. Tarjan, Time bounds for selection. Journal of Computer and System Sciences 7, 448-461 (1973).
+    Wikipedia, Median of medians, https://en.wikipedia.org/wiki/Median_of_medians
+    Wikipedia, Quickselect, https://en.wikipedia.org/wiki/Quickselect
+    Wikipedia, Floyd-Rivest algorithm, https://en.wikipedia.org/wiki/Floyd-Rivest_algorithm
+    David Eppstein, ICS 161: Design and Analysis of Algorithms Lecture notes for January 30, 1996, http://www.ics.uci.edu/~eppstein/161/960130.html 
+
+
+Wyszukiwanie mody
+WPROWADZENIE
+
+Moda (dominanta) to element ciągu występujący w nim najczęściej. Jeżeli elementy w ciągu nie powtarzają się, to ciąg nie ma mody.
+
+Można spotkać inną definicję, wg której w każdym przypadku istnieje moda, choć może nie być wyznaczona jednoznacznie, kilka elementów można przyjąć jako modę. Przykładowo dla ciągu różnych elementów każdy z nich może być modą.
+WYSZUKIWANIE MODY W ZBIORZE POSORTOWANYM ROSNĄCO
+
+SPECYFIKACJA
+Problem: 
+Wyszukiwanie mody w rosnącym ciągu liczb.
+
+DANE WEJŚCIOWE
+Rosnący ciąg n liczb umieszczonych w tablicy L. 
+
+DANE WYJŚCIOWE
+Pozycja (indeks) mody w ciągu L.
+Jeżeli w tablicy nie ma mody, to należy to zasygnalizować.
+
+Rozważymy algorytm wyszukiwania mody na liście uporządkowanej rosnąco lub malejąco (równe elementy są obok siebie). Funkcja zwraca indeks elementu lub None, jeżeli ciąg nie ma mody. Złożoność czasowa algorytmu jest liniowa O(n).
+IMPLEMENTACJA
+
+def moda(L, left, right):
+    """Wyszukiwanie mody w ciągu rosnącym lub malejącym."""
+    if left+1 > right:
+        return None
+    i1 = None             # najlepszy kandydat (indeks)
+    number1 = 0           # jego liczebność
+    i2 = left             # bieżący element (indeks)
+    number2 = 1           # jego liczebność
+    while i2 < right:
+        i2 += 1
+        if L[i2] == L[i2-1]:    # jeżeli się powtórzył
+            number2 += 1
+            # na bieżąco uaktualniamy najlepszego kandydata
+            if number2 > number1:  # jest lepszy kandydat
+                number1 = number2
+                i1 = i2
+        else:                   # nowy bieżący element
+            number2 = 1
+    return i1
+
+WYSZUKIWANIE MODY W ZBIORZE NIEUPORZĄDKOWANYM
+
+Metoda bezpośrednia (naiwna) wyszukiwania mody polega na przeglądaniu kolejnych elementów zbioru i tworzenia dla nich licznika wystąpień. Złożoność jest rzędu O(n**2).
+
+Inna metoda polega na posortowaniu zbioru wybranym algorytmem zaawansowanym o złożoności O(n*log(n)), a następnie wyszukaniu mody w tym zbiorze uporządkowanym ze złożonością O(n).
+
+Wreszcie można stworzyć licznik wystąpień za pomocą słownika (tablicy hashowalnej), co daje złożoność O(n). 
+
+
+Wyszukiwanie lidera
+WPROWADZENIE
+
+SPECYFIKACJA
+Problem: 
+Wyszukiwanie lidera w nieuporządkowanym ciągu liczb.
+
+DANE WEJŚCIOWE
+Ciąg n liczb umieszczonych w tablicy L. 
+
+DANE WYJŚCIOWE
+Pozycja (indeks) lidera w ciągu L.
+Jeżeli w tablicy nie ma lidera, to należy to zasygnalizować.
+
+Lider to element ciągu n elementów, który występuje więcej niż n/2 razy w ciągu. Dla n=2k lub n=2k+1 lider musi wystąpić co najmniej k+1 razy.
+
+Metoda siłowa rozwiązania problemu ma następujące etapy.
+
+    Sortowanie ciągu, które jest rzędu O(n*log n).
+    Znajdowanie elementu na pozycji n/2, który jest kandydatem na lidera. Jeżeli istnieje lider, to jest on elementem środkowym (medianą).
+    Sprawdzenie, czy kandydat jest liderem, które jest rzędu O(n). 
+
+Najbardziej pracochłonne jest sortowanie ciągu. Lepszy jest inny algorytm, który ma złożoność O(n). Składa się on z dwóch etapów [Sysło].
+
+    Wykrywanie kandydata na lidera. Badamy krotność kandydata na podstawie kolejnych porównań.
+    Sprawdzenie, czy kandydat jest rzeczywiście liderem. 
+
+Algorytm bazuje na spostrzeżeniu, że jeżeli zbiór X ma lidera, to po usunięciu ze zbioru X dwóch różnych elementów również będzie zawierał lidera. Stwierdzenie odwrotne nie jest prawdziwe.
+IMPLEMENTACJA
+
+def lider(L, left, right):
+    """Wyszukiwanie lidera w ciągu nieuporządkowanym."""
+    if left > right:
+        return None
+    # Etap I - wykrywanie kandydata na lidera.
+    k = left                  # kandydat na lidera (indeks)
+    number = 1                # krotność kandydata
+    for i in range(left+1, right+1):
+        if number == 0:       # nowy kandydat na lidera
+            k = i
+            number = 1
+        else:                 # porównujemy z kandydatem
+            if L[k] == L[i]:
+                number += 1
+            else:
+                number -= 1
+    # Etap II - sprawdzanie kandydata na lidera.
+    if number == 0:           # na liście nie ma lidera
+        return None
+    # Sprawdzamy ile razy kandydat jest na liście.
+    number = 0
+    for i in range(left, right+1):
+        if L[i] == L[k]:
+            number += 1
+    if number > (right-left+1)/2:
+        return k              # indeks lidera
+    else:
+        return None           # na liście nie ma lidera
+
+
+
