@@ -1,0 +1,853 @@
+Python (4) - funkcje
+PLAN
+
+    Podstawy funkcji
+    Funkcje wbudowane
+    Zakresy
+    Przekazywanie argumentów
+    Funkcje anonimowe
+    Rekurencja
+    Generatory
+    Algorytm Hornera
+    Sito Eratostenesa 
+    
+
+Podstawy funkcji
+WPROWADZENIE
+
+Funkcja jest narzędziem grupującym zbiór instrukcji w taki sposób, aby mogły one być wykonane w programie więcej niż jeden raz. Funkcje służą do maksymalizowania możliwości ponownego wykorzystania kodu i minimalizowania powtarzalności kodu.
+
+Instrukcje i wyrażenia związane z funkcjami
++-------------+----------------------------+
+| Instrukcja  | Przykłady                  |
++-------------+----------------------------+
+| Wywołania   | my_func(12, word="abc")    |
+| def, return | def func(x, y=1):          |
+|             |     return x + y           |
+| global      | def changer():             |
+|             |     global x; x = "nowy"   |
+| nonlocal    | def changer(): # Python 3  |
+|             |     nonlocal x; x = "nowy" |
+| yield       | generatory                 |
+| lambda      | funkcje anonimowe          |
++-------------+----------------------------+
+
+Definicja funkcji tworzy obiekt funkcji. Istnieją dwie odmiany obiektów funkcji: funkcje wbudowane i funkcje zdefiniowane przez użytkownika. Obie odmiany obsługują wywoływanie funkcji, ale ich implementacja jest różna.
+
+# Składnia funkcji.
+def nazwa_funkcji(lista_argumentów_funkcji):
+    docstring                       # opcjonalnie
+    instrukcje
+    return obiekt_wynikowy          # opcjonalne
+
+# Zalecane formy docstring.
+# Postać jednowierszowa.
+"""Jeden wiersz zakończony kropką."""
+
+# Postać wielowierszowa.
+# Tutaj mogą się pojawić wiersze dla modułu doctest.
+"""Pierwszy wiersz podsumowania.
+
+Od trzeciego wiersza może być dłuższy opis.
+"""
+
+def func(): ...               # utworzenie obiektu funkcji
+func()                        # wywołanie funkcji
+other_name = func             # przypisanie obiektu funkcji
+other_name()                  # ponowne wywołanie funkcji func
+func.atrr = value             # dołączenie atrybutu do obiektu funkcji
+dir(func)                     # lista atrybutów obiektu funkcji
+print ( func.__name__ )       # wypisze nazwę funkcji
+print ( func.__doc__ )        # wypisze docstring
+
+Instrukcja def jest kodem wykonywalnym. Tworzy ona obiekt funkcji i przypisuje go do nazwy. Nazwa funkcji powinna być zapisana w stylu joined_lower. Funkcje mogą zwracać obiekt wynikowy value z powrotem do wywołującego przez return value. Funkcje mogą też zwracać None przez samo return lub kiedy w kodzie funkcji nie pojawia się return.
+
+Argumenty funkcji są do niej wprowadzane przez wartość, tj. przekazywana jest referencja do obiektu. Argumenty funkcji mogą mieć określoną wartość domyślną. Wartość domyślna jest obliczana tylko raz, dlatego trzeba być ostrożnym z domyślnymi argumentami, które są zmienne, jak listy i słowniki. Funkcje mogą być wywoływane z argumentami postaci keyword=value. Są jeszcze inne możliwości, np. zmienna lista argumentów, rozpakowywanie argumentów z listy, wyrażenia lambda.
+
+Własne atrybuty funkcji mogą być sposobem implementacji odpowiednika mechanizmu "statycznych zmiennych lokalnych" dostępnych w innych językach programowania.
+POLIMORFIZM
+
+W Pythonie nie ma deklaracji typu argumentów, dlatego cechą funkcji jest polimorfizm: Zachowanie funkcji zależy od tego, co do niej przekażemy.
+
+def times(x, y):
+    """Zwraca iloczyn argumentów."""
+    return x * y
+
+times(2, 3)                   # 6
+times(2, 3.14)                # 6.28
+times("Bum!", 3)              # "Bum!Bum!Bum!"
+
+ZMIENNE LOKALNE
+
+Podstawienia do zmiennych wewnątrz funkcji tworzą zmienne lokalne. Odniesienie do zmiennej najpierw oznacza odniesienie do zmiennej lokalnej; jeżeli nie istnieje, to szukana jest zmienna globalna; jeżeli też nie istnieje, to szukane są zmienne wbudowane. Można od razu zadeklarować zmienną globalną przez instrukcję global.
+
+Wszystkie zmienne lokalne pojawiają się w momencie wywołania funkcji i znikają, kiedy funkcja przestaje działać.
+
+def my_len(sequence):              # sequence jest lokalne
+    """Obliczanie długości sekwencji."""
+    length = 0                     # length jest lokalne
+    for item in sequence:          # item jest lokalne
+        length += 1
+    return length
+
+
+Funkcje wbudowane
+WPROWADZENIE
+
+# Sprawdzenie listy obiektów wbudowanych 
+# (wyjątki i inne klasy, funkcje).
+import __builtin__            # Python 2
+dir(__builtin__)
+zip                           # funkcja wbudowana
+zip = "qwerty"                # zmieniamy referencję zip
+__builtin__.zip               # dostęp do oryginalnego zip
+__builtin__.zip = "qwerty"    # HORROR! Python 2
+
+W Pythonie 3 występuje moduł builtins.
+
+Nazwy typów: basestring(), bool(), complex(), dict(), float(), frozenset(), int(), list(), long() [Python 2], set(), str(), tuple(), unicode().
+
+Funkcje matematyczne i narzędziowe: abs(), all(), any(), chr(), divmod(), hex(), len(), map(), max(), min(), next() [2.6+]. oct(), ord(), pow(), range(), repr(), reversed(), round(), sorted(), sum(), unichr(), xrange(), zip().
+
+Programowanie obiektowe: classmethod(), delattr(), dir(), getattr(), hasattr(), isinstance(), issubclass(), object(), property(), setattr(), staticmethod(), super().
+
+Inne funkcje: __import__(), bin() [2.6+], callable(), cmp() [Python 2], compile(), enumerate(), eval(), execfile(), file(), filter(), format() [2.6+], globals(), hash(), help(), id(), input(), iter() [2.2+], locals(), open(), raw_input(), reduce() [Python 2], reload(), slice(), type(), vars().
+FUNKCJE ZWIĄZANE Z LISTAMI
+
+Wbudowane funkcje przydatne przy pracy na listach:
+
+    zip(seq1 [, seq2, ...]) - zwraca jedną listę krotek.
+    map(function, sequence) - funkcja przetworzy po kolei każdy element listy.
+    filter(function, sequence) - z listy pozostaną elementy, dla których funkcja zwróci True.
+    reduce(function, sequence) - zwraca pojedyńczą wartość obliczaną następująco: funkcja dwóch argumentów pobiera pierwsze dwa elementy z listy, oblicza wynik; dalej funkcja pobiera poprzedni wynik i trzeci element z listy, oblicza wynik, itd. W Pythonie 3 funkcja jest umieszczona w moduje functools. 
+
+Funkcje map() i filter() można łatwo zastąpić listą składaną.
+
+def cube(x):
+    return x * x * x
+
+print ( map(cube, range(10)) )
+print ( [cube(x) for x in range(10)] )  # lista składana
+
+L = [-2, -1, 0, 1, 2]
+print ( map(abs, L) )                   # [2, 1, 0, 1, 2]
+print ( [abs(x) for x in L] )           # lista składana
+
+L = [[1, 2], [3, 4]]                    # lista list
+print ( map(sum, L) )                   # [3, 7]
+print ( [sum(x) for x in L] )           # lista składana
+
+# Pythonie 3 map() zwraca generator, czyli aby zobaczyć
+# końcową listę trzeba napisać list(map(sum, L)).
+
+# Liczba argumentów funkcji musi zgadzać się z liczbą
+# dostarczonych list, a listy muszą mieć równą długość.
+def calc(x, y):
+    return 2 * x + y
+
+alist = range(9)
+print ( map(calc, alist, alist) )
+print ( [calc(x, y) for (x, y) in zip(alist, alist)] )   # lista składana
+
+def check(x):
+    return x % 2 != 0 and x % 3 != 0
+
+print ( filter(check, range(30)) )
+print ( [x for x in range(30) if check(x)] )   # lista składana
+
+def add(x, y):
+    return x + y
+
+def add2(x, y):   # tu widać zależność od startowej wartości
+    return 2 * x + y
+
+# Składnia:
+# reduce(function, sequence[, initial]) -> value
+# reduce(add, [1, 2, 3, 4, 5]) oblicza ((((1+2)+3)+4)+5).
+# reduce(lambda x, y: x+y, [1, 2, 3, 4, 5]) oblicza ((((1+2)+3)+4)+5).
+
+# Opcjonalna wartość jest umieszczana przed listą argumentów
+# i stanowi domyślną wartość na wypadek pustej listy
+# (a może też listy z jednym elementem?).
+# reduce(f, []) zwraca wyjątek TypeError.
+# reduce(f, [], x0) zwraca x0.
+# reduce(f, [x1]) zwraca x1, czyli nie korzysta z funkcji.
+# reduce(f, [x1], x0) zwraca f(x0, x1).
+# reduce(f, [x1, x2]) zwraca f(x1, x2).
+# reduce(f, [x1, x2], x0) zwraca f(f(x0, x1), x2).
+
+alist = range(11)
+
+result1 = sum(alist)
+result1 = reduce(add, alist, 0)
+result1 = reduce(add, alist)
+
+# Równoważny kod z pętlą (bez wartości początkowej).
+if len(alist) == 0:
+    raise TypeError()
+elif len(alist) == 1:
+    result2 = alist[0]
+else:
+    result2 = add(alist[0], alist[1])
+    for item in alist[2:]:
+        result2 = add(result2, item)
+
+print ( "{} {}".format(result1, result2) )   # porównanie wyników
+
+def my_sum(sequence):
+    """Slow sum()."""
+    return reduce(lambda x,y: x+y, sequence, 0)
+
+# import math
+# print ( math.factorial(10) )
+
+def my_factorial(n):
+    """Slow factorial()."""
+    return reduce(lambda x,y: x*y, range(1, n+1), 1)
+
+def gcd(a, b): 
+    """Compute the greatest common divisor."""
+    while b:
+        a, b = b, a % b
+    return a
+
+def lcm(a, b):
+    """Compute the least common multiple."""
+    return a * b / gcd(a, b)
+
+# Najmniejsza wspólna wielokrotność kilku liczb.
+# Zastosowane w pakiecie SymPy do obliczania rzędu
+# permutacji danej jako iloczym cykli.
+reduce(lcm, sequence, 1)
+
+
+Zakresy
+WPROWADZENIE
+
+Każda zmienna żyje w określonej przestrzeni nazw. Kiedy mówimy o szukaniu wartości nazwy w odniesieniu do kodu, do przestrzeni nazw odnosi się zakres (scope). Funkcje definiują zakres lokalny, a moduły zakres globalny. Rozwiązywanie konfliktów w zakresie nazw w Pythonie nazywane jest regułą LEGB (local, enclosing, global, builtin).
+
+    local - zakres lokalny
+    enclosing - zakres lokalny instrukcji def lub wyrażeń lambda zawierających daną funkcję [działa przy funkcjach zagnieżdżonych]
+    global - zakres globalny (moduł)
+    builtin - zakres wbudowany 
+
+Python wykorzystuje lokalizację przypisania do nazwy do powiązania jej z określoną przestrzenią nazw.
+
+Należy unikać stosowania zmienych globalnych w funkcjach, ponieważ programy stają się trudniejsze do debugowania. Ponadto przy czytaniu kodu programu można zostać łatwo wprowadzonym w błąd.
+
+X = 99                        # zmienna globalna (automatycznie)
+
+def func():
+    #print ( X )          # ERROR, X będzie lokalne
+    X = 88                # zmienna lokalna
+    print ( X )           # 88, odwołanie do lokalnego X
+
+func()
+print ( X )               # 99, globalne X
+
+X = 99                        # zmienna globalna
+
+def func():
+    global Z              # deklaracja przypisania zmiennej globalnej
+    print ( X )           # odwołanie do zmiennej globalnej (odczyt)
+    Y = 88                # zmienna lokalna
+    Z = 77
+
+func()                        # 99
+#print ( Y )                  # ERROR, Y nie istnieje
+print ( Z )                   # 77, Z jest globalne
+
+X = 99                        # zmienna globalna
+
+def func():
+    global X              # deklaracja przestrzeni nazw
+    print ( X )           # dozwolone
+    X = 88                # zmiana zmiennej globalnej
+
+func()                        # 99
+print ( X )                   # 88
+
+# https://www.python.org/dev/peps/pep-0227/
+# PEP 227 -- Statically Nested Scopes
+# Przykład działania nested scopes, zagnieżdżonych zakresów.
+
+x = 1
+def outer():
+    #from math import *   # SyntaxError: import * is not allowed ...
+    import math    # dozwolone
+    x = 2
+    def inner():
+        print ( x )
+    inner()
+
+outer()   # wypisze 2 z zagnieżdżonego zakresu
+#print ( math.sin(1) )   # NameError: name 'math' is not defined
+
+# Funkcja inner() widzi zmienną x z zakresu zagnieżdżonego wewnątrz
+# funkcji outer(), a nie z zakresu globalnego, jak było w Pythonie 2.1.
+
+
+Przekazywanie argumentów
+WPROWADZENIE
+
+Można definiować funkcje ze zmienną liczbą argumentów. Istnieją trzy sposoby, które mogą być ze sobą łączone:
+
+    domyślne wartości argumentów,
+    dowolna lista argumentów,
+    argumenty w postaci słów kluczowych. 
+
+DOMYŚLNE WARTOŚCI ARGUMENTÓW
+
+Definicja funkcji jest instrukcją. Argument domyślny jest generowany w chwili wywołania instrukcji def, a nie wywołania funkcji. Dlatego trzeba uważać, jeżeli argument domyślny jest zmienny, jak np. lista czy słownik.
+
+def print_word(word, n=1):
+    """Wypisanie n linii ze słowem word."""
+    for i in range(n):
+        print ( "{} {}".format(i, word) )
+
+print_word("bla")
+print_word("bla", 3)
+print_word(n=4, word="bum")   # zastosowanie słów kluczowych
+
+def tester1(x, L=[]):
+    """Lista L rośnie po każdym wywołaniu funkcji."""
+    L.append(x)
+    print ( "tester1 {}".format(L) )
+
+def tester2(x, L=None):
+    """Lista L domyślnie zawsze pusta."""
+    if L is None:
+        L = []
+    L.append(x)
+    print ( "tester2 {}".format(L) )
+
+tester1(1)
+tester1(2)
+tester1(3)
+tester2(1)
+tester2(2)
+tester2(3)
+
+DOWOLNA LISTA ARGUMENTÓW
+
+def print_multiple_items(separator, *arguments):   # arguments to krotka
+    """Sklejenie napisów podanym separatorem."""
+    print ( separator.join(arguments) )
+
+print_multiple_items("_", "ab", "cde", "f")       # ab_cde_f
+
+def union(*arguments):   # arguments to krotka
+    """Wypisanie listy wspólnych znaków występujących w napisach."""
+    result = []
+    for word in arguments:
+        for char in word:
+            if not char in result:
+                result.append(char)
+    return result
+
+print ( union("abc", "cde", "efg") )   # ['a', 'b', 'c', 'd', 'e', 'f', 'g']
+
+ARGUMENTY W POSTACI SŁÓW KLUCZOWYCH
+
+def university(**keywords):   # keywords to słownik
+    """Wypisanie władz uniwersytetu."""
+    for key in sorted(keywords):
+        print ( "{} : {}".format(key, keywords[key]) )
+
+university(rektor="Nowak", kanclerz="Pedracka", prorektor1="Mania")
+# kanclerz : Pedracka
+# prorektor1 : Mania
+# rektor : Nowak
+
+POSTAĆ OGÓLNA
+
+W wywołaniu funkcji najpierw muszą zostać podane wszystkie argumenty pozycyjne, po których następują wszystkie argumenty ze słowami kluczowymi (name=value), a po nich forma *arguments i na końcu forma **keywords. W nagłówku funkcji kolejność argumentów jest analogiczna.
+
+# Ogólnie funkcja może mieć postać:
+# def f(a1, a2=v2, *a3, **a4): ...
+# Przy wywołaniu f(x1, x2, x3, x4, b1=x5, b2=x6) będą podstawienia:
+# a1=x1, normalny argument pozycyjny
+# a2=x2, argument dopasowany pozycyjnie
+# a3=(x3, x4), tu są nadmiarowe argumenty pozycyjne
+# a4={"b1":x5, "b2":x6}, tu są nadmiarowe argumenty ze słowami kluczowymi
+
+ROZPAKOWYWANIE LISTY ARGUMENTÓW
+
+range(3, 6)         # [3, 4, 5], zwykłe wywołanie z osobnymi argumentami
+args = [3, 6]
+range(*args)        # [3, 4, 5], wywołanie z rozpakowaniem argumentów
+# Tutaj args może być dowolnym obiektem iterowalnym z dwoma elementami.
+
+def describe(name, age=0, position=None):
+    """Wypisanie komunikatu o argumentach."""
+    print ( "{} age {} position {}".format(name, age, position) )
+
+person = {"name": "Bogdan", "age": 30, "position": "teacher"}
+
+describe("Adam", 20, "student")
+# Adam age 20 position student
+
+describe("Bogdan", 30, "teacher")
+
+# Pobieranie danych ze słownika.
+describe(person["name"], person["age"], person["position"])
+
+# Zastosowanie słów kluczowych - kolejność argumentów dowolna.
+describe(name=person["name"], age=person["age"], position=person["position"])
+
+# Rozpakowanie słownika.
+describe(**person)
+# Bogdan age 30 position teacher
+
+W Pythonie 2 istnieje funkcja apply o podobnym zastosowaniu, ale została usunięta z Pythona 3.
+SYMULOWANIE PARAMETRÓW WYJŚCIA
+
+Instrukcja return może zwracać wiele wartości pakując je w krotkę lub inny typ kolekcji.
+
+def find_minmax(x, y):
+    """Równoczesne znajdowanie min i max."""
+    min2 = x if x < y else y
+    max2 = y if x < y else x
+    return (min2, max2)
+
+# Zastosowanie - rozpakowanie krotki wynikowej.
+a, b = find_minmax(5, 3)
+
+
+Funkcje anonimowe
+WPROWADZENIE
+
+Lambda jest wyrażeniem (lambda expression), a nie instrukcją, dzięki czemu może pojawić się w miejscu niedostępnym dla instrukcji def. Lambda zwraca obiekt funkcji, do którego można opcjonalnie przypisać nazwę. Ciałem lambda jest pojedyńcze wyrażenie, a nie blok instrukcji. Przykładowo lambda nie może zawierać print, bo to jest statement (podobnie yield, return).
+
+# Do lambda można przyporządkować nazwę.
+func1 = lambda x, y, z: x + y + z
+print ( func1(2, 3, 4) )
+
+def func1(x, y, z):            # równoważna funkcja
+    return x + y + z
+
+# W argumentach lambda można używać argumentów domyślnych.
+func2 = (lambda x=0, y=0, z=0: x + y + z)
+print ( func2(4, 5) )
+
+# Lambda można stosować w funkcji map().
+map(lambda x: 2*x+1, range(9))
+[2*x+1 for x in range(9)]     # lista składana
+
+# Z lambda można budować listę lub słownik.
+action = {
+"jeden": lambda x: x,
+"dwa": lambda x: x**2,
+"trzy": lambda x: x**3
+}
+print ( action["dwa"](10) )     # pow(10, 2) = 100
+
+powers = [
+lambda x : 1,
+lambda x: x, 
+lambda x: pow(x, 2), 
+lambda x: pow(x, 3)
+]
+print ( powers[2](3) )     # pow(3, 2) = 9
+
+# Zastosowanie logiki wyboru.
+lambda_abs = lambda x: -x if x < 0 else x
+lambda_min = lambda x, y: x if x < y else y
+lambda_max = lambda x, y: x if x > y else y
+
+
+Rekurencja
+WPROWADZENIE
+
+Funkcje rekurencyjne to funkcje, które wywołują same siebie bezpośrednio lub za pośrednictwem innych funkcji. Istotne jest zapewnienie, że rekurencja będzie przerwana i nie wystąpi pętla nieskończona.
+
+def print_stars(n):
+    """Rekurencyjne wypisywanie n linii z gwiazdką."""
+    if n > 0:
+        print ( "*" )
+        print_stars(n-1)
+
+print_stars(5)                # wywołanie funkcji
+
+# 0! = 1, 1! = 1, n! = n*(n-1)!
+
+def factorial(n):
+    """Rekurencyjne obliczanie funkcji silnia n!"""
+    if n == 0 or n == 1:
+        return 1
+    else:
+        return n * factorial(n-1)
+
+import math
+print ( math.factorial(10) )     # Python 2.6+
+print ( factorial(10) )
+
+# f(0) = 0, f(1) = 1, f(n) = f(n-1) + f(n-2)
+
+def fibonacci(n):
+    """Ciąg Fibonacciego (definicja rekurencyjna)."""
+    if n == 0 or n == 1:
+        return n
+    else:
+        return fibonacci(n-1) + fibonacci(n-2)
+
+# binomial(n, k) = factorial(n) / (factorial(k) * factorial(n-k))
+# binomial(n, 0) = binomial(n, n) = 1
+
+def binomial(n, k):
+    """Dwumian Newtona w wersji z rekurencyjnej."""
+    if k == 0 or k == n:
+        return 1
+    else:
+        return binomial(n-1, k-1) + binomial(n-1, k)
+
+
+Generatory
+WPROWADZENIE
+
+Wyrażenia yield (yield expressions) pojawiły się w Pythonie 2.5 do definiowania funkcji generatora (generator function) zamiast zwykłej funkcji. Wyrażenia yield mogą się pojawić jedynie w ciele definicji funkcji.
+
+Z generatorów korzystamy zwykle wtedy, gdy nie potrzebujemy pamiętać pełnej listy, a lista jest tylko pewnym krokiem pośrednim w obliczeniach. Generatory to "leniwe funkcje": obliczają wartości tylko wtedy, gdy są żądane. Generatory są iteratorami, bo obsługują metodę next() [więcej o iteratorach powiemy po omówieniu klas i wyjatków (lekcja 7)]. Inne metody generatorów to close(), send(), throw() [PEP 342].
+
+Każde wyrażenie yield tymczasowo zatrzymuje przetwarzanie, zapamiętuje stan funkcji. Po wznowieniu generatora (ponownym wywołaniu) przetwarzanie jest kontunuowane od miejsca zatrzymania.
+
+Generatory są iteratorami, ale można po nich przejść tylko raz. Wartości generatora nie są przechowywane w pamięci, tylko są wytwarzane w locie (on the fly).
+
+# Przykładowa lista składana.
+x = [i*i for i in range(100)]           # lista w całości
+
+# xrange() jest generatorem, więc dobrze tu pasuje.
+x = (i*i for i in xrange(100))          # generator object
+
+# W praktyce xrange() nie jest szybsze niż range().
+# Przydaje się przy bardzo długich listach, gdy brakuje pamięci.
+
+# Tworzenie list w różnych wersjach Pythona.
+L = range(8)                  # Python 2
+L = list(xrange(8))           # Python 2
+L = list(range(8))            # Python 3, range() to generator
+L = list(range(8))            # UNIWERSALNE
+
+def my_generator(stop):
+    """Generator zastępujący xrange(stop)."""
+    value = 0
+    while value < stop:
+        yield value           # yield zamiast return
+        value = value + 1
+
+# Sposób 1 korzystania z generatora.
+# Mamy ukryty w tle protokół iteracji.
+for i in my_generator(10):
+    print ( i )
+# Po zakończeniu pętli tracimy dostęp do generatora,
+# ale i tak jest on już zakończony.
+
+# Sposób 2 korzystania z generatora.
+# Jawne korzystanie z protokołu iteracji.
+x = my_generator(3)
+print ( x.next() )           # 0
+print ( x.next() )           # 1
+print ( x.next() )           # 2
+print ( x.next() )           # StopIteration
+# W następnych wywołaniach też otrzymamy wyjątek StopIteration.
+
+def fibonacci():
+    """Nieskończony generator liczb Fibonacciego."""
+    minus1, minus0 = 0, 1
+    yield minus1
+    yield minus0
+    while True:
+        minus1, minus0 = minus0, minus1 + minus0
+        yield minus0
+
+
+for i in fibonacci():
+    print ( i )
+    if i > 100:
+        break
+# 0 1 1 2 3 5 8 13 21 34 55 89 144
+
+# Generator jest nieskończony, więc należało samemu
+# przerwać pętlę przez break. Ten generator mógłby dalej
+# produkować liczby Fibonacciego, gdyby mieć do niego dostęp.
+
+fib = fibonacci()   # fib to generator object
+for i in fib:
+    print ( i )
+    if i > 100:
+        break
+print ( fib.next() )     # 233
+print ( fib.next() )     # 377
+
+# Przy generatorach jest problem, jeżeli chcemy wykonać podwójną
+# iterację po obiekcie generatora.
+x = (i*i for i in xrange(10))        # generator object
+for i in x:
+    for j in x:
+        print ( "{} {}".format(i, j) )
+# WYNIK
+# 0 1
+# 0 4
+# 0 9
+# 0 16
+# 0 25
+# 0 36
+# 0 49
+# 0 64
+# 0 81
+# Druga pętla for wyczerpała generator x.
+
+# Próbujemy z dwoma generatorami
+x = (i*i for i in xrange(10))        # generator object
+y = (i*i for i in xrange(10))        # generator object
+for i in x:
+    for j in y:
+        print ( "{} {}".format(i, j) )
+# WYNIK
+0 0
+0 1
+0 4
+0 9
+0 16
+0 25
+0 36
+0 49
+0 64
+0 81
+# Generator y wyczerpał się po jednym przebiegu (x=0).
+
+# xrange to jest osobna klasa, więc zwraca nowe instancje.
+# Rozwiązaniem są dwa niezależne generatory, które powstają w pętli.
+for i in (i*i for i in xrange(10)):
+    for j in (i*i for i in xrange(10)):
+        print ( "{} {}".format(i, j) )
+# WYNIK
+0 0
+0 1
+0 4
+0 9
+0 16
+0 25
+0 36
+0 49
+0 64
+0 81
+1 0
+1 1
+1 4
+1 9
+1 16
+1 25
+1 36
+1 49
+1 64
+1 81
+4 0
+4 1
+4 4
+4 9
+4 16
+4 25
+4 36
+4 49
+4 64
+4 81
+9 0
+9 1
+9 4
+9 9
+9 16
+9 25
+9 36
+9 49
+9 64
+9 81
+16 0
+16 1
+16 4
+16 9
+16 16
+16 25
+16 36
+16 49
+16 64
+16 81
+25 0
+25 1
+25 4
+25 9
+25 16
+25 25
+25 36
+25 49
+25 64
+25 81
+36 0
+36 1
+36 4
+36 9
+36 16
+36 25
+36 36
+36 49
+36 64
+36 81
+49 0
+49 1
+49 4
+49 9
+49 16
+49 25
+49 36
+49 49
+49 64
+49 81
+64 0
+64 1
+64 4
+64 9
+64 16
+64 25
+64 36
+64 49
+64 64
+64 81
+81 0
+81 1
+81 4
+81 9
+81 16
+81 25
+81 36
+81 49
+81 64
+81 81
+
+Listy składane są żarłoczne (greedy), obliczają wynik od razu, jako listę. Generatory są leniwe (lazy), obliczają jedną wartość na raz, kiedy jest potrzebna. Warto zapamiętać regułę:
+
+    Korzystamy z list składanych, kiedy obliczona lista jest wymaganym wynikiem końcowym.
+    Korzystamy z generatorów, jeżeli obliczana lista jest tylko pośrednim etapem obliczeń. 
+
+W Pythonie 3.3 pojawiło się wyrażenie (generator delegation):
+
+yield from sequence
+
+Zwykle odpowiada to w Pythonie 2 wyrażeniu:
+
+for item in sequence:
+    yield item
+
+PEP 380 wprowadza pewien protokół generatorów w dodatkowymi możliwościami.
+
+PEP 342 (Python 2.5) opisuje "Coroutines via Enhanced Generators".
+
+http://code.activestate.com/recipes/576727-pure-python-implementation-of-pep-380-yield-from/
+
+
+Algorytm Hornera
+WPROWADZENIE
+
+Algorytm Hornera (Horner scheme) to sposób obliczania wartości wielomianu dla nadej wartości argumentu wykorzystujący minimalną liczbę mnożeń. Jest to również algorytm dzielenia wielomianu W(x) przez dwumian (x-c). Schemat ten wiązany jest z nazwiskiem Hornera, był jednak już znany Newtonowi, Ruffiniemu i matematykom chińskim w XII wieku.
+
+Dla wielomianu stopnia n należy wykonać n mnożeń i n dodawań. Schemat Hornera jest optymalny pod względem liczby wykonywanych działań (1971 Borodin).
+
+def horner(L, left, right, x):
+    """Wersja iteracyjna algorytmu Hornera.
+    W(x) = L[left] + L[left+1]*x + L[left+2]*x*x + ... """
+    i = right
+    result = L[i]
+    while i > left:
+        i = i - 1
+        result = result * x + L[i]
+    return result
+
+Kod funkcji możemy zapisać w module horner.py, aby skorzystać z niej w innych programach.
+
+import horner
+poly = [1, 2, 3, 4]
+y = 2
+result = horner.horner(poly, 0, len(poly)-1, y)
+
+Ciekawe informacje są na Wikipedii(en). Jest też kod w Pythonie, współczynniki muszą być podawane kolejno od najwyższego.
+
+def horner2(x, *arguments):
+    ""The Horner Scheme for evaluating a polynomial."""
+    result = 0
+    for coefficient in arguments:
+        result = result * x + coefficient
+    return result
+
+# Wywołanie.
+# a0 + x * (a1 + x * (a2 + x * a3))
+y = 1
+L = [1, 2, 3, 4]
+a0, a1, a2, a3 = L
+print ( horner2(y, a3, a2, a1, a0) )
+print ( horner2(y, *reversed(L)) )   # rozpakowanie listy argumentów
+
+# Wydaje się, że zgrabniejsza będzie funkcja przyjmująca
+# rosnące współczynniki wielomianu.
+def horner3(x, *arguments):
+    ""The Horner Scheme for evaluating a polynomial."""
+    result = 0
+    for coefficient in reversed(arguments):
+        result = result * x + coefficient
+    return result
+
+y = 1
+L = [1, 2, 3, 4]   # 1+2x+3x^2+4x^3
+a0, a1, a2, a3 = L
+print ( horner3(y, a0, a1, a2, a3) )
+print ( horner3(y, *L) )     # rozpakowanie listy argumentów
+
+# Zastosowanie reduce().
+def horner4(x, *arguments):
+    ""The Horner Scheme for evaluating a polynomial."""
+    return reduce(lambda a,b: a*x+b, reversed(arguments))
+
+y = 1
+L = [1, 2, 3, 4]   # 1+2x+3x^2+4x^3
+print ( horner4(y, *L) )     # rozpakowanie listy argumentów
+
+
+Sito Eratostenesa
+WPROWADZENIE
+
+Algorytm szukania wszystkich liczb pierwszych nie większych od podanej liczby.
+
+def sito(n):
+    """Sito Eratostenesa - liczby pierwsze nie większe od n."""
+    L = [0] + n * [1]
+    p = 2
+    q = p * p
+    while q <= n:
+        if L[p] == 1:  # liczba pierwsza
+            i = q
+            while i <= n:  # wyrzucam p*p, p*(p+1), p*(p+2),...
+                L[i] = 0
+                i = i + p
+        p = p + 1
+        q = p * p
+    M = []
+    for i in range(1, n+1):
+        if L[i] == 1:
+            M.append(i)
+    return M
+
+# Wersja bardzie zwarta.
+def sito(n):                  # liczby pierwsze <= n
+    """Sito Eratostenesa - liczby pierwsze nie większe od n."""
+    L = [0] + n * [1]
+    for p in range(2, n):     # wystarczy p do sqrt(n)
+        q = p * p
+        if q > n:
+            break
+        if L[p] == 1:         # liczba pierwsza
+            # wyrzucam p*p, p*(p+1), p*(p+2),...
+            for i in range(q, n+1, p):
+                L[i] = 0
+    return [i for i in range(1, n+1) if L[i]==1]
+
+
+ 
+ 
