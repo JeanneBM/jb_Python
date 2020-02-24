@@ -1,0 +1,811 @@
+Python (10) - abstrakcyjne typy danych
+PLAN
+
+    Podstawy ADT
+    Listy
+    Stosy
+    Kolejki
+    Kolejki priorytetowe
+    Tablice asocjacyjne
+    Struktura zbiorów rozłącznych 
+    
+
+Podstawy ADT
+WPROWADZENIE
+
+Abstrakcyjny typ danych (ang. abstract data type, ADT) jest typem danych, który jest dostępny tylko za pośrednictwem odpowiedniego interfejsu. Program korzystający z abstrakcyjnego typu danych nazywamy klientem, a program określający typ danych - implementacją. Dzięki abstrakcyjnym typom danych możemy oddzielić wykonywane przez programy pojęciowe przekształcenia danych od wszelkich konkretnych reprezentacji struktur danych i implementacji algorytmów. Przy analizie wydajności programów musimy być świadomi kosztów operacji podstawowych.
+
+Dla zbiorów obiektów abstrakcyjnych zwykle potrzebujemy następujących operacji:
+
+    inicjalizacja zbioru obiektów (konstruktor)
+    umieszczenie nowego obiektu w zbiorze (insert)
+    usuwanie obiektu ze zbioru (remove)
+    niszczenie zbioru obiektów (destruktor, zwolnienie zasobów)
+    kopiowanie zbioru obiektów (konstruktor kopiujący) 
+
+Najważniejsze abstrakcyjne typy danych:
+
+    lista (list)
+    stos (LIFO, stack)
+    kolejka (FIFO, queue)
+    double-ended queue (dequeue, deque)
+    kolejka z priorytetami (priority queue)
+    sterta/kopiec (heap)
+    graf (graph)
+    struktura zbiorów rozłącznych (disjoint-set data structure)
+    zbiór (set)
+    tablica asocjacyjna (associative array) 
+
+ZALETY UŻYWANIA ADT
+
+    Enkapsulacja. Użytkownik nie musi znać szczegółów implementacji.
+    Lokalizacja zmian. Nie trzeba zmieniać kodu użytkownika po zmianie implementacji ADT.
+    Elastyczność. Różne implementacje danego ADT o tych samych właściwościach mogą być używane zamiennie. Daje to możliwość poprawienia ogólnej wydajności w szczególnych sytuacjach. 
+
+WIKIPEDIA
+
+    https://en.wikipedia.org/wiki/Abstract_data_type
+    https://en.wikipedia.org/wiki/List_(abstract_data_type)
+    https://en.wikipedia.org/wiki/Collection_(abstract_data_type)
+    https://en.wikipedia.org/wiki/Stack_(abstract_data_type)
+    https://en.wikipedia.org/wiki/Queue_(abstract_data_type)
+    https://en.wikipedia.org/wiki/Double-ended_queue
+    https://en.wikipedia.org/wiki/Priority_queue
+    https://en.wikipedia.org/wiki/Graph_(abstract_data_type)
+    https://en.wikipedia.org/wiki/Set_(abstract_data_type)
+    https://en.wikipedia.org/wiki/Associative_array 
+
+
+Lista
+WPROWADZENIE
+
+Lista to ADT, który reprezentuje skończoną liczbę uporządkowanych elementów (wartości) mogących się powtarzać. Jeżeli liczba uporządkowanych elementów może być potencjalnie nieskończona, to używa się pojęcia strumienia. Lista to podstawowy przykład kontenera do przechowywania elementów. Typowe operacje dla ADT List:
+
+    konstruktor tworzący pustą listę,
+    testowanie, czy lista nie jest pusta [len(L) == 0, empty()],
+    dołączanie elementu do początku listy [L.insert(0, item)],
+    dołączanie elementu na koniec listy [L.append(item)],
+    dołączanie elementu przed element na pozycji i [L.insert(i, item)],
+    dostęp do głowy (head), czyli pierwszego (lewego skrajnego) elementu (L[0]),
+    dostęp do ogona (tail), czyli ostatniego (prawego skrajnego) elementu (L[-1]),
+    dostęp do elementu o danym indeksie i (numeracja od 0 lub 1, L[i], find(i)),
+    pobieranie wycinka listy (L[i:j]),
+    łączenie (sklejanie) dwóch list [merge()],
+    usunięcie elementu o danym indeksie i (del L[i]),
+    czyszczenie listy [clear()]. 
+
+ADT List jest typowo implementowany jako lista powiązana (liniowa lub cykliczna) lub tablica, zwykle o zmiennej długości. W Pythonie ADT List jest realizowany przez wbudowany typ list. 
+
+
+Stosy
+WPROWADZENIE
+
+Stos to ADT, który pozwala zapisywać dane i następnie pobierać je w kolejności odwrotnej do zapisu (ang. last in, first out, LIFO; ostatni wchodzi, pierwszy wychodzi). Interfejs stosu składa się z 4 funkcji:
+
+    konstruktor __init__() [inicjalizacja pustego stosu],
+    push() [wstawienie elementu],
+    pop() [pobranie elementu],
+    is_empty() [test czy stos jest pusty]. 
+
+Jeżeli stos ma ograniczenie na liczbę przechowywanych elementów, to stosuje się jeszcze funkcję is_full() [test czy stos jest pełny]. Czasem stosuje się jeszcze operację peek() lub top(), która daje dostęp do elementu na szczycie stosu, ale bez usuwania go ze stosu. Sytuacje prowadzące do błędu: przepełnienie stosu, pobieranie elementu z pustego stosu. Wydaje się, że nie jest ustalony jednolity sposób obsługi błędów. W Pythonie możemy zastosować mechanizm wyjątków lub zaimplementować inne rozsądne zachowanie (powiększenie stosu).
+IMPLEMENTACJA 1
+
+Najpierw możemy wykorzystać standardowe listy Pythona do utworzenia stosu. Zastosujemy otoczkę obiektową wokół list. Python sam wykryje próbę pobierania danych z pustego stosu.
+
+class Stack:
+
+    def __init__(self):
+        self.items = []
+
+    def __str__(self):                  # podglądamy stos
+        return str(self.items)
+
+    def is_empty(self):
+        return not self.items
+
+    def is_full(self):                  # nigdy nie jest pełny
+        return False
+
+    def push(self, item):
+        self.items.append(item)         # dodajemy na koniec
+
+    def pop(self):                      # zwraca element
+        return self.items.pop()         # zabieram od końca
+
+Po zapisaniu kodu do osobnego modułu stack.py możemy w dowolnym programie korzystać z tego abstrakcyjnego typu danych. Python pozwala umieszczać na stosie elementy różnych typów bez dodatkowych zabiegów.
+
+import stack
+
+astack = stack.Stack()
+for item in ["a", 2, 3.5]:
+    astack.push(item)
+# Zdejmowanie elementów ze stosu w kolejności 3.5, 2, "a".
+while not astack.is_empty():
+    print astack.pop()
+
+IMPLEMENTACJA 2
+
+Implementacja stosu na bazie listy jednokierunkowej.
+
+class Node:
+
+    def __init__(self, data=None, next=None):
+        self.data = data
+        self.next = next
+
+    def __str__(self):
+        return str(self.data)
+
+class Stack:
+
+    def __init__(self):
+        self.head = None
+
+    def is_empty(self):
+        return not self.head
+
+    def is_full(self):
+        return False
+
+    def push(self, data):
+        self.head = Node(data, next=self.head)
+
+    def pop(self):
+        if self.is_empty():
+            raise Exception("stack is empty")
+        data = self.head.data
+        self.head = self.head.next
+        return data
+
+# Możemy skorzystać z przygotowanych wcześniej klas.
+import slist
+
+class Stack(slist.SingleList):
+
+    # __init__ i is_empty są dziedziczone
+
+    push = slist.SingleList.insert_head
+
+    pop = slist.SingleList.remove_head
+
+W implementacji z listą jednokierunkową operacje push() i pop() są klasy O(1) - czas pracy nie zależy od rozmiaru stosu. Pamięć zajmowana przez stos jest proporcjonalna do liczby przechowywanych elementów i nie ma ograniczenia na liczbę elementów.
+IMPLEMENTACJA 3
+
+Implementacja tablicowa stosu jest stosowana w językach programowania, które oferują tablice elementów jednego typu. Przy inicjalizacji stosu trzeba podać jego rozmiar, czyli maksymalną liczbę elementów, które ma przechowywać. Nowe elementy umieszczamy na coraz dalszych pozycjach w tablicy i zapamiętujemy liczbę elementów na stosie (jest to również indeks miejsca, do którego wstawimy następny element). Przy zdejmowaniu elementu ze stosu pomniejszamy numer indeksu, a na zwolnione miejsce wstawiamy bezpieczną wartość (w Pythonie jest nią None, a w C/C++ zero lub NULL). W języku Python możemy łatwo zasymulować taką konstrukcję.
+
+class Stack:
+
+    def __init__(self, size=10):
+        self.items = size * [None]      # utworzenie tablicy
+        self.n = 0                      # liczba elementów na stosie
+        self.size = size
+
+    def is_empty(self):
+        return self.n == 0
+
+    def is_full(self):
+        return self.size == self.n
+
+    def push(self, data):
+        self.items[self.n] = data
+        self.n += 1
+
+    def pop(self):
+        self.n -= 1
+        data = self.items[self.n]
+        self.items[self.n] = None    # usuwam referencję
+        return data
+
+W implementacji tablicowej operacje push() i pop() są klasy O(1) - czas pracy nie zależy od rozmiaru stosu. Pamięć zajmowana przez stos jest stała i zależy od maksymalnej liczby elementów, które możemy trzymać na stosie. 
+
+
+Kolejki
+WPROWADZENIE
+
+Kolejka to ADT, który pozwala zapisywać dane i następnie pobierać je w takiej kolejności, w jakiej je zapisano (ang. first in, first out, FIFO; pierwszy wchodzi, pierwszy wychodzi). Interfejs kolejki ma 4 funkcje:
+
+    konstruktor __init__() [inicjalizacja pustej kolejki],
+    is_empty() [test czy kolejka jest pusta],
+    put() lub enqueue() [wstawienie elementu],
+    get() lub dequeue() [pobranie elementu]. 
+
+Jeżeli kolejka ma ograniczenie na liczbę przechowywanych elementów, to stosuje się jeszcze funkcję is_full(). Sytuacje prowadzące do błędu: przepełnienie kolejki, pobieranie elementu z pustej kolejki.
+IMPLEMENTACJA 1
+
+Implementacja kolejki FIFO za pomocą list Pythona. Robimy otoczkę wokół list stosując podejście obiektowe. Python sam wykryje próbę pobierania elementu z pustej kolejki.
+
+class Queue:
+
+    def __init__(self):
+        self.items = []
+
+    def __str__(self):             # podglądanie kolejki
+        return str(self.items)
+
+    def is_empty(self):
+        return not self.items
+
+    def is_full(self):             # nigdy nie jest pusta
+        return False
+
+    def put(self, data):
+        self.items.append(data)
+
+    def get(self):
+        return self.items.pop(0)   # mało wydajne!
+
+Po zapisaniu tego kodu do osobnego modułu queue.py możemy w dowolnym programie korzystać z kolejek.
+
+import queue
+
+aqueue = queue.Queue()    # inicjalizacja kolejki
+for item in ["a", 2, 3.5]:
+    aqueue.put(item)
+# Pobieranie elementów z kolejki w kolejności: "a", 2, 3.5
+while not aqueue.is_empty():
+    print aqueue.get()
+
+IMPLEMENTACJA 2
+
+Implementacja kolejki FIFO za pomocą listy jednokierunkowej.
+
+class Node:
+
+    def __init__(self, data=None, next=None):
+        self.data = data
+        self.next = next
+
+    def __str__(self):
+        return str(self.data)
+
+class Queue:
+
+    def __init__(self):
+        self.head = None
+
+    def is_empty(self):
+        return not self.head
+
+    def put(self, data):        # linear-time
+        node = Node(data)   # next jest domyślnie None
+        if self.is_empty():
+            self.head = node
+        else:    # dajemy na koniec listy
+            last = self.head
+            while last.next:
+                last = last.next
+            last.next = node
+
+    def get(self):                  # constat-time
+        data = self.head.data
+        self.head = self.head.next
+        return data
+
+Metoda put() nie jest optymalna, ponieważ jest klasy O(N). Wymaga przejścia przez wszystkie węzły, aby dotrzeć do ostatniego węzła. Rozwiązaniem tego problemu jest dodatkowy atrybut tail w klasie Queue, w którym zapisana będzie referencja do ostatniego elementu.
+IMPLEMENTACJA 3
+
+Implementacja kolejki FIFO za pomocą listy jednokierunkowej. Dodajemy wskaźnik do ogona, aby poprawić wydajność listy.
+
+class Node:
+
+    def __init__(self, data=None, next=None):
+        self.data = data
+        self.next = next
+
+    def __str__(self):
+        return str(self.data)
+
+class Queue:
+
+    def __init__(self):
+        self.head = None
+        self.tail = None
+
+    def is_empty(self):
+        return not self.head
+
+    def put(self, data):            # constat-time
+        node = Node(data)   # next jest domyslnie None
+        if self.is_empty():
+            self.head = self.tail = node
+        else:                   # dajemy na koniec listy
+            self.tail.next = node
+            self.tail = node
+
+    def get(self):                  # constat-time
+        data = self.head.data
+        self.head = self.head.next
+        if self.is_empty():       # zabezpieczenie
+            self.tail = None
+        return data
+
+# Wykorzystanie klasy SingleList do bydowy kolejki.
+import slist
+
+class Queue(slist.SingleList):
+    put = slist.SingleList.insert_tail
+    get = slist.SingleList.remove_head
+
+IMPLEMENTACJA 4
+
+Implementacja kolejki FIFO za pomocą listy dwukierunkowej.
+
+import dlist
+
+class Queue(dlist.DoubleList):
+    put = dlist.DoubleList.insert_head
+    get = dlist.DoubleList.remove_tail
+
+import dlist
+
+class Queue(dlist.DoubleList):
+    put = dlist.DoubleList.insert_tail
+    get = dlist.DoubleList.remove_head
+
+IMPLEMENTACJA 5
+
+Implementacja kolejki FIFO za pomocą tablic. Przy inicjalizacji kolejki trzeba podać maksymalną liczbę przechowywanych w kolejce elementów (size). Wykorzystywana w implementacji tablica będzie o jeden większa, aby przy pełnej tablicy head i tail były różne.
+
+class Queue:
+
+    def __init__(self, size=5):
+        self.n = size + 1         # faktyczny rozmiar tablicy
+        self.items = self.n * [None] 
+        self.head = 0           # pierwszy do pobrania 
+        self.tail = 0           # pierwsze wolne
+
+    def is_empty(self):
+        return self.head == self.tail
+
+    def is_full(self):
+        return (self.head + self.n-1) % self.n == self.tail
+
+    def put(self, data):
+        self.items[self.tail] = data
+        self.tail = (self.tail + 1) % self.n
+
+    def get(self):
+        data = self.items[self.head]
+        self.items[self.head] = None      # usuwam referencję
+        self.head = (self.head + 1) % self.n
+        return data
+
+
+
+Kolejki priorytetowe
+WPROWADZENIE
+
+Kolejka priorytetowa to ADT zawierający elementy z kluczami (priorytetami), która pozwala na przeprowadzenie następujących operacji:
+
+    inicjalizacja pustej kolejki (__init__),
+    umieszczenie w kolejce nowego elementu (insert),
+    usunięcie z kolejki elementu o największej wartości klucza (remove),
+    sprawdzenie, czy kolejka jest pusta (is_empty),
+    zmiana priorytetu arbitralnie wskazanego elementu,
+    usunięcie arbitralnie wskazanego elementu,
+    połączenie dwóch kolejek priorytetowych w jedną. 
+
+Kolejka priorytetowa jest uogólnieniem stosu i kolejki, ponieważ używając odpowiednich przypisań priorytetów, struktury te jesteśmy w stanie zrealizować za pomocą kolejek priorytetowych. Zastosowania kolejek priorytetowych: planowanie zadań w systemach komputerowych, sortowanie rekordów, kompresja plików, itp.
+
+Z definicji kolejki priorytetowej wynika, że dane (klucze) musimy umieć porównywać ze sobą. Ponadto chcemy mieć dane tak ułożone, aby szybko można było pobrać element o najwyższym priorytecie. Możemy sobie wyobrazić co najmniej trzy podejścia do implementacji kolejki priorytetowej.
+
+    Możemy utrzymywać dane jako listę posortowaną względem priorytetów. Wtedy element o największym priorytecie jest pierwszy lub ostatni, w zależności od sposobu sortowania. Operacja wstawiania elementu będzie kosztowna. [zmiana priorytetu elementu pociąga konieczność ponownego sortowania; można też tak: wyjąć wskazany element, zmienić mu priorytet i wstawić ponownie do kolejki]
+    Możemy dodawać elementy do kolejki bez sortowania, a dopiero przy usuwaniu elementu z kolejki wybierać największego. Operacja usuwania elementu będzie kosztowna. [tu bez problemu zmieniamy priorytety w kolejce]
+    Możemy w kolejce utrzymywać częściowe uporządkowanie na stercie. Wtedy operacje wstawiania i usuwania elementu będą wiązały się z pewną pracą. [zmiana priorytetu wymaga przebudowy stery] 
+
+Na nasze potrzeby zakładamy, że interfejs kolejki priorytetowej będzie miał cztery funkcje: __init__(), is_empty(), insert(), remove(). Warto zauważyć, że jeżeli chcemy tylko sprawdzić największy element w kolejce, to możemy kolejno zastosować metody remove() i insert(). Sprawdzimy różne sposoby implementacji kolejki priorytetowej. Dla prostoty będziemy elementy porównywać bezpośrednio, choć można zmodyfikować kod tak, aby funkcja porównująca była parametrem określanym w chwili tworzenia kolejki.
+IMPLEMENTACJA 1
+
+Badamy implementację kolejki z priorytetami za pomoca list Pythona. Element o największym priorytecie wyszukujemy w chwili, gdy chcemy go usunąć z kolejki. Łatwo można zmieniać priorytety elementów w kolejce.
+
+class PriorityQueue:
+
+    def __init__(self):
+        self.items = []
+
+    def __str__(self):   # podglądamy kolejkę
+        return str(self.items)
+
+    def is_empty(self):
+        return not self.items
+
+    def insert(self, item):
+        self.items.append(item)
+
+    def remove(self):
+        maxi = 0
+        for i in range(1, len(self.items)):
+            if self.items[i] > self.items[maxi]:
+                maxi = i
+        return self.items.pop(maxi)   # mało wydajne
+
+Po zapisaniu tego kodu do osobnego modułu pqueue.py możemy w dowolnym programie korzystać z kolejek priorytetowych.
+
+import pqueue
+
+pq = pqueue.PriorityQueue()
+for item in [5, 3, 8]:
+    pq.insert(item)
+# Usuwanie elmentów z kolejki w kolejności: 8, 5, 3.
+while not pq.is_empty():
+    print pq.remove()
+
+IMPLEMENTACJA 2
+
+Implementacja kolejki z priorytetami za pomocą listy jednokierunkowej. Lista jest stale uporządkowana, a największy element znajduje się na początku listy.
+
+class Node:
+
+    def __init__(self, data=None, next=None):
+        self.data = data
+        self.next = next
+
+    def __str__(self):
+        return str(self.data)
+
+class PriorityQueue:
+
+    def __init__(self):
+        self.head = None
+
+    def is_empty(self):
+        return not self.head
+
+    def insert(self, data):
+        node = Node(data)
+        # Największy element chcemy mieć na początku listy.
+        # Robimy widełki do wstawienia nowego elementu.
+        before = None
+        after = self.head   # może być None
+        while after:
+            if after.data < node.data: break
+            before = after
+            after = after.next
+        if before is None: # przed początkiem listy
+            node.next = self.head
+            self.head = node
+        else:  # jesteśmy w głębi listy, może na końcu
+            node.next = before.next
+            before.next = node
+
+    def remove(self):   # constant-time, bo usuwamy początek
+        data = self.head.data
+        self.head = self.head.next
+        return data
+
+IMPLEMENTACJA 3
+
+Implementacja kolejki z priorytetami za pomocą listy jednokierunkowej. Nowe elementy dodajemy na początek listy, a szukamy elementu największego przy usuwaniu go z kolejki.
+
+class Node:
+
+    def __init__(self, data=None, next=None):
+        self.data = data
+        self.next = next
+
+    def __str__(self):
+        return str(self.data)   # bardzo ogólnie
+
+class PriorityQueue:
+
+    def __init__(self):
+        self.head = None
+
+    def is_empty(self):
+        return not self.head
+
+    def insert(self, data):   # constant-time, O(1)
+        self.head = Node(data, next=self.head)
+
+    def remove(self):  # nie ma zabezpieczenia
+        # Etap 1 - wyszukanie węzła. Wydajność O(N).
+        before = None
+        best = self.head
+        node = self.head   # następnego za tym będziemy sprawdzać
+        while node.next:
+            if node.next.data > best.data:
+                before = node
+                best = node.next
+            node = node.next
+        # Etap 2 - odłączanie węzła.
+        if before is None:   # best to head
+            self.head = self.head.next
+        else:   # poprawiamy linki
+            before.next = best.next
+        return best.data
+
+IMPLEMENTACJA 4
+
+Implementacja kolejki z priorytetami za pomocą tablicy. Tablica nie jest uporządkowana. Znajdujemy indeks największego elementu, zamieniamy go z ostatnim i skracamy tablicę jak dla stosu.
+
+class PriorityQueue:
+
+    def __init__(self, size=10):
+        self.items = size * [None]
+        self.n = 0   # pierwszy wolny indeks
+        self.size = size
+
+    def is_empty(self):
+        return self.n == 0
+
+    def is_full(self):
+        return self.size == self.n
+
+    def insert(self, data):
+        # brak zabezpieczenia
+        self.items[self.n] = data
+        self.n += 1
+
+    def remove(self):
+        # brak zabezpieczenia
+        # Etap 1 - wyszukiwanie elementu.
+        maxi = 0
+        for i in range(self.n):
+            if self.items[i] > self.items[maxi]:
+                maxi = i
+        # Etap 2 - usuwanie elementu.
+        self.n -= 1
+        data = self.items[maxi]
+        self.items[maxi] = self.items[self.n]
+        self.items[self.n] = None   # usuwamy referencję
+        return data
+
+IMPLEMENTACJA 5
+
+Implementacja kolejki z priorytetami za pomocą sterty. Metody klasy Heap będą dziedziczone przez klasę PriorityQueue.
+
+import heap
+
+class PriorityQueue(heap.Heap): pass
+
+
+
+Tablice asocjacyjne
+WPROWADZENIE
+
+Tablica asocjacyjne przechowuje pary (klucz, wartość) i umożliwia dostęp do wartości przez podanie klucza. Inne nazwy tego ADT to tablica skojarzeniowa, mapa, słownik. Obsługiwane operacje:
+
+    Wstawienie pary do kolekcji (add, insert).
+    Usunięcie pary z kolekcji (remove, delete).
+    Modyfikacja istniejącej pary (reassign) [często łączone w jedną operację ze wstawianiem pary (set)].
+    Wyszukiwane wartości powiązanej z danym kluczem (lookup).
+    Opcjonalnie zwracanie liczby par w kolekcji.
+    Opcjonalnie zwracanie iteratora po kolekcji. 
+
+Tablice asocjacyjne realizowane są zwykle jako drzewa poszukiwań lub tablice mieszające. W Pythonie ten ADT jest realizowany przez słowniki, które są wbudowanym typem danych. 
+
+
+Struktura zbiorów rozłącznych
+WPROWADZENIE
+
+Struktura zbiorów rozłącznych jest wykorzystywana do rozwiązania problemu połączeniowego.
+PROBLEM POŁĄCZENIOWY
+
+SPECYFIKACJA
+Problem połączeniowy.
+
+DANE WEJŚCIOWE
+Dane jest V liczb naturalnych od 0 do V-1 (wierzchołków)
+i E par tych liczb (krawędzi, połączeń).
+Dane są dwie liczby p, q z przedziału od 0 do V-1 włącznie.
+
+DANE WYJŚCIOWE
+Informacja (True/False), czy jest połączenie między p i q,
+a więc czy istnieje ciąg krawędzi prowadzący z p do q.
+
+Problem połączeniowy ma zastosowanie w wielu dziedzinach.
+
+    Połączenia między komputerami sieci komputerowej.
+    Połączenia w obwodzie elektronicznym.
+    Klasy równoważności, np. w teorii grup.
+    Łączenie zbiorów.
+    Algorytmy teorii grafów (Boruvki, Kruskala). 
+
+Dane wejściowe o połączeniach mogą być zapisane w strukturze grafu G = (V, E) lub też mogą pochodzić z innego źródła.
+INTERFEJS
+
+class UnionFind:
+    """Klasa realizująca strukturę zbiorów rozłącznych."""
+
+    def __init__(self): pass  # inicjalizacja
+
+    def create(self, x): pass  # stworzenie zbioru jednoelementowego
+
+    def find(self, x): pass    # reprezentant zbioru zawierającego x
+
+    def union(self, x, y): pass # łączenie zbioru zawierającego x
+                                # ze zbiorem zawierającym y
+
+# Zastosowanie.
+uf = UnionFind()
+for item in [0, 1, 2, 3, 4, 5]:
+    uf.create(item)
+# Zapisywanie połączeń między elementami
+for (x, y) in [(0, 1), (3, 4), (4, 5)]:
+    uf.union(x, y)
+# Sprawdzanie połączeń.
+print uf.find(0) == uf.find(3)          # False, brak połączenia
+print uf.find(3) == uf.find(5)          # True, jest połączenie
+
+ALGORYTM SZYBKIEGO WYSZUKIWANIA
+
+Przygotowujemy tablicę/słownik parent zawierającą V liczb. Liczby p i q są połączone, jeżeli parent[p] jest równe parent[q]. Tablicę inicjalizujemy przez parent[i] = i.
+
+class UnionFind:
+
+    def __init__(self):
+        self.parent = {}
+
+    def create(self, x):
+        # Tworzymy drzewa jednoelementowe.
+        if x not in self.parent:
+            self.parent[x] = x
+
+    def find(self, x):
+        # Szukamy korzenia drzewa.
+        return self.parent[x]
+
+    def union(self, x, y):
+        # Szukamy korzeni drzew.
+        z = self.parent[x]      # zmienna tymczasowa jest konieczna
+        if z == self.parent[y]:   # to samo drzewo
+            return
+        # Łączenie - poprawiamy korzenie.
+        for x in self.parent:
+            if self.parent[x] == z:
+                self.parent[x] = self.parent[y]
+
+Złożoność czasowa. Wyszukiwanie jest klasy O(1) [szybkie wyszukiwanie], bo tylko porównujemy dwa elementy tablicy. Scalanie jest O(V*E), bo dla każdej z E operacji scalania musimy wykonać V iteracji pętli for (co najmniej jedno porównanie).
+
+Złożoność pamięciowa jest O(V). Trzymamy tylko tablicę z V elementami.
+
+Szybkie wyszukiwanie można przedstawić graficznie za pomocą drzewa (czy zbioru drzew) z V węzłami, gdzie korzeń jest reprezentantem danego podzbioru/klasy równoważności [Sedgewick s. 12].
+ALGORYTM SZYBKIEGO SCALANIA
+
+Przygotowujemy tablicę parent zawierającą V liczb. Tablica jest taka sama jak poprzednio, ale interpretacja jej elementów będzie inna. Liczby p i q są połączone, kiedy po przejściu ścieżek p, parent[p], parent[parent[p]], ... oraz q, parent[q], parent[parent[q]], ... dojdziemy do tej samej liczby r, takiej że parent[r] = r.
+
+class UnionFind:
+
+    def __init__(self):
+        self.parent = {}
+
+    def create(self, x):
+        # Tworzymy drzewa jednoelementowe.
+        if x not in self.parent:
+            self.parent[x] = x
+
+    def find(self, x):
+        # Szukamy korzenia drzewa.
+        while x != self.parent[x]:
+            x = self.parent[x]
+        return x
+
+    def union(self, x, y):
+        # Szukamy korzeni drzew.
+        x = self.find(x)
+        y = self.find(y)
+        if x == y:   # to samo drzewo
+            return
+        # Scalanie.
+        self.parent[x] = y
+
+Czas działania algorytmu zależy od natury wprowadzanych danych, ale jest on szybszy od algorytmu szybkiego wyszukiwania.
+
+Dla E > V rozwiązanie problemu połączeniowego za pomocą algorytmu szybkiego scalania może wymagać wykonania więcej niż E*V/2 instrukcji. Załóżmy, że pary będą przychodzić w kolejności 1-2, 2-3, 3-4, itd. Po V-1 takich par wszystkie wierzchołki będą połączone, a utworzone drzewo będzie liniowe. Wyszukiwanie połączenia liczby V-1 z inną wymaga przejrzenia przynajmniej V-1 łączy.
+ALGORYTM ZRÓWNOWAŻONEGO SZYBKIEGO SCALANIA
+
+Będziemy zawsze dołączać mniejsze drzewo do większego. Musimy przechowywać liczbę węzłów dla każdego drzewa w tablicy size. Można pokazać, że algorytm wymaga przejścia najwyżej log(V) łączy, aby stwierdzić, czy dowolne dwie z V liczb są połączone.
+
+Zrównoważony algorytm szybkiego scalania wymaga wykonania najwyżej O(E*log(V)) instrukcji [Sedgewick s. 15]. W praktyce algorytm rozwiązuje rzeczywiste problemy w czasie liniowym.
+
+class UnionFind:
+
+    def __init__(self):
+        self.parent = {}
+        self.size = {}   # liczba węzłów drzewa
+
+    def create(self, x):
+        # Tworzymy drzewa jednoelementowe.
+        if x not in self.parent:
+            self.parent[x] = x
+            self.size[x] = 1
+
+    def find(self, x):
+        # Szukamy korzenia drzewa.
+        while x != self.parent[x]:
+            x = self.parent[x]
+        return x
+
+    def union(self, x, y):
+        # Szukamy korzeni drzew.
+        x = self.find(x)
+        y = self.find(y)
+        if x == y:   # to samo drzewo
+            return
+        # Scalanie.
+        if self.size[x] < self.size[y]:
+            self.parent[x] = y
+            self.size[y] = self.size[y] + self.size[x]
+        else:
+            self.parent[y] = x
+            self.size[x] = self.size[x] + self.size[y]
+
+KOMPRESJA ŚCIEŻEK PRZEZ POŁOWIENIE
+
+Szukamy sposobu osiągnięcia gwarancji liniowego działania algorytmu. W idealnym przypadku każdy węzeł powinien wskazywać na korzeń jego drzewa, ale nie chcemy ponosić kosztu zmian dużej liczby łączy (jak w algorytmie szybkiego wyszukiwania).
+
+Możemy każdy sprawdzany węzeł modyfikować tak, aby wskazywał wprost na korzeń (kompresja ścieżek). Istnieje wiele sposobów zaimplementowania kompresji ścieżek. Pokażemy kompresję ścieżek przez połowienie, która jest prostsza w realizacji niż pełna kompresja ścieżek [Sedgewick s. 17].
+
+class UnionFind:
+
+    def __init__(self):
+        self.parent = {}
+        self.size = {}   # liczba węzłów drzewa
+
+    def create(self, x):
+        # Tworzymy drzewa jednoelementowe.
+        if x not in self.parent:
+            self.parent[x] = x
+            self.size[x] = 1
+
+    def find(self, x):
+        # Szukamy korzenia drzewa.
+        while x != self.parent[x]:
+            self.parent[x] = self.parent[self.parent[x]]   # połowienie
+            x = self.parent[x]
+        return x
+
+    def union(self, x, y):
+        # Szukamy korzeni drzew.
+        x = self.find(x)
+        y = self.find(y)
+        if x == y:   # to samo drzewo
+            return
+        # Scalanie.
+        if self.size[x] < self.size[y]:
+            self.parent[x] = y
+            self.size[y] = self.size[y] + self.size[x]
+        else:
+            self.parent[y] = x
+            self.size[x] = self.size[x] + self.size[y]
+
+PEŁNA KOMPRESJA ŚCIEŻEK
+
+Cormen (s. 580) pokazuje dla lasu zbiorów rozłącznych dwie heurystyki dla poprawienia wydajności.
+
+    Łączenie według rangi. Dla każdego węzła przechowujemy rangę stanowiącą górne ograniczenie na wysokość węzła. Ranga może się zmienić jedynie przy operacji union.
+    Kompresja ścieżek. Podczas operacji find zmieniamy tak łącze w każdym węźle na ścieżce do reprezentanta, aby wskazywał bezpośrednio na korzeń. Procedura find jest dwuprzebiegowa. 
+
+class UnionFind:
+
+    def __init__(self):
+        self.parent = {}
+        self.rank = {}
+
+    def create(self, x):
+        # Tworzymy drzewa jednoelementowe.
+        if x not in self.parent:
+            self.parent[x] = x
+            self.rank[x] = 0
+
+    def find(self, x):
+        # Szukamy korzenia drzewa.
+        if x != self.parent[x]:
+            self.parent[x] = self.find(self.parent[x])   # kompresja
+        return self.parent[x]
+
+    def union(self, x, y):
+        # Szukamy korzeni drzew.
+        x = self.find(x)
+        y = self.find(y)
+        if x == y:   # to samo drzewo
+            return
+        # Mniejsze drzewo podłączamy do większego.
+        if self.rank[x] > self.rank[y]:
+            self.parent[y] = x
+        else:
+            self.parent[x] = y
+            if self.rank[x] == self.rank[y]:
+                self.rank[y] = self.rank[y] + 1
+
+
