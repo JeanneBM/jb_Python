@@ -1744,3 +1744,621 @@ set([1, 3])
 >>> {(i, j) for j in range(2) for i in range(3, 5)}
 set([(3, 0), (3, 1), (4, 0), (4, 1)])
 
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+Python (3) - instrukcje i składnia
+
+PLAN
+
+    Sterowanie
+    Instrukcja warunkowa
+    Pętla while
+    Pętla for
+    Standardowe wejście
+    Standardowe wyjście 
+    
+
+Sterowanie
+STRUKTURA PROGRAMU W PYTHONIE
+
+    Programy składają się z modułów.
+    Moduły zawierają instrukcje.
+    Instrukcje zawierają wyrażenia.
+    Wyrażenia tworzą i przetwarzają obiekty. 
+
+WPROWADZENIE
+
+Python jest językiem proceduralnym, opartym na instrukcjach. Zwykły sposób przetwarzania instrukcji jest sekwencyjny. Ale możemy to zmienić poprzez wprowadzenie warunkowego wykonania kodu (instrukcja warunkowa), albo poprzez wielokrotne wykonywanie jednej instrukcji (pętle).
+
+Przy instrukcjach blokowych ważne jest stosowanie prawidłowej konwencji zapisu, która nie będzie wprowadzała w błąd czytelnika.
+INSTRUKCJE PRZYPISANIA
+
+Instrukcje przypisania tworzą referencje do obiektów.
+
+Zmienne tworzone są przy pierwszym przypisaniu.
+
+Przed odniesieniem się do zmiennych trzeba je najpierw przypisać.
+
+word = "qwerty"               # forma podstawowa
+x, y = 23, 45                 # przypisanie krotki (pozycyjne)
+[x, y] = ["ab", "cd"]         # przypisanie listy (pozycyjne)
+x, y, z = "abc"               # przypisanie sekwencji
+[x, y, z] = (1, 2, 3)         # przypisanie sekwencji
+x = y = z = 0                 # przypisanie z wieloma celami
+# x = (y = (z = 0))           # SyntaxError, to nie działa jak w C/C++!
+x += 5                        # przypisane rozszerzone (x = x + 5)
+L += 5                        # odpowiada L.append(5), IN PLACE
+L += sequence                 # odpowiada L.extend(sequence), IN PLACE
+
+L = [1, 2, 3, 4]
+front, L = L[0], L[1:]        # odcięcie początku
+
+# Python 3, rozszerzona składnia rozpakowania.
+# M to sekwencja (string, lista, krotka).
+# Gdy zabraknie elementów, to L może być pustą listą!
+front, *L = M          # M[0], M[1:]
+first, *L, last = M    # M[0], M[1:-1], M[-1]
+
+INSTRUKCJE WYRAŻEŃ
+
+Wyrażenia można użyć jako instrukcji, ale ma to sens jedynie wtedy, gdy efekt uboczny działania wyrażenia będzie przydatny.
+
+Instrukcje nie mogą być używane jako wyrażenia.
+
+some_function()               # wywołanie funkcji
+some_object.method()          # wywołanie metody
+a_variable                    # zmienna w trybie interaktywnym
+print word                    # wyrażenie w Pythonie 2
+print(word)                   # funkcja w Pythonie 3
+yield x ** 2                  # zwracanie wyniku częściowego (generator)
+lambda x: x ** 2              # funkcja anonimowa
+
+WYRAŻENIE PUSTE (PASS)
+
+Wyrażenie pass nie robi nic. Jest wykorzystywane tam, gdzie syntaktycznie powinno być jakieś wyrażenie. Czasem przy tworzeniu programu tymczasowo można wstawić pass w miejsce brakującego kodu, który będzie napisany później.
+
+while True:
+    pass        # czekamy na przerwanie z klawiatury
+
+def dummy_function():
+    pass        # kod do uzupełnienia w przyszłości
+
+class EmptyClass:
+    pass       # kod do uzupełnienia w przyszłości
+
+# https://stackoverflow.com/questions/13886168/how-to-use-the-pass-statement
+# Ignorowanie pewnych typów wyjątków.
+try:
+    self.version = "Expat %d.%d.%d" % expat.version_info
+except AttributeError:
+    pass       # unknown
+
+# Definiowanie wyjątków bez nowego zachowania.
+# Nazwa wyjątku niesie informację o zdarzeniu.
+class CompileError(Exception):
+    pass
+
+INSTRUKCJA DEL
+
+Podstawowe zastosowanie instrukcji del to usuwanie zmiennej (dokładniej: usunięcie referencji do obiektu). Po usunięciu zmiennej próba odczytania zmiennej prowadzi do błędu (aż nastąpi nowe przypisanie wartości do tej zmiennej).
+
+Drugim częstym zastosowaniem instrukcji del jest usuwanie elementu o danym indeksie z listy lub usuwanie wycinka z listy. 
+
+
+Instrukcja warunkowa
+WPROWADZENIE
+
+W Pythonie nie ma instrukcji switch czy case, ponieważ można je łatwo zastąpić serią testów if i elif. Można również wykorzystać słownik do symulacji wyborów.
+
+# Porównanie C i Pythona.
+if (x > y) {               /* ANSI C */
+    x = 1;
+    y = 2;
+}
+
+if x > y:                  # Python, nawiasy opcjonalne
+    x = 1                 # bez klamerek, średników
+    y = 2                 # obowiązkowe wcięcie kodu (4 spacje)
+
+# Instrukcje złożone w Pythonie.
+wiersz_nagłówka:              # obowiązkowy dwukropek
+    zagnieżdżony_blok_instrukcji
+
+# Przypadek specjalny - lepiej unikać.
+# Przy prostych wyrażeniach można zrezygnować z wcięcia.
+# Może to być wygodne w trybie interaktywnym.
+if x > y: print x       # print x to wyrażenie
+
+# Zagnieżdżone bloki.
+Blok0
+Wiersz nagłówka:
+    Blok1
+    Wiersz nagłówka:
+        Blok2
+    Blok1 (kontynuacja)
+Blok0 (kontynuacja)
+
+Koniec wiersza kończy instrukcję.
+
+Koniec wcięcia to koniec bloku.
+
+Konwencja: wcięcia (indentację) tworzymy wykorzystując tylko 4 spacje (PEP 8). Indentacja wymusza na programistach tworzenie jednolitego, regularnego i czytelnego kodu.
+INSTRUKCJA WARUNKOWA IF-ELSE
+
+# Składnia.
+if test1:
+    instrukcje
+elif test2:                   # opcjonalne, może być więcej sekcji elif
+    instrukcje
+else:                         # opcjonalne (jeden raz), jeśli nic nie pasuje
+    instrukcje
+
+# Niech n będzie pewną liczbą całkowitą.
+if n < 0:
+    print ( "liczba ujemna!" )
+elif n % 2 == 0:              # sprawdzamy inną możliwość
+    print ( "{} {}".format(n, "liczba parzysta") )
+else:                         # to jest sekcja opcjonalna
+    print ( "{} {}".format(n, "liczba nieparzysta") )
+
+# Porównanie C i Pythona.
+# W C else należy do ostatniego (najbliższego) if, ale generalnie
+# dla uniknięcia pomyłki w rozumieniu lepiej wstawić nawiasy klamrowe.
+# W Pythonie wcięcia decydują o logice.
+if x:
+    if y:
+        instrukcja1
+else:   # powiązane z if x
+    instrukcja2
+
+# Zastosowanie słownika (nie korzystać na siłę).
+# W zależności od wyboru użytkownika podstawiamy inne wartości.
+adict = {"a":1, "b":2, "c":3}           # lista możliwości
+choice = "b"
+result = adict[choice]                  # zamiast if-elif
+resutl = adict.get(choice, "Error")     # z zabezpieczeniem
+
+WYRAŻENIE TRÓJARGUMENTOWE
+
+Wyrażenie trójargumentowe if-else przypomina operator trójargumentowy z języka C.
+
+if X:
+    A = Y
+else:
+    A = Z
+# Można to zapisać prościej (wyrażenie trójargumentowe).
+A = Y if X else Z
+
+a = 25 ; b = 30
+pos_a = (-a) if a < 0 else a
+max_a_b = b if a < b else a
+
+# Zastosowanie do słowników.
+# Ustawienie domyślnej wartości, jeżeli klucza nie ma.
+value = D.get("x", 0)                   # klasycznie
+value = D["x"] if "x" in D else 0       # if-else
+
+
+Pętla while
+WPROWADZENIE
+
+Wewnątrz pętli while można stosować instrukcje break (natychmiastowe wyjście z pętli) i continue (kontynuacja pętli) jak w języku C.
+
+# Składnia.
+while test1:        # test pętli
+    instrukcje      # ciało pętli
+    if test2:
+        break       # wyjście z pętli, opcjonalne
+    if test3:
+        continue    # przejście do test1, opcjonalne
+else:               # opcjonalne
+    instrukcje      # wykonane, jeśli pętli nie zakończyło break
+# Część else będzie wykonana również wtedy, gdy ciało pętli
+# nigdy nie zostanie wykonane.
+
+# Odliczanie.
+n = 8
+while n > 0:
+    print ( n )
+    n = n - 1
+
+# To zadanie bardziej elegancko wykona pętla for.
+line = "zdanie"
+i = 0
+while i < len(line):
+    print ( "{} {}".format(i, line[i]) )
+    i = i + 1
+
+while True:                   # pętla nieskończona
+    print ( "Napisz Ctrl+C ..." )
+
+word = "qwerty"
+while word:                   # póki word niepuste
+    print ( word )
+    word = word[1:]           # odcinamy pierwszy znak
+
+# Obsługa błędów za pomocą sprawdzania danych wejściowych.
+while True:
+    reply = raw_input("Wpisz tekst:")   # Python 2
+    if reply == "stop":
+        break
+    print ( reply.upper() )
+
+while True:
+    reply = raw_input("Wpisz tekst:")   # Python 2
+    if reply == "stop":
+        break
+    elif not reply.isdigit():
+        print ( "To nie jest liczba!" )
+    else:
+        print ( int(reply) ** 2 )
+
+# Obsługa błędów za pomocą instrukcji try (przechwytywanie wyjątków).
+# Łatwiej można sobie radzić z niezwykłymi przypadkami.
+while True:
+    reply = raw_input("Wpisz tekst:")   # Python 2
+    if reply == "stop":
+        break
+    try:
+        number = int(reply)
+    except ValueError:        # kod obsługujący błędy
+        print ( "To nie jest liczba!" )
+    else:                     # jeśli nie było zgłoszenia wyjątku
+        print ( number ** 2 )
+
+
+Pętla for
+WPROWADZENIE
+
+Pętla for jest uniwersalnym iteratorem po sekwencjach. Jeżeli chcemy wykonać pętlę po ciągu liczb całkowitych, to pomocna jest funkcja range() lub wersja z generatorem xrange(). Można stosować break (natychmiastowe wyjście z pętli) i continue (kontynuacja pętli) jak w języku C.
+
+Niebezpiecznie jest modyfikować sekwencję (np. listę) po której biegnie pętla for. Należy raczej zrobić kopię listy do iteracji. Bezpieczną operacją jest wydłużenie listy przez L.append(item) lub L.extend(sequence).
+
+# Składnia.
+for item in sequence:
+    instrukcje      # tu zwykle używamy item
+    if test1:
+        break       # wyjście z pętli, opcjonalne
+    if test2:
+        continue    # przejście na górę pętli, opcjonalne
+else:               # opcjonalne
+    instrukcje      # jeżeli nie było break, działa nawet przy pustej sekwencji
+
+word = "praca"
+for char in word:             # pętla po stringu
+    print char,               # przecinek daje wydruk w jednym wierszu, Python 2
+    print(char, end=" ")      # wydruk w jednym wierszu, Python 3
+print ("")                    # na koniec przechodzimy do nowej linii
+
+# Pętla po liście liczb z funkcji range().
+for i in range(6):            # lista liczb od 0 do 5
+    print ( i )
+# Indeks pętli żyje poza nią.
+print ( i )                   # wynik to 5
+
+# Pętla po liście składającej się z elementów różnych typów.
+for item in [4, "s", [2, 3], 3.14159]:
+    print ( item )
+
+# Pętla po krotce różnych elementów.
+for item in (6, "abc", 1.2):
+    print ( item )
+
+# Pętla po liście składającej się z krotek.
+# Następuje pozycyjne przypisanie zmiennych.
+for (a, b) in [(2, "i"), (3.14, "f"), ("a", "s")]:
+    print ( "{} {} {} {}".format("pierwszy, a, "drugi", b) )
+
+# Wydłużanie listy w trakcie działania pętli for.
+# Zachować ostrożność!
+# Można wpaść w pętlę nieskończoną.
+L = range(5)
+for i in L:
+    print ( i )
+    if (i % 2) == 1:            # jeżeli i jest nieparzyste
+        L.append(2 * i)         # dodaję tylko parzyste
+        #L.extend([2 * i, 4 * i])
+# Wynik: 0 1 2 3 4 2 6
+
+# Bezpieczniejszy wariant z kopią listy.
+for item in L[:]:
+    process(item)
+for item in list(L):
+    process(item)
+
+# Pętla for w konteście słowników.
+D = {"a": 1, "b": 2, "c": 3}
+for key in D:                 # pętla po kluczach
+    print ( "{} {}".format(key, D[key]) )
+for (key, value) in D.items():
+    print ( "{} {}".format(key, value) )
+
+GENEROWANIE WARTOŚCI PRZESUNIĘCIA I ELEMENTÓW
+
+owoce = ["jabłko", "gruszka", "śliwka"]
+
+# Pętla for po liście stringów.
+for owoc in owoce:
+    print ( "Bardzo lubię " + owoc + "!" )
+
+# Pętla po liście stringów z wykorzystaniem indeksów.
+# Tak można robić, gdy potrzebujemy wykorzystać numer elementu.
+for i in range(len(owoce)):
+    print ( "{} {}".format(i, owoce[i]) )
+
+# Obecnie wygodniej jest zastosować iterator enumerate().
+for (i, item) in enumerate(owoce):
+    print ( "{} {}".format(i, item) )
+
+[c*i for (i, c) in enumerate("abcd")]   # ["", "b", "cc", "ddd"]
+[2**i for i in range(5)]                # [1, 2, 4, 8, 16]
+
+ZAGNIEŻDŻONE PĘTLE FOR
+
+# Wyszukiwanie wspólnych elementów dwóch sekwencji.
+seq1 = "mielonka"
+seq2 = "biedronka"
+alist = []
+for item in seq1:
+    if item in seq2:   # mało wydajne
+        alist.append(item)
+print ( alist )               # ["i","e","o","n","k","a"]
+# Inny sposób polega na zastosowaniu zbiorów.
+
+LISTY SKŁADANE
+
+# Oczyszczanie linii z białych znaków po prawej stronie.
+# lines to lista stringów.
+lines = [line.rstrip() for line in lines]
+
+lines = [line.rstrip() for line in open("words.txt")]
+lines = [line.upper() for line in open("words.txt")]
+lines = [line.replace("\t", ";") for line in open("words.txt")]
+
+PRZECHODZENIE RÓWNOLEGŁE - ZIP
+
+# Składnia.
+zip(seq1 [, seq2 [...]]) zwraca [(seq1[0], seq2[0] ...), (...)]
+
+L = [1, 2, 3, 4]
+M = [5, 6, 7, 8]
+for (x, y) in zip(L, M):
+    print ( "{} {} {}".format(x, y, x+y) )
+for (x, y) in zip("abcdef", "qwerty"):
+    print ( "{} {} {}".format(x, y, x+y) )
+
+PRZECHODZENIE RÓWNOLEGŁE - MAP
+
+# Składnia.
+map(function, sequence[, sequence, ...]) zwraca list
+# W Pythonie 3 map() zwraca generator.
+
+# Funkcję map można łatwo zastąpić listą składaną.
+L = [-2, -1, 0, 1, 2]
+map(abs, L)                   # [2, 1, 0, 1, 2]
+[abs(x) for x in L]
+
+map(ord, "qwerty")            # [113, 119, 101, 114, 116, 121]
+[ord(x) for x in "qwerty"]
+
+L = [1, 2, 3, 4]
+M = [1, 1, 2, 2]
+map(pow, L, M)                # [1, 2, 9, 16]
+[pow(x, y) for (x, y) in zip(L, M)]
+
+words = ["jeden", "dwa", "trzy"]
+map(str.upper, words)         # ['JEDEN', 'DWA', 'TRZY']
+[word.upper() for word in words]
+
+TWORZENIE SŁOWNIKÓW ZA POMOCĄ FUNKCJI ZIP
+
+keys = ["jeden", "dwa", "trzy"]
+values = ["I", "II", "III"]
+D = dict(zip(keys, values))
+# To samo za pomocą pętli for.
+D = {}              # lub D = dict()
+for (k, v) in zip(keys, values):
+    D[k] = v
+
+D = dict(zip(range(6), "qwerty"))
+
+INNE KONTEKSTY ITERACYJNE
+
+Funkcje wbudowane: sorted(), sum(), min(), max(), any(), all(), list(), tuple(), set(), str.join(), zip().
+
+Nowe obiekty iterowane w Pythonie 3: dict.keys(), dict.values(), dict.items(), range(), map(), zip(), filter().
+
+# Zastosowanie funkcji all() i any().
+
+L = [1, 2, 4, 5]
+#L = [2, 4, 6]
+
+# Sprawdzamy, czy wszystkie liczby są parzyste.
+
+# Zastosowanie klauzuli else w pętli for.
+for x in L:
+    if x % 2 != 0:
+        break
+else:
+    print ( "Wszystkie parzyste" )
+
+# Zastosowanie all().
+if all(x % 2 == 0 for x in L):
+    print ( "Wszystkie parzyste" )
+
+# Sprawdzamy, czy choć jedna liczba jest parzysta.
+
+if any(x % 2 == 0 for x in L):
+    print ( "Jest liczba parzysta na liście" )
+
+
+Standardowe wejście
+WPROWADZENIE
+
+Funkcja input() próbuje interpretować wprowadzone dane i z tego powodu jest powolna. Lepiej wczytać napis za pomocą funkcji raw_input(), a następnie rzutować na potrzebny typ. W razie potrzeby możemy się zabezpieczyć przez try/except.
+
+W Pythonie 3 istnieje tylko funkcja input(), która działa tak jak raw_input() w Pythonie 2.
+
+# Składnia.
+# raw_input([prompt]) - zwraca string, Python 2
+
+# input([prompt]) - zwraca wartość, Python 2
+# równoważne eval(raw_input(prompt))
+
+word = raw_input(prompt)
+variable = input(prompt)
+
+# Przy input() wynik może być typu int, float lub inny.
+# Jeżeli chcemy mieć na pewno int, to można zrobić tak:
+# n = int(raw_input("Podaj int: "))
+# Jeżeli wejście nie będzie pasowało do int, to będzie wyjątek.
+
+line = raw_input("Podaj napis: ")
+
+n = input("Podaj liczbe: ")
+print ( type(n) )
+print ( "{} {}".format("Podana liczba:", n) )
+
+# Korzystanie z modułu sys.
+# Obiekt sys.stdin jest typu file, mode "r".
+
+import sys
+line = sys.stdin.readline()
+
+# Można skorzystać z try/except i używać tej samej nazwy input()
+# w Pythonie 2 i Pythonie 3.
+try:
+    input = raw_input
+except NameError:   # jesteśmy w Pythonie 3
+    pass
+
+
+Standardowe wyjście
+WPROWADZENIE
+
+Podstawowe polecenie do wyprowadzania wyników to print. Jest to przyjazny programiście interfejs do standardowego strumienia wyjścia (stdout). Polecenie przekształca obiekt na jego reprezentację tekstową, dodaje formatowanie i przesyła do standardowego wyjścia.
+
+Kolejne elementy po słowie print oddzielamy przecinkami. Przecinek na końcu wiersza z print zapobiega wyświetleniu "\n", czyli przejściu do nowej linii.
+
+W Pythonie 3 print() jest funkcją wbudowaną.
+
+# Konstrukcja podobna do C z procentem i krotką.
+# Składnia:
+# %[(nazwa)][opcje][szerokość][.precyzja]kod_typu
+print "int %d float %f str %s" % (5, 3.14159, "napis")
+
+# Format z %s jest uniwersalny - korzysta z funkcji str().
+print "int %s float %s str %s" % (5, 3.14159, "napis")
+
+print "%-10s|%10s" % ("napis1", "napis2")
+print "pi = %8.2f" % 3.14159           # po procencie jest krotka
+print "pi = %8.2f" % (3.14159,)        # bardziej precyzyjnie
+print "a %10.1f b %3d" % (1.23456, 2)  # dwie lub więcej pozycji
+
+# Wyprowadzanie danych do pliku:
+afile = open("data.txt", "w")
+afile.write((%s %s\n) % (item1, item2))   # typowy sposób
+print >> afile, item1, item2        # niezbyt ładne
+afile.close()
+
+# Korzystanie z modułu sys.
+# Obiekt sys.stdout jest typu file, mode "w".
+
+import sys
+print X
+sys.stdout.write(str(X) + "\n")  # jw, równoważne
+sys.stdout.write("%s\n" % X)     # jw, ale będzie problem dla X tuple
+print "alpha", "beta"
+sys.stdout.write("%s %s\n" % ("alpha", "beta"))  # jw
+
+# Można na chwilę zmienić stdout:
+import sys
+tmp = sys.stdout
+sys.stdout = open("log.txt", "a")
+print "napis"           # idzie do pliku
+sys.stdout.close()
+sys.stdout = tmp
+
+# Korzystanie ze słownika przy formatowaniu stringu.
+phones = {"Adam": 1234, "Bogdan": 3456, "Czarek": 5678}
+print "Telefony: Adam: %(Adam)s, Bogdan: %(Bogdan)s." % phones
+
+# Można wykorzystać funkcję systemową zwracającą słownik.
+name = "elektron"
+mass = 0.511034    # MeV
+print "%(name)s, masa %(mass)s MeV" % locals()
+
+# Zapis wywołań print działający w Pytonie 2 i 3.
+print("napis")               # jeden obiekt
+print("%s %s %s" % (item1, item2, item3))
+
+# Emulacja funkcji print() z Pythona 3 w Pythonie 2.
+import sys
+
+def print3(*arguments, **keywords):
+    sep = keywords.get("sep", " ")
+    end = keywords.get("end", "\n")
+    file = keywords.get("file", sys.stdout)
+    output = sep.join(str(arg) for arg in arguments)
+    file.write(output + end)
+
+# Zastosowanie.
+print3(1, 2, 3)              # zwykłe wywołanie
+print3(1, 2, 3, sep="")      # wstrzymanie separatora
+print3(1, 2, 3, sep="...")   # zmiana separatora
+print3(4, 5, 6, end="")      # wstrzymanie nowego wiersza
+print3(7, 9, 9, file=sys.stderr)       # przekierowanie strumienia
+
+# PEP 236 - Back to the __future__
+# W Pythonie 2.6 można włączyć obsługę funkcji print()
+# z Pythona 3 za pomocą instrukcji import.
+# Ta instrukcja nie powoduje błędu w Pythonie 3.
+
+from __future__ import print_function
+
+METODA FORMAT
+
+# Składnia (Python 2.6+, 3.x):
+# S.format(*arguments, **keywords)
+
+# Argumenty pozycyjne.
+print "{0} albo {1}".format("prawda", "fałsz")  # prawda albo fałsz
+print "{} albo {}".format("prawda", "fałsz")  # prawda albo fałsz (Python 2.7)
+print "{1} albo {0}".format("prawda", "fałsz")  # fałsz albo prawda
+# Formatowanie {position:format_spec}.
+# {position:10} typ str, szerokość minimum 10 znaków;
+# {position:4d} typ int, szerokość minimum 4 znaki;
+# {position:.3f} typ float, 3 cyfry po przecinku;
+# {position:8.1f} typ float, 1 cyfra po przecinku, całość 8 znaków;
+for x in range(1,11):
+    print "{0:2d} {1:3d}".format(x, x*x)
+
+# Argumenty w postaci słów kluczowych.
+print "{person} jest {description}".format(
+    person="Adam", description="okropny")
+# Formatowanie {key:format_spec}.
+# {key:d} key wskazuje na typ int;
+
+# Argumenty pozycyjne i słowa kluczowe można używać łącznie.
+print "Kali liczyć: {0}, {1}, {2}, {last}.".format(
+    "jeden", "dwa", "trzy", last="mnóstwo")
+# Kali liczyć: jeden, dwa, trzy, mnóstwo.
+
+# Formatowania {position!conversion:format_spec} oraz
+# {key!conversion:format_spec}.
+# {0!s} wymusza formatowanie obiektu przez str().
+# {0!r} wymusza formatowanie obiektu przez repr().
+# Podobnie {key!s}, {key!r}.
+import math
+print "PI wynosi {0} {0!s} {0!r}".format(math.pi)
+# 'PI wynosi 3.14159265359 3.14159265359 3.1415926535897931'
+
+# Zastosowanie słownika ze słowami kluczowymi.
+table = {"Adam":1234, "Bogdan":5678}
+print "Adam {Adam:d}; Bogdan {Bogdan:d}".format(**table)
+# Adam 1234; Bogdan 5678
+
+
+ 
+ 
+ 
