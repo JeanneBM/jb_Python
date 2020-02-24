@@ -1,0 +1,8 @@
+# Oczyszczanie linii z białych znaków po prawej stronie.
+# lines to lista stringów.
+lines = [line.rstrip() for line in lines]
+
+lines = [line.rstrip() for line in open("words.txt")]
+lines = [line.upper() for line in open("words.txt")]
+lines = [line.replace("\t", ";") for line in open("words.txt")]
+
