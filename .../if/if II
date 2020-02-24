@@ -23,3 +23,13 @@ if x > y:                  # Python, nawiasy opcjonalne
     
 -------------------------------------------------------------------------------------------------
 
+# Instrukcje złożone w Pythonie.
+
+wiersz_nagłówka:                         # obowiązkowy dwukropek
+    zagnieżdżony_blok_instrukcji
+
+# Przypadek specjalny - lepiej unikać.
+# Przy prostych wyrażeniach można zrezygnować z wcięcia.
+# Może to być wygodne w trybie interaktywnym.
+
+if x > y: print x                        # print x to wyrażenie
