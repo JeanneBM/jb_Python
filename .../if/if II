@@ -1,0 +1,13 @@
+answer = None
+# Tutaj może być jakiś kod nadający wartość zmiennej answer.
+if answer is None:
+    quit = True
+elif answer == "quit":
+    quit = True
+else:
+    quit = False
+
+print (quit)
+
+-------------------------------------------------------------------------------------------------
+
