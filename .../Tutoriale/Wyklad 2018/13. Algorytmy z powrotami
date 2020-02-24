@@ -1,0 +1,529 @@
+Python (13) - algorytmy z powrotami
+PLAN
+
+    Algorytmy z powrotami
+    Droga skoczka szachowego
+    Problem ośmiu hetmanów
+    Problem dokładnego pokrycia zbioru 
+    
+
+Algorytmy z powrotami
+WPROWADZENIE
+
+Algorytmy z powrotami (ang. backtracking) są algorytmami rekurencyjnymi. Szukamy algorytmów poszukujących rozwiązań dla specyficznych problemów metodą prób i błędów. Zwykle stosowanym tu sposobem jest podział rozwiązywanego zadania na podzadania. Dla takich zadań często najbardziej naturalnym opisem jest opis rekurencyjny.
+
+Cały proces rozwiązywania problemu można potraktować jako proces poszukiwań w drzewie podzadań. Zwykle drzewo podzadań rośnie bardzo szybko (wykładniczo) i równie szybko rośnie ilość pracy związana z przeglądaniem drzewa. Najczęściej drzewo można stopniowo obcinać stosując reguły heurystyczne, co pozwala zredukować obliczenia. Algorytmy z powrotami uzyskały znaczenie prawie wyłącznie dzięki maszynom cyfrowym, które mogą cierpliwie i dokładnie sprawdzać ogromną liczbę wariantów.
+
+Wirth omawia ogólne zasady podziału zadań, związanych z rozwiązywaniem pewnej klasy problemów, na podzadania oraz możliwości stosowania rekurencji. Kod może być zorganizowany na kilka sposobów.
+
+    Znajdowanie pojedyńczego rozwiązania danego problemu. Przykładem jest określenie drogi skoczka szachowego i rozmieszczenie ośmiu hetmanów. Każde rozwiązanie jest jednakowo dobre, więc kończymy poszukiwania po znalezieniu pierwszego rozwiązania.
+    Znajdowanie wszystkich rozwiązań danego problemu. Przykładem jest układanie pentomino, ale także droga skoczka szachowego i osiem hetmanów.
+    Znajdowanie optymalnego rozwiązania. Należy wygenerować wszystkie możliwe rozwiązania i zachować jedno w pewnym sensie optymalne. Musimy mieć daną pewną funkcję f, która będzie mierzyć wartość każdego rozwiązania. Przykładem jest poszukiwanie największego zbioru niezależnego w grafie, a funkcja f będzie zwracać liczność znalezionego zbioru niezależnego. Podczas pracy algorytmu przechowujemy najlepsze z dotychczasowych rozwiązań, ponadto trzeba rozpocząć od poprawnej wartości początkowej (np. zbiór niezależny pusty lub jednoelementowy). 
+
+Cechy charakterystyczne algorytmów z powrotami:
+
+    Kolejne kroki, które mogłyby doprowadzić do rozwiązania końcowego są zapisywane. Jeżeli dochodzimy do ślepej uliczki, to odpowiednie zapisy są usuwane.
+    Liczba potencjalnych kandydatów w każdym kroku jest skończona (ale może się zmieniać w kolejnych krokach).
+    Programy często używają parametru jawnie określającego głębokość rekurencji, co pozwala na proste sformułowanie warunku zakończenia. 
+
+Algorytm z powrotami jest właściwie metaheurystyką niż specyficznym algorytmem. Użytkownik musi określić problem do rozwiązania, naturę częściowego rozwiązania i jak należy częściowe rozwiązanie uzupełniać w celu otrzymania pełnego rozwiązania. W przeciwieństwie do wielu innych mataheurystyk, mamy tu gwarancję znalezienia wszystkich rozwiązań w ograniczonym zakresie czasu.
+
+Wybrane problemy rozwiązywane za pomocą algorytmów z powrotami:
+
+    Droga skoczka szachowego.
+    Problem ośmiu hetmanów.
+    Problem dokładnego pokrycia zbioru (latin square; sudoku).
+    Problem trwałego małżeństwa [Wirth] [Mamy dane n kobiet i n mężczyzn. Każda kobieta i każdy mężczyzna szereguje partnerów według preferencji. Jeżeli n par zostało dobranych tak, że istnieje mężczyzna i kobieta, którzy nie stanowią małżeństwa, ale mężczyzna przedkłada tę kobietę nad aktualną żonę, a kobieta przedkłada tego mężczyznę nad aktualnego męża, to taki dobór małżeństw jest nietrwały. Jeżeli żadna taka para nie istnieje, to dobór małżeństw jest trwały.].
+    Problem m-kolorowania grafu (ang. m coloring problem) - problem kolorowania wierzchołków grafu nieskierowanego m kolorami.
+    Problem optymalnego wyboru [Wirth] (problem znalezienia największego zbioru niezależnego w grafie nieskierowanym; problem plecakowy). 
+
+https://en.wikipedia.org/wiki/Backtracking
+
+https://en.wikipedia.org/wiki/Stable_marriage_problem (Gale, Shapley, 1962) 
+
+
+Droga skoczka szachowego
+WPROWADZENIE
+
+Problem polega na obejściu całej szachownicy w taki sposób, że każde pole będzie odwiedzone dokładnie raz. Możliwe są różne punkty startowe na szachownicy. Dla skoczka istnieje potencjalnie osiem kierunków ruchu do następnej pozycji.
+
+Warto zauważyć, że problem drogi skoczka szachowego jest specjalnym przypadkiem NP-trudnego problemu znajdowania ścieżki lub cyklu Hamiltona w grafie nieskierowanym. Okazuje się, problem znalezienia drogi skoczka szachowego jest taką instancją ogólnego problemu, która ma rozwiązanie wielomianowe. Istnieją algorytmy działające w czasie liniowym O(n*n) [n to bok planszy kwadratowej], które znajdują rozwiązanie. Otwarta ścieżka Hamiltona istnieje dla każdego n większego lub równego 5. Zamknięta ścieżka Hamiltona (cykl) istnieje dla każdego n parzystego większego lub równego 6. Algorytmy znajdujące rozwiązanie zwykle wykorzystują metodę dziel i zwyciężaj, gdzie rozwiązania dla małych planszy są zawczasu przygotowane.
+
+# Problem drogi skoczka na kwadratowej szachownicy o boku N.
+# Współrzędne planszy x i y mają zakres od 0 do N-1.
+
+def rysuj():
+    for i in range(N):
+        for j in range(N):
+            print "%2s" % plansza[i, j],
+        print
+
+def dopuszczalny(x, y):
+    return 0 <= x < N and 0 <= y < N and plansza[x, y] == 0
+
+def zapisz(krok, x, y):
+    plansza[x, y] = krok   # zapis ruchu
+
+def wymaz(x, y):
+    plansza[x, y] = 0
+
+def probuj(krok, x, y):
+    # krok - nr kolejnego kroku do zrobienia
+    # x, y - pozycja startowa skoczka
+    # Funkcja zwraca bool True/False (czy udany ruch).
+    udany = False
+    kandydat = 0          # numery od 0 do RUCHY_SKOCZKA-1
+    while (not udany) and (kandydat < RUCHY_SKOCZKA):
+        u = x + delta_x[kandydat]         # wybieramy kandydata 
+        v = y + delta_y[kandydat]
+        if dopuszczalny(u, v):
+            zapisz(krok, u, v)
+            if krok < N * N:         # warunek końca rekurencji
+                udany = probuj(krok+1, u, v)
+                if not udany:
+                    wymaz(u, v)
+            else:
+                udany = True
+        kandydat += 1
+    return udany
+
+N = 5  # bok szachownicy
+RUCHY_SKOCZKA = 8
+
+# Inicjalizacja pustej planszy.
+plansza = {}
+for i in range(N):
+    for j in range(N):
+        plansza[i, j] = 0
+
+# . 2 . 1 .   kolejne możliwe ruchy skoczka
+# 3 . . . 0
+# . . x . .
+# 4 . . . 7
+# . 5 . 6 .
+
+delta_x = [2,1,-1,-2,-2,-1,1,2]         # różnica współrzędnej x
+delta_y = [1,2,2,1,-1,-2,-2,-1]         # różnica współrzędnej y
+(x0, y0) = (2, 2)                       # pole startowe skoczka
+
+zapisz(1, x0, y0)
+
+if probuj(2, x0, y0):
+    print "Mamy rozwiązanie"
+    rysuj()
+else:
+    print "Nie istnieje rozwiązanie"
+
+Przykładowe rozwiązania problemu dla planszy 5x5.
+
+ 1  6 15 10 21  Start (0, 0).
+14  9 20  5 16
+19  2  7 22 11
+ 8 13 24 17  4
+25 18  3 12 23
+
+Start (0, 1) - brak rozwiązań.
+
+25 14  1  8 19  Start (0, 2).
+ 4  9 18 13  2
+15 24  3 20  7
+10  5 22 17 12
+23 16 11  6 21
+
+23 10 15  2 25  Start (1, 1).
+16  1 24  9 14
+11 22  5 18  3
+ 6 17 20 13  8
+21 12  7  4 19
+
+Start (1, 2) - brak rozwiązań.
+
+23 10 15  4 25  Start (2, 2).
+16  5 24  9 14
+11 22  1 18  3
+ 6 17 20 13  8
+21 12  7  2 19
+
+
+Problem ośmiu hetmanów (the queens problem)
+WPROWADZENIE
+
+[Wikipedia] Hetman jest figurą szachową, która bije figury znajdujące się w tej samej kolumnie, wierszu lub przekątnej, co on sam. W jaki sposób rozstawić osiem hetmanów na tradycyjnej szachownicy 8x8 tak, aby wzajemnie się nie atakowały? Ile jest możliwych rozstawień?
+
+Problem można wysłowić w języku teorii grafów. Wierzchołkami grafu są pola na szachownicy. krawędzie grafu łączą pola, z których hetmani atakują się wzajemnie. Szukamy zbioru niezależnego wierzchołków grafu o największej liczności. Problem jest NP-trudny.
+
+# Problem ośmiu hetmanów.
+# Znajdowanie jednego rozwiązania.
+# Wiersze i kolumny mają zakres od 0 do N-1.
+
+def rysuj():
+    for w in range(N):
+        for k in range(N):
+            if x[k] == w:
+                print "H",
+            else:
+                print ".",
+        print
+
+def dopuszczalny(w, k):
+    return a[w] and b[w+k] and c[w-k]
+
+def zapisz(w, k):
+    x[k] = w
+    a[w] = False
+    b[w+k] = False
+    c[w-k] = False
+
+def wymaz(w, k):
+    a[w] = True
+    b[w+k] = True
+    c[w-k] = True
+
+def probuj(k):
+    udany = False
+    w = 0                 # numery od 0 do N-1
+    while (not udany) and (w < N):
+        if dopuszczalny(w, k):
+            zapisz(w, k)
+            if k < (N-1):
+                udany = probuj(k+1)
+                if not udany:
+                    wymaz(w, k)
+            else:
+                udany = True
+        w += 1
+    return udany
+
+N = 8  # bok szachownicy i jednocześnie liczba hetmanów
+
+# x[i] to pozycja hetmana w kolumnie i
+x = N * [None]
+
+# a[j] == True to brak hetmana w wierszu j
+a = N * [True]
+
+# b[k] == True to brak hetmana na przekątnej k [/].
+# Suma wiersz+kolumna od 0 do (2N-2).
+b = (2*N-1) * [True]
+
+# c[k] == True to brak hetmana na przekątnej k [\].
+# Różnica wiersz-kolumna od (-N+1) do (N-1).
+c = (2*N-1) * [True]
+
+if probuj(0):
+    print "Mamy rozwiązanie"
+    rysuj()
+else:
+    print "Nie istnieje rozwiązanie"
+
+# Problem ośmiu hetmanów.
+# Znajdowanie wszystkich rozwiązań.
+
+def probuj(k):
+    # Sprawdzanie wszystkich kandydatow (wiersze).
+    for w in range(N):
+        if dopuszczalny(w, k):
+            zapisz(w, k)
+            if k < (N-1):
+                probuj(k+1)
+            else:
+                rysuj()
+            wymaz(w, k)
+
+. . H . Dwa rozwiązania dla planszy 4x4,
+H . . . jedno istotnie różne.
+. . . H
+. H . .
+-------
+. H . .
+. . . H
+H . . .
+. . H .
+
+H . . . . Dziesięć rozwiązań dla planszy 5x5,
+. . . H . dwa istotnie różne.
+. H . . .
+. . . . H
+. . H . .
+---------
+H . . . .
+. . H . .
+. . . . H
+. H . . .
+. . . H .
+---------
+. . H . .
+H . . . .
+. . . H .
+. H . . .
+. . . . H
+---------
+. . . H .
+H . . . .
+. . H . .
+. . . . H
+. H . . .
+---------
+. H . . .
+. . . H .
+H . . . .
+. . H . .
+. . . . H
+---------
+. . . . H
+. . H . .
+H . . . .
+. . . H .
+. H . . .
+---------
+. H . . .
+. . . . H
+. . H . .
+H . . . .
+. . . H .
+---------
+. . . . H
+. H . . .
+. . . H .
+H . . . .
+. . H . .
+---------
+. . . H .
+. H . . .
+. . . . H
+. . H . .
+H . . . .
+---------
+. . H . .
+. . . . H
+. H . . .
+. . . H .
+H . . . .
+
+
+Problem dokładnego pokrycia zbioru
+WPROWADZENIE
+
+Problem dokładnego pokrycia zbioru (the exact cover problem) może być określony abstrakcyjnie następująco [Knuth, Dancing links]: Jeżeli dana jest macierz zer i jedynek, to czy posiada ona zbiór wierszy zawierający dokładnie jedną 1 w każdej kolumnie? Przykładowo macierz A poniżej posiada taki zbiór (wiersze 1, 4, 5).
+
++----------+---------------+
+| Kolumna  | A B C D E F G |
++----------+---------------+
+| Wiersz 1 | 0 0 1 0 1 1 0 |
+| Wiersz 2 | 1 0 0 1 0 0 1 |
+| Wiersz 3 | 0 1 1 0 0 1 0 |
+| Wiersz 4 | 1 0 0 1 0 0 0 |
+| Wiersz 5 | 0 1 0 0 0 0 1 |
+| Wiersz 6 | 0 0 0 1 1 0 1 |
++----------+---------------+
+
+Można też patrzeć na kolumny jak na przestrzeń, a na wiersze jak na podzbiory tej przestrzeni. Wtedy będziemy chcieli pokryć przestrzeń podzbiorami rozłącznymi. W każdym przypadku problem jest trudny, NP-zupełny. Rozwiązuje się go za pomocą algorytmów z powrotami (backtracking).
+PARKIET
+
+Problem układania parkietu identycznymi klockami 2x1. Rozważamy planszę 2x3.
+
++----------+ Numeracja pól planszy
+| 11 12 13 |
+| 21 22 23 |
++----------+
+
++----------+-------------------+
+| Kolumna  | 11 12 13 21 22 23 |
++----------+-------------------+
+| Wiersz 1 |  1  1  0  0  0  0 | poziomo
+| Wiersz 2 |  0  1  1  0  0  0 | poziomo
+| Wiersz 3 |  0  0  0  1  1  0 | poziomo
+| Wiersz 4 |  0  0  0  0  1  1 | poziomo
+| Wiersz 5 |  1  0  0  1  0  0 | pionowo
+| Wiersz 6 |  0  1  0  0  1  0 | pionowo
+| Wiersz 7 |  0  0  1  0  0  1 | pionowo
++----------+-------------------+
+Przygotowany plik z danymi:
+11 12
+12 13
+21 22
+22 23
+11 21
+12 22
+13 23
+Są 3 rozwiązania tego problemu.
++-------+  +-------+  +-------+
+| A A C |  | A B B |  | A B C |
+| B B C |  | A C C |  | A B C |
++-------+  +-------+  +-------+
+
+Podobnie możemy analizować różne puzzle i układanki, np. pentomino, sudoku.
+OPIS ALGORYTMU
+
+W artykule Knutha mamy podany algorytm postępowania.
+
+Jeżeli A jest pusta, to zakończ.
+Wybierz kolumnę c (deterministycznie).
+Ustal wiersze r, dla których A[r,c]=1.
+Dla każdego wiersza r:
+    Dodaj r do częściowego rozwiązania.
+    Ustal kolumny j takie, że A[r,j]=1.
+    Dla każdej kolumny j:
+        Usuń/zaznacz kolumnę j z A.
+        Ustal wiersze i takie, że A[i,j]=1.
+        Dla każdego wiersza i:
+            Usuń wiersz i z A.
+    Wykonaj algorytm na zredukowanej macierzy A.
+    Przywróć usunięte wiersze i.
+    Przywróć/odznacz kolumny j.
+    Usuń r z częściowego rozwiązania.
+
+IMPLEMENTACJA ALGORYTMU W PYTHONIE
+
+Krok pierwszy to reprezentacja macierzy A. Macierz jest zwykle rzadka (niewiele jedynek), co sugeruje zapisywanie tylko niezerowych pozycji. Możemy wykorzystać elastyczność Pythona i korzystać z etykiet tekstowych. Szukając rozwiązania będziemy usuwać wiersze z macierzy A aż do jej całkowitego opróżnienia. Z drugiej strony wybrane wiersze będą wchodziły w skład rozwiązania. Pierwszy pomysł na reprezentację macierzy A to wykorzystanie słownika:
+
+A1 = {(1, "C"): 1, (1, "E"): 1, (1, "F"): 1,
+(2, "A"): 1, (2, "D"): 1, (2, "G"): 1,
+(3, "B"): 1, (3, "C"): 1, (3, "F"): 1,
+(4, "A"): 1, (4, "D"): 1,
+(5, "B"): 1, (5, "G"): 1,
+(6, "D"): 1, (6, "E"): 1, (6, "G"): 1}
+
+Wszystkie niezerowe wartości w macierzy A to jedynki, co sugeruje, że nie musimy ich zapisywać, tylko pamiętać pozycje (węzły). Stąd drugi pomysł przechowywania macierzy jako listy węzłów (para wiersz i kolumna). Będziemy mogli korzystać z bogatej kolekcji metod dla list.
+
+A2 = [(1, "C"), (1, "E"), (1, "F"),
+(2, "A"), (2, "D"), (2, "G"),
+(3, "B"), (3, "C"), (3, "F"),
+(4, "A"), (4, "D"),
+(5, "B"), (5, "G"),
+(6, "D"), (6, "E"), (6, "G")]
+
+W globalnym słowniku covered_cols zapiszemy stan każdej kolumny, czy jest już pokryta (True), czy nie (False).
+
+covered_cols = {}
+for (r, c) in A:
+    covered_cols[c] = False
+
+Rozwiązania będziemy szukali za pomocą rekurencyjnej funkcji search(k), która na każdym poziomie ustala jeden wiersz rozwiązania. Wiersz ten (listę węzłów) zapiszemy w globalnym słowniku B pod kluczem k.
+
+B = {}
+
+def print_solution():
+    for k in B:
+        for node in B[k]:
+            print node[1],
+        print
+
+Na każdym poziomie wywołania funkcji search(k) będziemy wybierać jedną kolumnę jeszcze nie pokrytą, którą chcemy pokryć. Trzeba to robić systematycznie aż do pokrycia wszystkich kolumn. Kod zapiszemy w osobnej funkcji, aby łatwo testować różne sposoby wybierania kolumn.
+
+Definiujemy wyjątek dla sytuacji błędnych danych. Dokładniej: jeżeli są niepokryte kolumny, to funkcja powinna jedną z nich podać, nawet taką, która nie ma pokrywającego ją wiersza. Funkcja generuje wyjątek, jeżeli nie ma niepokrytych kolumn. Sytuację kolumny bez wiersza, który może ją pokryć, obsługujemy w funkcji search() [to jest ślepy zaułek, ale nie generujemy wyjątku, tylko funkcja oddaje sterowanie wyżej].
+
+class CoverError(Exception):
+    """Błąd w problemie pokrycia."""
+    pass
+
+def choose_col1():
+    # Wybieramy pierwszą niepokrytą kolumnę.
+    for c in covered_cols:
+        if not covered_cols[c]:
+            return c
+    raise CoverError("Wszystkie kolumny pokryte")
+
+def choose_col2():
+    # Wybieramy ostatnią niepokrytą kolumnę.
+    cols = [c for c in covered_cols if not covered_cols[c]]
+    if not cols:
+        raise CoverError("Wszystkie kolumny pokryte")
+    #return cols[0]      # można wybrać pierwszą
+    return cols[-1]      # wybieram ostatnią
+
+def choose_col3():
+    # Wybieramy kolumnę z najmniejszą liczbą jedynek.
+    # Najpierw szukamy niepokrytych kolumn.
+    cols = [c for c in covered_cols if not covered_cols[c]]
+    if not cols:
+        raise CoverError("Wszystkie kolumny pokryte")
+    # Dla kolumn niepokrytych szukam liczby wierszy.
+    # Mogą się trafić kolumny bez wierszy, więc trzeba inicjalizować zerem.
+    tmp = dict([(c, 0) for c in cols])
+    for (r, c) in A:
+        if c in cols:
+            tmp[c] = tmp[c] + 1
+    # Szukamy minimalnej liczby wierszy.
+    min_c = cols[0]
+    for c in cols:
+        if tmp[c] < tmp[min_c]:
+            min_c = c
+    return min_c
+
+choose_col = choose_col1         # wybrany wariant
+
+Właściwa funkcja szukająca rozwiązania ma postać.
+
+def search(k):                # szukaj kolejnego wiersza nr k w tablicy A
+    if not A:             # już nie ma wierszy
+        for c in covered_cols:
+            if not covered_cols[c]:   # ślepy zaułek
+                return
+        print_solution()                  # wszystkie pokryte
+        return
+    c = choose_col()
+    # Wybieramy wiersze z 1 w kolumnie c.
+    rows = [node[0] for node in A if node[1]==c]
+    if not rows:
+        # Nie ma wiersza z jedynką w kolumnie c.
+        return
+    for r in rows:
+        box = []         # tymczasowo usuniete wiersze
+        # dodaj wiersz r do częściowego rozwiązania
+        B[k] = [node for node in A if node[0] == r]
+        # Usuwam wiersz r z A.
+        for node in B[k]:
+            box.append(node)
+            A.remove(node)
+        # Wybieram kolumny j takie, że A[r, j] == 1 (tu jest c!)
+        cols = [node[1] for node in B[k]]
+        for j in cols:
+            # Zaznaczam kolumnę j.
+            covered_cols[j] = True
+            # Wybieram wiersze i takie, że A[i, j] == 1.
+            # Tu są też wiersze z rows.
+            rows2 = [node[0] for node in A if node[1] == j]
+            # Przenoszę wiersze z A do box.
+            # Nie wolno iterować po A i zmieniać A jednocześnie!
+            tmp = [node for node in A if node[0] in rows2]
+            for node in tmp:
+                box.append(node)
+                A.remove(node)
+        search(k+1)
+        # Przywracam wiersze do A.
+        for node in box:
+            A.append(node)
+        del box
+        del B[k]
+        # Anuluję zaznaczenie kolumn.
+        for j in cols:
+            covered_cols[j] = False
+    return
+
+Do funkcji search(k) można dodać kod zliczający wybrane operacje, aby lepiej zrozumieć działanie algorytmu.
+
+Dla dużych problemów wygodnie jest wczytać macierz A z pliku tekstowego zawierającego wiersze. Dla przykładowej macierzy A plik będzie miał postać
+
+C E F
+A D G
+B C F
+A D
+B G
+D E G
+
+Funkcja wczytująca macierz A z pliku może mieć postać:
+
+def read_table(file_name):
+    afile = open(file_name, "r")
+    table = []
+    row = 0
+    for line in afile:
+        row = row + 1
+        for col in line.split():
+            table.append((row, col))
+    afile.close()
+    return table
+
+
+    
