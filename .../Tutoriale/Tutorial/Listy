@@ -1,0 +1,65 @@
+Listy 
+
+Lista jest to kontener mogący w sobie pomieścić różnego typu dane. Są one umieszczone w konkretnej kolejności.
+
+Listę możemy sobie wyobrazić jak tabelkę, gdzie w poszczególnych komórkach umieszczone są różne treści, np.:
+
+ 
+65 	“Kot” 	2.45 	True
+
+Do stworzenia takiej listy wykorzystamy polecenie:
+
+    moja_lista = [65,"Kot",2.45,True]
+
+Elementy listy zawarte są w nawiasach kwadratowych, oddzielone od siebie przecinkami.
+
+ 
+
+Każdy element listy posiada określony adres. Numeracja rozpoczyna się od 0. Numery te nazywamy indeksami. Indeks 0 ma pierwszy element listy. Każdy kolejny element ma indeks o 1 większy. Indeksy poszczególnych elementów naszej listy przedstawiają się więc następująco:
+65 	“Kot” 	2.45 	True
+0 	1 	2 	3
+
+ 
+
+Po co nam numeracja elementów? Aby móc się do nich bezpośrednio dostać – chociażby w celu ich wypisania, modyfikacji czy usunięcia.
+
+Jak już powiedzieliśmy pierwszy element listy ma indeks 0. Aby wypisać zawartość pierwszego elementu na ekran odwołamy się właśnie do niego:
+
+    print(moja_lista[0])
+
+Efektem będzie wypisanie na ekran liczby 65.
+
+Aby wypisać wyraz Kot, odwołamy się do drugiego elementu listy, posiadającego indeks 1:
+
+    print(moja_lista[1])
+
+i tak dalej.
+
+ 
+
+W listach posiadamy jeszcze drugi sposób numeracji – od końca. I tak ostatni element listy będzie posiadał adres -1, przedostatni -2 i tak dalej:
+-4 	-3 	-2 	-1
+65 	“Kot” 	2.45 	True
+0 	1 	2 	3
+
+ 
+
+Aby wypisać wartość 2.45 na ekran możemy się zatem odwołać do danego elementu na 2 sposoby:
+
+    print(moja_lista[2])
+
+lub
+
+    print(moja_lista[-2])
+
+ 
+
+Jeśli próbując się odwołać do danego elementu listy wykorzystamy indeks spoza zakresu, czyli na przykład odwołamy się do elementu:
+
+    print(moja_lista[4])
+
+bądź
+
+    print(moja_lista[-5])
+
+Otrzymamy informujący nas o tym błąd: IndexError: list index out of range.
