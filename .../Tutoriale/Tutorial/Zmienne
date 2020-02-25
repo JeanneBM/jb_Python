@@ -1,0 +1,84 @@
+Zmienne
+
+Zmienna jest przestrzenią w pamięci komputera gotową do przechowywania określonej wartości.
+
+Zmienna posiada określoną nazwę, której wykorzystanie umożliwi wprowadzenie do niej wartości, bądź jej odczytanie. Posiada również typ, w zależności od tego jaki rodzaj danych chcemy w niej przechowywać.
+
+W języku Python przestrzeń pamięci na daną zmienną alokowana (rezerwowana) jest automatycznie.
+Nazwa zmiennej
+
+Aby prawidłowo utworzyć nazwę zmiennej musimy pamiętać o kilku zasadach:
+
+    wielkość liter w nazwie zmiennej ma znaczenie – zmienna x oraz zmienna X, to dwie różne zmienne
+    nazwa zmiennej może zawierać wyłącznie litery, cyfry oraz znak podkreślnika / podłogi (_)
+    nazwa zmiennej nie może rozpoczynać się od cyfry
+    nazwa zmiennej nie może być taka sama jak słowa kluczowe języka Python:
+    and, as, assert, break, class, continue, def, del, elif, else, except, False, finally, for, from, global, if, import, in, is, lambda, None, nonlocal, not, or, pass, raise, return, True, try, while, with, yield
+
+W przypadku, gdy spróbujemy użyć niewłaściwej nazwy zmiennej otrzymamy komunikat o błędzie składniowym (syntax error).
+
+Przykłady prawidłowych nazw zmiennych:
+
+    x
+    X
+    x1
+    x_1
+    _x
+
+Przykłady błędnych nazw zmiennych:
+
+    1x
+    x.1
+    x 1
+    while
+
+Typ zmiennej
+
+Wyobraź sobie, że zadajesz drugiej osobie następujące pytania:
+
+    Jak masz na imię?
+    Ile masz lat?
+    Ile ważysz?
+    Czy jesteś żonaty?
+
+Na każde z tych pytań otrzymasz odpowiedź innego typu. I tak kolejno odpowiedzi mogłyby wyglądać następująco:
+
+    “Wiktor”
+    50
+    82.4
+    True (Tak, prawda)
+
+Są to podstawowe typy zmiennych języka Python, podobnie zresztą jak i większości pozostałych języków programowania.
+
+I tak mamy tu do czynienia z następującymi typami zmiennych:
+
+    Integer (int) – liczba całkowita
+    Float – liczba zmiennoprzecinkowa
+    String (str) – ciąg znaków
+    Boolean (bool) – prawda / fałsz
+
+Typ zmiennej ustawiany jest automatycznie na podstawie wprowadzonej do niego wartości. Można wymusić zmianę typu zmiennej, ale o tym w jednej z kolejnych lekcji.
+
+Zobaczmy na przykładzie, co się dzieje, jeśli wykonamy następującą linię kodu:
+
+    x = 2 + 2
+
+    zostanie obliczona prawa strona równania
+    wynik obliczenia zostanie wprowadzony w określoną komórkę pamięci
+    nazwa zmiennej zostanie przypisana do tej właśnie komórki pamięci
+    dopóki wynik prawej strony równania jest liczbą całkowitą, typem tej zmiennej będzie int
+
+Aby wypisać na ekran wynik powyższego równania wykorzystalibyśmy oczywiście funkcję print:
+
+    print(x)
+
+Jeśli chcemy natomiast sprawdzić typ zmiennej x wykorzystamy następujące połączenie poleceń:
+
+    print(type(x))
+
+Wypisujemy tym samym na ekran typ zmiennej x. W naszym przypadku otrzymamy na ekranie wynik:
+
+    <class 'int'>
+
+Czyli liczba całkowita.
+
