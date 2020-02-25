@@ -41,3 +41,57 @@ Aby nie mieć problemów z kolejnością wykonywania działań, ważnością ope
     3 + (2 * 4)
     
     
+Operatory arytmetyczne
+
+
+Operator 	Opis 	Użycie
++ 	Suma, symbol dodatni 	x + y
+– 	Różnica, symbol ujemny 	-x – y
+* 	Iloczyn 	x * y
+/ 	Iloraz 	x / y
+% 	Modulo – reszta z dzielenia 	x % y
+// 	Dzielenie całkowite 	x // y
+** 	Potęga 	x ** y
+
+ 
+
+Pierwsze cztery operatory służą do zapisu sumy, różnicy, iloczynu oraz ilorazu, czyli podstawowych działań matematycznych. Przejdźmy do pozostałych.
+Reszta z dzielenia
+
+Symbol %, czyli modulo – służy nam do wyliczenia reszty z dzielenia przy dzieleniu całkowitym. Zobaczmy do na przykładzie:
+
+    7%3
+
+Reszta z dzielenia 7 przez 3 wynosi 1. Dzieje się tak , gdyż w liczbie 7 zmieszczą się dwie liczby 3, czyli 6. A 7-6 = 1.
+
+Sprawdźmy to na jeszcze jednym przykładzie:
+
+    15%4
+
+Reszta z dzielenia wynosi 3.
+
+ 
+Dzielenie całkowite
+
+Symbol // służy do wyliczenia, potocznie mówiąc, podłogi z dzielenia. Odcinamy z wyniku dzielenia część ułamkową, pozostaje nam jedynie liczba całkowita.
+
+Przykłady:
+
+    11 // 3
+
+Wynik: 3
+
+    13.0 // 3
+
+Wynik: 4.0
+
+ 
+Potęga
+
+Symbol ** to symbol potęgowania. Liczba znajdująca się przed tym symbolem zostaje podniesiona do potęgi znajdującej się za tym symbolem.
+
+Przykład:
+
+    3 ** 2
+
+Wynik: 9
