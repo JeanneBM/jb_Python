@@ -139,3 +139,118 @@ Natomiast użycie tylko jednego znaku równości:
 
 Jest wykorzystaniem operatora przypisania i wygeneruje błąd. Stanie się tak dlatego, iż próbujemy przypisać wartość 5 do zmiennej o nazwie 4, a jak pamiętamy, nazwa zmiennej nie może rozpoczynać się od cyfry.
 
+Operatory logiczne
+Operator 	Opis 	Wykorzystanie
+and 	true jeśli obie zmienne true 	x and y
+or 	true jeśli którakolwiek zmienna true 	x or y
+not 	odwrotność elementu następującego 	not x
+
+ 
+and
+
+Zwraca wartość true jeśli obie zmienne są prawdziwe.
+
+Zobaczmy to na przykładzie:
+
+    (3 > 1) and (7 > 9)
+
+Lewa strona: 3 > 1 – true
+
+Prawa strona 7 > 9 – false
+
+Zatem wynik całego wyrażenia: false
+
+ 
+
+Tabela wyniku operatora and:
+x 	y 	x and y
+true 	true 	true
+true 	false 	false
+false 	true 	false
+false 	false 	false
+
+ 
+or
+
+Zwraca wartość true jeśli którakolwiek zmienna ma wartość true.
+
+Zobaczmy to na przykładzie:
+
+    (3 > 1) or (7 > 9)
+
+Lewa strona: 3 > 1 – true
+
+Prawa strona 7 > 9 – false
+
+Zatem wynik całego wyrażenia: true
+
+ 
+
+Tabela wyniku operatora and:
+x 	y 	x or y
+true 	true 	true
+true 	false 	true
+false 	true 	true
+false 	false 	false
+
+ 
+not
+
+Zwraca odwrotność wyniku wyrażenia.
+
+Przykad:
+
+    not (3 > 1)
+
+Wynik wyrażenia w nawiasie: true
+
+Wynik całości: false
+
+Tabela wyniku operatora not:
+x 	not x
+true 	false
+false 	true
+
+Operatory przynależności
+Operator 	Opis 	Wykorzystanie
+in 	Sprawdzenie czy wartość jest zawarta w zbiorze, stringu 	3 in [1,2,3,4,5]
+not in 	Sprawdzenie czy wartości nie ma w zbiorze, stringu 	3 not in [1,2,3,4,5]
+
+ 
+
+Operatorów przynależności używamy by sprawdzić czy interesująca nas wartość znajduje się, bądź nie znajduje się, w danym zbiorze.
+
+Przykładowo mamy daną listę:
+
+    x = [1,2,'kot',4,'pies',6.5]
+
+Sprawdźmy zatem działanie operatorów przynależności.
+
+    5 in x
+
+Wynik: false, gdyż nie ma wartości 5 na naszej liście.
+
+    'kot' in x
+
+Wynik: true, gdyż ciąg znaków kot jest jednym z elementów listy.
+
+    mysz not in x
+
+Wynik: true, gdyż ciąg znaków mysz nie znajduje się na liście.
+
+ 
+
+Operatorów przynależności możemy również używać w odniesieniu do ciągów znaków:
+
+    't' in 'Witaj Świecie'
+
+Wynik: true, litera t znajduje się w ciągu znaków Witaj Świecie
+
+    'wiecie' in 'Witaj Świecie'
+
+Wynik: true.
+
+    'Ś' not in 'Witaj Świecie'
+
+Wynik: false, gdyż Ś znajduje się w zadanym ciągu znaków.
+
