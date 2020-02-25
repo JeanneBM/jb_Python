@@ -1,0 +1,143 @@
+Instrukcje warunkowe pozwalają na wykonanie instrukcji tylko i wyłącznie wtedy, kiedy warunek będzie spełniony.
+
+Dla przykładu taką instrukcją warunkową mogłoby być zdanie: Jeśli pada deszcz zabierz parasol.
+
+ 
+
+Składnia:
+
+    if warunek :
+         instrukcja1
+         instrukcja2
+         ...
+    else :
+         instrukcja1
+         ...
+
+ 
+
+Przejdźmy od razu do przykładu, który następnie omówimy:
+
+    x = int(input("Twoja akutalna prędkość w terenie zabudowanym (km/h): "))
+    if x>50 :
+      print("Oj nieładnie - łamiesz przepisy!")
+    else :
+      print("Brawo!")
+    print("Prowadził Cię TechnikInformatyk.pl")
+
+Jako wartość zmiennej x przyjmujemy podaną przez użytkownika aktualną prędkość samochodu w terenie zabudowanym. Program ma za zadanie sprawdzić czy kierowca nie łamie przepisów i nie jedzie za szybko.
+
+Pierwsza linia mam nadzieję, że jest oczywista, przejdźmy zatem od razu do instrukcji warunkowej:
+
+    if x>50 :
+      print("Oj nieładnie - łamiesz przepisy!")
+
+if
+
+if rozpoczyna instrukcję warunkową, zaraz po tym słowie kluczowym znajduje się warunek. W naszym przypadku sprawdzane jest czy x jest większe niż 50. Linia ta kończy się symbolem dwukropka (:), który jest wymagany.
+
+Warunek może generować dwie wartości: true jeśli jest prawdziwy lub false. W przypadku, kiedy warunek jest spełniony wykona się instrukcja / instrukcje znajdująca się w kolejnej linii / kolejnych liniach.
+
+Ważne: Każda instrukcja, która ma być wykonana po spełnieniu warunku poprzedzona jest tabulatorem.
+
+W naszym przykładzie, jeśli wartość zmiennej x jest większa niż 50, na ekran wypisze się komunikat: Oj nieładnie – łamiesz przepisy!
+
+ 
+
+    else :
+      print("Brawo!")
+
+else
+
+Jest elementem opcjonalnym – to znaczy nie musi wystąpić. W naszym przykładzie chcemy jednak wypisać na ekran komunikat informujący kierowcę, że jego prędkość jest zgodna z przepisami.
+
+Blok ten rozpoczyna słowo kluczowe else (w przeciwnym razie), po którym następuje obowiązkowy symbol dwukropka (:).
+
+Podobnie jak w przypadku if, w bloku else wykonają się instrukcje, które poprzedzone są tabulatorem.
+
+ 
+
+Spójrzmy raz jeszcze na całość programu:
+
+    x = int(input("Twoja akutalna prędkość w terenie zabudowanym (km/h): "))
+    if x>50 :
+      print("Oj nieładnie - łamiesz przepisy!")
+    else :
+      print("Brawo!")
+    print("Prowadził Cię TechnikInformatyk.pl")
+
+Załóżmy, że użytkownik poda prędkość: 60.
+
+    Program przypisze zmiennej x wartość całkowitą 60.
+    W instrukcji warunkowej if zostanie sprawdzony warunek czy x > 50, wynik true – warunek jest spełniony
+    Wykonają się instrukcje zawarte w bloku if, czyli zostanie wypisany komunikat: Oj nieładnie – łamiesz przepisy!
+    Blok else zostanie pominięty.
+    Zostaną wykonane instrukcje zawarte w dalszej części programu, już po całej instrukcji warunkowej – czyli wypisany komunikat: Prowadził Cię TechnikInformatyk.pl
+
+A co jeśli użytkownik podał wartość 40?
+
+    Program przypisze zmiennej x wartość całkowitą 40.
+    W instrukcji warunkowej if zostanie sprawdzony warunek czy x > 50, wynik false- warunek nie jest spełniony
+    Zostaje pominięty blok instrukcji if, przechodzimy od razu do else
+    Zostaną wykonane instrukcje zawarte w bloku else, czyli zostanie wypisany komunikat: Brawo!
+    Zostaną wykonane instrukcje zawarte w dalszej części programu, już po całej instrukcji warunkowej – czyli wypisany komunikat: Prowadził Cię TechnikInformatyk.pl
+
+ 
+
+Co należy zapamiętać?
+
+    jeśli warunek jest spełniony wykonają się instrukcje bloku if, jeśli nie jest spełniony bloku else
+    po słowie kluczowym if oraz warunku następuje symbol dwukropka, podobnie po słowie kluczowym else
+    instrukcje w blokach if oraz else poprzedzone są tabulatorem
+    instrukcje niepoprzedzone symbolem tabulatora nie należą do bloków if oraz else i zostaną wykonane niezależnie od nich
+
+Dotychczas mieliśmy do czynienia z przypadkami instrukcji warunkowych gdzie możliwe były tylko 2 opcje – prawda lub fałsz. Możemy jednak chcieć uzyskać konkretną odpowiedź spośród większej ilości możliwych odpowiedzi. Z pomocą przychodzi nam jeszcze jeden element instrukcji warunkowej, a mianowicie elif – skrót od else if.
+
+ 
+
+Składnia:
+
+    if warunek1 :
+         instrukcja1
+         instrukcja2
+         ...
+    elif warunek2 :
+         instrukcja1
+         ...
+    elif warunek3 :
+         instrukcja1
+         ...
+    ...
+    else :
+         instrukcja1
+         ...
+
+ 
+
+Przejdźmy do przykładu, w którym na podstawie osiągniętego procentowego wyniku ze sprawdziany automatycznie zostanie wystawiona ocena:
+
+    x = int(input("Podaj swój procentowy wynik ze sprawdzianu: "))
+    if x < 50 :
+      ocena = "niedostateczny"
+    elif x < 60 :
+      ocena = "dopuszczający"
+    elif x < 75 :
+      ocena = "dostateczny"
+    elif x < 90 :
+      ocena = "dobry"
+    else :
+      ocena = "bardzo dobry"
+      
+    print("Twój wynik procentowy ze sprawdzianu to:",x,"\nTwoja ocena:",ocena)
+
+elif
+
+Dzięki elif możemy dodać więcej warunków do naszej instrukcji warunkowej. Warunki sprawdzane są po kolei, jeden po drugim. W momencie, kiedy jeden z warunków jest spełniony, pozostałe nie są już sprawdzane. Możliwa w instrukcji warunkowej jest tylko jedna opcja.
+
+Zatem jeśli użytkownik podał wartość x równą 82:
+
+    Sprawdzony został warunek x < 50, warunek nie został spełniony, przechodzimy zatem do kolejnego
+    Sprawdzony został warunek x < 60, warunek nie został spełniony, przechodzimy zatem do kolejnego
+    Sprawdzony został warunek x < 75, warunek nie został spełniony, przechodzimy zatem do kolejnego
+    Sprawdzony został warunek x < 90, warunek został spełniony, wartość zmiennej ocena została ustawiona na dobry
+    Opuszczamy instrukcję warunkową, zostaje na ekran wypisany komunikat o uzyskanych wynikach ze sprawdzianu
