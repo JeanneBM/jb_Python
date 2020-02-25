@@ -95,3 +95,47 @@ Przykład:
     3 ** 2
 
 Wynik: 9
+
+Operatory relacyjne
+Operator 	Znaczenie 	Wykorzystanie
+> 	większe 	x > y
+< 	mniejsze 	x < y
+== 	równe 	x == y
+!= 	różne 	x != y
+>= 	większe lub równe 	x >= y
+<= 	mniejsze lub równe 	x <= y
+
+ 
+
+Wykorzystując operatory relacyjne zadajemy pytanie: Czy?
+
+    x > y
+
+Czy x jest większe od y? Tak zadane pytanie może nam dać jedną z dwóch odpowiedzi TRUE lub FALSE (tak lub nie).
+
+Jeśli zatem przykładowo wykorzystamy:
+
+    6 > 5
+
+Odpowiedź będzie brzmiała: true.
+
+Natomiast w takim przypadku:
+
+    7 <= 4
+
+Odpowiedzią będzie false.
+
+ 
+
+Należy zwrócić uwagę na operator porównania, składający się z podwójnego znaku równości.
+
+    4==5
+
+Jest zapytaniem czy 4 jest równe 5 i zwróci wynik false.
+
+Natomiast użycie tylko jednego znaku równości:
+
+    4=5
+
+Jest wykorzystaniem operatora przypisania i wygeneruje błąd. Stanie się tak dlatego, iż próbujemy przypisać wartość 5 do zmiennej o nazwie 4, a jak pamiętamy, nazwa zmiennej nie może rozpoczynać się od cyfry.
+
