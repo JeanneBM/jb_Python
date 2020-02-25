@@ -1,0 +1,99 @@
+Mechanizm pętli służy do wykonania pewnej grupy czynności wielokrotnie. W języku Python mamy dwa rodzaje pętli pierwsza z nich to pętla while.
+Składnia
+
+    while warunek :
+      instrukcje
+    else :
+      instrukcje
+
+W budowie pętli while można doszukać się analogii do instrukcji warunkowej if. Podobnie jak w niej rozpoczynamy od słowa kluczowego, w tym wypadku while, po którym następuje warunek i symbol dwukropka. Następnie znajduje się blok instrukcji, z których każda oddalona jest od lewej strony tabulatorem.
+
+Opcjonalnym elementem jest blok else, wykonywany zawsze, jeśli warunek nie jest lub przestanie być spełniony.
+while
+
+Przejdźmy do pierwszego przykładu:
+
+    x = int(input("Podaj dowolną liczbę naturalną: "))
+    while x > 0 :
+        print("Obieg pętli")
+        x -= 1
+    else :
+        print("Wewnątrz else")
+    print("Poza pętlą")
+
+Użytkownik podaje dowolną dodatnią liczbę całkowitą. Rozpoczyna się pętla while:
+
+    Sprawdzany jest warunek, czy podana liczba jest większa od 0, jeśli tak przechodzimy do punktu 2
+    Na ekran wypisany zostaje tekst “Obieg pętli”
+    Zostaje zmniejszona wartość x o 1
+    Powrót do punktu pierwszego
+    Jeśli warunek z punktu pierwszego nie jest spełniony, wykonuje się instrukcja wewnątrz bloku else: wypisany zostaje na ekran tekst “Wewnątrz else”
+    Po wyjściu z pętli wykonują się dalsze instrukcje programu
+
+Efekt dla podanej przez użytkownika wartości: 5
+
+    Podaj dowolną liczbę naturalną: 5
+    Obieg pętli
+    Obieg pętli
+    Obieg pętli
+    Obieg pętli
+    Obieg pętli
+    Wewnątrz else
+    Poza pętlą
+
+Dodajmy fragment kodu, który ponumeruje nam poszczególne obiegi pętli.
+
+    x = int(input("Podaj dowolną liczbę naturalną: "))
+    obieg_petli = 0
+    while x > 0 :
+        obieg_petli += 1
+        print("Obieg pętli nr:",obieg_petli)
+        x -= 1
+    else :
+        print("Wewnątrz else")
+    print("Poza pętlą")
+
+Za numerację odpowiadała będzie nowa zmienna o nazwie obieg_petli. Jej początkową wartość ustawiamy na 0, w każdym obiegu pętli zwiększając o 1.
+
+Ponownie efekt dla podanej przez użytkownika wartośći: 5
+
+    Podaj dowolną liczbę naturalną: 5
+    Obieg pętli nr: 1
+    Obieg pętli nr: 2
+    Obieg pętli nr: 3
+    Obieg pętli nr: 4
+    Obieg pętli nr: 5
+    Wewnątrz else
+    Poza pętlą
+
+ 
+
+Zobaczmy sposób wykorzystania pętli while na jeszcze jednym przykładzie. Użytkownik poda nam dowolną liczbę naturalną, my natomiast obliczymy sumę poszczególnych liczb, począwszy od 1 aż do wartości tej liczby.
+
+Np. dla wartości 3 wynikiem będzie suma 1 + 2 + 3 = 6.
+
+    x = int(input("Podaj dowolną liczbę naturalną: "))
+    suma = 0
+    obieg_petli = 0
+    while obieg_petli < x :
+        obieg_petli += 1
+        suma = suma + obieg_petli
+        print("Obieg pętli nr:",obieg_petli,"- obliczona suma:",suma)
+    print("Suma kolejnych liczb składających się na ",x,"wynosi",suma)
+
+    Użytkownik podaje wartość liczby naturalnej
+    Ustawiamy wartości zmiennych suma, obieg_petli na 0
+    Sprawdzamy warunek: czy obieg_petli jest liczbą mniejszą niż x podane przez użytkownika, jeśli tak przechodzimy do pkt 4
+    Zwiększamy wartość zmiennej obieg_petli o 1, obliczamy sumę, dodając do dotychczasowej wartości sumy wartość obieg_petli
+    Wypisujemy na ekran komunikat, w którym jesteśmy obiegu pętli i ile na chwilę obecną wynosi suma, wracamy do pkt 3
+    Po zakończeniu pętli przechodzimy do wypisania komunikatu podsumowującego
+
+Przykład wykonania programu:
+
+    Podaj dowolną liczbę naturalną: 5
+    Obieg pętli nr: 1 - obliczona suma: 1
+    Obieg pętli nr: 2 - obliczona suma: 3
+    Obieg pętli nr: 3 - obliczona suma: 6
+    Obieg pętli nr: 4 - obliczona suma: 10
+    Obieg pętli nr: 5 - obliczona suma: 15
+    Suma kolejnych liczb składających się na  5 wynosi 15
