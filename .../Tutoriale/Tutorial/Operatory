@@ -1,0 +1,43 @@
+Operatory są symbolami wykonania działań na danych.
+Podział operatorów
+Arytmetyczne 	+. -.*, /, **, %, //
+Relacyjne 	<, <=, >, >=, !=, ==
+Logiczne 	or, and, not
+Bitowe 	|, &, ^, ~, <<, >>
+Przynależności 	in, not in
+Tożsamości 	is, is not
+
+ 
+Ważność operatorów
+
+Określa kolejność wykorzystania operatora (kolejność wykonywania działań). Im wyżej w tabeli – tym ważniejszy.
+Operator 	Opis
+** 	potęga
+~, +, – 	bitowa inwersja, symbol dodatnia, symbol ujemna
+*, /, %, // 	iloczyn, iloraz, reszta z dzielenia, dzielenie całkowite
++, – 	suma, różnica
+>>, << 	przesunięcia bitowe
+& 	bitowe AND
+^ ,| 	bitowe XOR, bitowe OR
+<=, < ,> ,>= 	mniejszy lub równy, mniejszy, większy, większy lub równy
+<> ,== ,!= 	różny, równy, różny
+= ,%= ,/= ,//= ,-= ,+= ,*=, **= 	operatory przypisania
+is , is not 	operatory tożsamości
+in, not in 	operatory przynależności
+not , or , and 	operatory logiczne
+
+Podobnie jak w matematyce ważna jest kolejność wykonywania działań. Powyższa tabela pozwala przewidzieć zachowanie programu w zależności od tego jak dane działanie napiszemy.
+
+Weźmy dla przykładu proste działanie:
+
+    3 + 2 * 4
+
+Nie biorąc pod uwagę ważności operatorów działania wykonalibyśmy kolejno od lewej, do prawej. Dało by to nam błędny wynik 20.
+
+Spoglądając na powyższą tabelę wiemy, że symbol iloczynu jest wyżej położony w tabeli niż symbol sumy. Zatem najpierw wykonujemy mnożenie (2 * 4 = 8) następnie sumę (3 + 8 = 11). W ten sposób otrzymujemy właściwy wynik.
+
+Aby nie mieć problemów z kolejnością wykonywania działań, ważnością operatorów i przede wszystkim dbając o czytelność kodu, starajmy się wykorzystywać nawiasy.
+
+    3 + (2 * 4)
+    
+    
