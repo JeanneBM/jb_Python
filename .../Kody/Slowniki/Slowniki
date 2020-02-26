@@ -6,6 +6,11 @@ osoba = {'imie':'Jan', 'nazwisko':'Kowalski', 'wiek':64, 'kolor_oczu':'niebieski
 
 -------------------------------------------------------------------------------------
 
+liczby={"jeden": "one", "dwa": "two", "trzy": "three"}
+print ("one"  in liczby)
+
+-------------------------------------------------------------------------------------
+
 liczby={"jeden": "one", "dwa": "two"}
 liczby["two"]="dwa"
 print (liczby["dwa"])
