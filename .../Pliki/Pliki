@@ -30,3 +30,5 @@ print(x)
 
 ['Pierwsza linia pliku\n', 'Pliku druga linia\n', 'Linia trzecia pliku\n', 'Ostatnia pliku linia']
 
+--------------------------------------------------------------
+
