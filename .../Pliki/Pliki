@@ -43,3 +43,7 @@ Ostatnia pliku linia
 
 --------------------------------------------------------------
 
+plik = open('test.txt', 'a')
+plik.write('ZZZZZ')
+plik.close()
+
