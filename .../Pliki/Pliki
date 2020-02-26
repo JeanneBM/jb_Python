@@ -36,3 +36,8 @@ plik = open('test.txt', 'r+')
 plik.write('Cokolwiek')
 plik.close()
 
+Cokolwiekku 
+Pliku druga linia 
+Linia trzecia pliku 
+Ostatnia pliku linia
+
