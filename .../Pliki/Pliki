@@ -27,3 +27,6 @@ Pierwsza linia pliku
 plik = open('test.txt', 'r')
 x = plik.readlines()
 print(x)
+
+['Pierwsza linia pliku\n', 'Pliku druga linia\n', 'Linia trzecia pliku\n', 'Ostatnia pliku linia']
+
