@@ -1,1 +1,8 @@
+zbior = {'kot', 'pies', 'mysz', 'kot', 'chomik', 'kaczka'}
+print(zbior)
+
+{'mysz', 'kaczka', 'kot', 'pies', 'chomik'}
+
+---------------------------------------------------------------------------------
+
 
