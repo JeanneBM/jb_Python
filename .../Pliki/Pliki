@@ -20,3 +20,6 @@ plik = open('test.txt', 'r')
 x = plik.readline()
 print(x)
 
+Pierwsza linia pliku
+
+--------------------------------------------------------------
