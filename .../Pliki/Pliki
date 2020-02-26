@@ -47,3 +47,8 @@ plik = open('test.txt', 'a')
 plik.write('ZZZZZ')
 plik.close()
 
+Cokolwiekku 
+Pliku druga linia 
+Linia trzecia pliku 
+Ostatnia pliku liniaZZZZZ
+
