@@ -3,3 +3,11 @@ print(plik.read())
 plik.close()
 
 --------------------------------------------------------------
+
+plik = open('test.txt', 'r')
+zawartosc = plik.read()
+print(zawartosc)
+plik.close()
+
+--------------------------------------------------------------
+
