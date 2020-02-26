@@ -23,3 +23,7 @@ print(x)
 Pierwsza linia pliku
 
 --------------------------------------------------------------
+
+plik = open('test.txt', 'r')
+x = plik.readlines()
+print(x)
