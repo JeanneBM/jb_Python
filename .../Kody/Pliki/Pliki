@@ -61,9 +61,18 @@ plik.close()
 AAAAA
 
 --------------------------------------------------------------
+# Zawartosc pliku:
+# Pierwsza linia pliku 
+# Pliku druga linia 
+# Linia trzecia pliku 
+# Ostatnia pliku linia
 
 plik = open('test.txt', 'r')
 plik.seek(6)
 print(plik.read())
 plik.close()
 
+za linia pliku 
+Pliku druga linia 
+Linia trzecia pliku 
+Ostatnia pliku linia
