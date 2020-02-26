@@ -16,3 +16,7 @@ Ostatnia pliku linia
 
 --------------------------------------------------------------
 
+plik = open('test.txt', 'r')
+x = plik.readline()
+print(x)
+
