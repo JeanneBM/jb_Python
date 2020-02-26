@@ -54,3 +54,7 @@ Ostatnia pliku liniaZZZZZ
 
 --------------------------------------------------------------
 
+plik = open('test.txt', 'w')
+plik.write('AAAAA')
+plik.close()
+
