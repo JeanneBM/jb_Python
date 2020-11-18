@@ -1,0 +1,134 @@
+names = "Python"                  # Nazwa zmiennej
+job_title = "Programista"         # Nazwa zmiennej ze znakiem podkreślenia 
+populated_countries_list = []     # Nazwa zmiennej
+
+_books = {}     # Definicja prywatnej zmiennej
+__dict = []     # Nazwa niekolidująca z innymi nazwami we wbudowanych bibliotekach
+
+    
+# Prywatna metoda z pojedynczym znakiem podkreślenia
+def _get_data():
+    ...
+# Podwójny znak podkreślenia zapobiegający konfliktowi z nazwami wbudowanych funkcji
+def __path():
+    ...
+    
+# Zła nazwa
+def get_user_info(id):
+    db = get_db_connection()
+    user = execute_query_for_user(id)
+    return user
+# Dobra nazwa
+def get_user_by(user_id):
+    db = get_db_connection()
+    user = execute_user_query(user_id)
+    return user
+
+class UserInformation:
+    def get_user(id):
+        db = get_db_connection()
+        user = execute_query_for_user(id)
+        return user
+        
+TOTAL = 56
+TIMOUT = 6
+MAX_OVERFLOW = 7
+
+
+def calculate_tax(amount, yearly_tax):
+    ...
+class Player:
+    def get_total_score(self, player_name):
+        ...
+        
+        
+users = [{"first_name":"Helena", "age":39},
+         {"first_name":"Bartek", "age":10},
+         {"first_name":"Ania", "age":9}
+        ]
+users = sorted(users, key=lambda user: user["first_name"].lower())
+
+
+users = [{"first_name":"Helena", "age":39},
+         {"first_name":"Bartek", "age":10},
+         {"first_name ":"Ania", "age":9}
+        ]
+def get_user_name(users):
+    """Odczytanie imienia i zamiana liter na małe."""
+    return users["first_name"].lower()
+def get_sorted_dictionary(users):
+    """Sortowanie zagnieżdżonego słownika."""
+    if not isinstance(users, dict):
+        raise ValueError("Błędna wartość w słowniku")
+    if not len(users):
+        raise ValueError("Słownik jest pusty")
+    users_by_name = sorted(users, key=get_user_name)
+    return users_by_name
+    
+import csv
+with open("pracownicy.csv", mode="r") as csv_file:
+    csv_reader = csv.DictReader(csv_file)
+    line_count = 0
+    for row in csv_reader:
+        if line_count == 0:
+            print(f'Nazwy kolumn: {", ".join(row)}')
+            line_count += 1
+            print(f'\t{row["name"]} wynagrodzenie: {row["salary"]} '
+                  f'data urodzenia {row["birthday"]}.')
+        line_count += 1
+    print(f'Przetworzono {line_count} wierszy.')
+    
+    
+import csv
+def  process_salary(csv_reader):
+    """Przetworzenie pliku CSV."""
+    global line_count 
+    for row in csv_reader:
+        if line_count == 0:
+            print(f'Nazwy kolumn: {", ".join(row)} '
+                  f'data urodzenia {row["birthday"]}.')
+            line_count += 1
+        print(f'\t{row["name"]} wynagrodzenie: {row["salary"]}')
+        line_count += 1
+    print(f'Przetworzono {line_count} wierszy.')
+
+with open("pracownicy.csv", mode="r" ) as csv_file:
+    csv_reader = csv.DictReader(csv_file)
+    line_count = 0
+    process_salary(csv_reader)
+    
+    
+first_name = "Jan"
+last_name = "Nowak"
+# Niezalecany sposób łączenia ciągów.
+full_name = first_name + "  " +  last_name
+# Bardziej wydajny i czytelny sposób.
+" ".join([first_name, last_name])
+
+
+def get_prime_number():
+    """Lista liczb pierwszych z zakresu od 1 do 100."""
+    
+def call_weather_api(url, location):
+    """Informacje o pogodzie w zadanym miejscu.
+
+   Funkcja weather_api() zwraca informacje o pogodzie w zadanym miejscu,
+   wykorzystując zadany interfejs API. W argumencie location można umieszczać
+   jedynie nazwy miast. Umieszczenie nazwy państwa lub regionu
+   spowoduje zgłoszenie wyjątku.
+   :param url: Adres interfejsu API z informacjami o pogodzie.
+   :type url: str
+   :param location: Nazwa miasta.
+   :type location: str
+   :return: Informacje o pogodzie w zadanym mieście.
+   :rtype: str
+   """
+   
+def call_weather_api(url: str, location: str) -> str:
+   """Informacje o pogodzie w zadanym miejscu.
+
+   Funkcja weather_api() zwraca informacje o pogodzie w zadanym miejscu,
+   wykorzystując zadany interfejs API. W argumencie location można umieszczać
+   jedynie nazwy miast. Umieszczenie nazwy państwa lub regionu
+   spowoduje zgłoszenie wyjątku."""
+   
