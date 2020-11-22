@@ -1,0 +1,16 @@
+import re
+def get_unique_emails(file_name):
+    """
+    Odczytywanie unikatowych adresów e-mail z pliku.
+    """
+    emails = set()
+    with open(file_name) as fread:
+        for line in fread:
+            match = re.findall(r'[\w\.-]+@[\w\.-]+', line)
+            for email in match:
+                emails.add(email)
+    return emailsils.add
+    
+###
+
+
