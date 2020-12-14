@@ -1,1 +1,34 @@
-https://www.udemy.com/course/automate/?utm_source=adwords&utm_medium=udemyads&utm_campaign=Python_v.PROF_la.EN_cc.ROW_ti.7380&utm_content=deal4584&utm_term=_._ag_85724077624_._ad_386274912907_._kw__._de_c_._dm__._pl__._ti_aud-568228300785%3Adsa-774930046209_._li_9067607_._pd__._&matchtype=b&gclid=Cj0KCQjw0pfzBRCOARIsANi0g0t6CqUaTKc8nnJ_gXeAXHrvwS2xF5UBRKWJzolx9wsMj8LeL-r4POsaAj8xEALw_wcB
+Section 1: Python Basics 
+
+- IDLE is an editor
+- Interactive shell (>>>) & File Editor 
+
+Expressions = Values + Operators
+
+- Int, Float, String Functions
+
+Order of Operations:
+1. Parentheses
+2. Multiplication / Division
+3. Addition / Subtraction
+
+- spam = 42
+- spam + 1
+
+Values passed to functions = Arguments
+
+First program:
+
+# This program says hello and asks for my name
+
+print ('Hello World!')
+print ('What is your name?) 
+myName = input()
+print ('It is good to meet you, ' + myName)
+print ('The length of your is: ')
+print (len(myName))
+print ('What is your age?') 
+myAge = input()
+print ('You will be ' + str(int(myAge) + 1) + 'ina year.')
+
+
