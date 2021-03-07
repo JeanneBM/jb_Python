@@ -127,3 +127,33 @@ if __name__ == '__main__':
     unittest.main()
     
 ------------------------------------------------------------------------------------------------------------------------
+
+Start set_name test
+
+user_id length =  4
+[0, 1, 2, 3]
+user_name length =  4
+['name0', 'name1', 'name2', 'name3']
+
+Finish set_name test
+
+
+Start get_name test
+
+user_id length =  4
+user_name length =  4
+Testing for get_name no user test
+Testing for get_name no user test
+
+Finish get_name test
+
+..
+----------------------------------------------------------------------
+Ran 2 tests in 0.000s
+
+OK
+
+Process finished with exit code 0
+
+------------------------------------------------------------------------------------------------------------------------
+
