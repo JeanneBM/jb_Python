@@ -33,3 +33,30 @@ Launching unittests with arguments python -m unittest /home/.../.py in /home/...
 
 
 Process finished with exit code 0
+
+
+python -m unittest test_module1 test_module2
+python -m unittest test_module.TestClass
+python -m unittest test_module.TestClass.test_method
+
+python -m unittest tests/test_something.py
+python -m unittest -v test_module
+
+python -m unittest
+python -m unittest -h
+
+
+
+----------------------------------------------------------------
+python -v unittest tests/test_something.py:         #a higher level of verbosity, and produce
+
+test_isupper (__main__.TestStringMethods) ... ok
+test_split (__main__.TestStringMethods) ... ok
+test_upper (__main__.TestStringMethods) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.001s
+
+OK
+-----------------------------------------------------------------------------------------------------------
+
