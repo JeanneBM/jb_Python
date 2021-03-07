@@ -19,6 +19,7 @@ if __name__ == '__main__':
     print('User associated with id 0 is', person.get_name(0))
     
 ------------------------------------------------------------------------------------------------------------------------
+Output:
 
 User Abbas has been added with id  0
 User associated with id 0 is  Abbas
@@ -54,6 +55,7 @@ If you want to see the verbose, then the command will be;
 $python3.6 -m unittest -v Basic_Test.Testing
 
 ------------------------------------------------------------------------------------------------------------------------
+Output:
 
 Ran 2 tests in 0.001s
 
@@ -127,6 +129,7 @@ if __name__ == '__main__':
     unittest.main()
     
 ------------------------------------------------------------------------------------------------------------------------
+Output:
 
 Start set_name test
 
