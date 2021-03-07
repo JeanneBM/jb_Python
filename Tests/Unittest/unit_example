@@ -162,6 +162,11 @@ Process finished with exit code 0
 
 ------------------------------------------------------------------------------------------------------------------------
 
+1. OK: If all test cases are passed, the output shows OK
+2. Failure: If any of test cases failed and raised an AssertionError exception
+3. Error: If any exception other than AssertionError exception is raised
+     
+    
 Method	Checks that
 
 assertEqual(a,b)	a==b
