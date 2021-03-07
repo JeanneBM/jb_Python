@@ -161,6 +161,7 @@ Process finished with exit code 0
 ------------------------------------------------------------------------------------------------------------------------
 
 Method	Checks that
+
 assertEqual(a,b)	a==b
 assertNotEqual(a,b)	a != b
 assertTrue(x)	bool(x) is True
@@ -174,3 +175,5 @@ assertIn(a, b)	a in b
 assertNotIn(a, b)	a not in b
 assertIsInstance(a, b)	isinstance(a, b)
 assertNotIsInstance(a, b)	not isinstance(a, b)
+
+
