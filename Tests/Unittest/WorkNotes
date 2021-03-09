@@ -1,0 +1,12 @@
+Input test
+
+Loop tests
+
+  def test_output(self):
+    for i in range(1,11):
+      ....
+      self.assertEqual(fn(i),output[i])
+      
+Class test
+
+
