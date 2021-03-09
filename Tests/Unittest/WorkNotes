@@ -2,6 +2,69 @@ Input test
 
 Using unittest.mock to test user input and program output
 
+def main():
+    answer = input("Would you like to create a pirate?! (yes/no)").lower()
+
+    if answer == 'y':
+
+        name = input("Enter the name of your pirate")
+        CreateAPirate(name, "Serpent", "100")
+
+    elif answer == 'n':
+        print("Okay! you chose not to create a pirate!")
+    else:
+        print("You must say Yes or No")
+
+
+def CreateAPirate(name, ship, age, beard="NO"):
+    print("Capt:", name)
+    print("Pirate Ship:", ship)
+    print("Age:", age)
+    print("Do you have a beard?:", beard)
+    return
+
+here is my test code
+
+import unittest
+from unittest.mock import patch
+import sys
+from RunFile import main
+import io
+
+class TestSuite(unittest.TestCase):
+
+    @patch('builtins.input',side_effects=['y','test'])
+    def test_stdout_equals_Hello(self,m):
+
+      saved_stdout = sys.stdout
+      try:
+          out = io.StringIO()
+          sys.stdout = out
+          main()
+          output = out.getvalue().strip()
+          self.assertEquals("Capt: test\nPirate Ship: Serpent\nAge: 100\nDo you have a beard?: NO",output)
+      finally:
+          sys.stdout = saved_stdout
+
+if __name__ == "__main__":
+    unittest.main()
+
+and lastly my AssertionError code and traceback
+
+Failure <Click to see difference>
+
+Traceback (most recent call last):
+  File "C:\Python33\lib\unittest\mock.py", line 1087, in patched
+    return func(*args, **keywargs)
+  File "C:\Users\jsalce\Documents\Testsuites\IfStatements\Testsuite.py", line 18, in     test_stdout_equals_Hello
+    self.assertEquals("Capt: test\nPirate Ship: Serpent\nAge: 100\nDo you have a beard?: NO",output)
+AssertionError: 'Capt: test\nPirate Ship: Serpent\nAge: 100\nDo you have a beard?: NO' != 'You must say Yes or No'
++ You must say Yes or No- Capt: test
+- Pirate Ship: Serpent
+- Age: 100
+- Do you have a beard?: NO
+
+
 Loop tests
 
   def test_output(self):
