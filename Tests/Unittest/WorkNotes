@@ -1,5 +1,7 @@
 Input test
 
+Using unittest.mock to test user input and program output
+
 Loop tests
 
   def test_output(self):
