@@ -1,12 +1,18 @@
 https://www.python.org/dev/peps/pep-0008/
 
-https://docs.travis-ci.com/
+https://docs.travis-ci.com/ | https://docs.travis-ci.com/user/tutorial/
 https://intellij-support.jetbrains.com/hc/en-us/community/posts/360000218290-Configure-google-docstring
 https://blog.usejournal.com/why-and-how-to-make-a-requirements-txt-f329c685181e
 https://stackoverflow.com/questions/8275209/how-can-i-create-a-restful-calculator
 https://www.burwood.com/blog-archive/containerization-vs-virtualization
 https://blog.usejournal.com/why-and-how-to-make-a-requirements-txt-f329c685181e
 https://docs.pytest.org/en/reorganize-docs/new-docs/user/naming_conventions.html
-
-python linters in Google browser
+https://realpython.com/python-testing/
 https://github.com/JeanneBM/black
+python linters in Google browser
+
+https://itnext.io/setup-flask-project-using-docker-and-gunicorn-4dcaaa829620
+https://docs.docker.com/language/python/build-images/
+https://www.google.com/search?channel=fs&client=ubuntu&q=python+code+coverage
+
+https://coveralls.io/builds/22802834
