@@ -1,0 +1,167 @@
+$ python -m pip install pytest
+===========================================================================================================================
+
+# test_with_unittest.py
+
+from unittest import TestCase
+
+class TryTesting(TestCase):
+    def test_always_passes(self):
+        self.assertTrue(True)
+
+    def test_always_fails(self):
+        self.assertTrue(False)
+
+---------------------------------------------------------------------------------------------------------------------------
+$ python -m unittest discover
+F.
+============================================================
+FAIL: test_always_fails (test_with_unittest.TryTesting)
+------------------------------------------------------------
+Traceback (most recent call last):
+  File "/.../test_with_unittest.py", line 9, in test_always_fails
+    self.assertTrue(False)
+AssertionError: False is not True
+
+------------------------------------------------------------
+Ran 2 tests in 0.001s
+
+FAILED (failures=1)
+
+===========================================================================================================================
+
+# test_with_pytest.py
+
+def test_always_passes():
+    assert True
+
+def test_always_fails():
+    assert False
+    
+---------------------------------------------------------------------------------------------------------------------------
+$ pytest
+================== test session starts =============================
+platform darwin -- Python 3.7.3, pytest-5.3.0, py-1.8.0, pluggy-0.13.0
+rootdir: /.../effective-python-testing-with-pytest
+collected 2 items
+
+test_with_pytest.py .F                                          [100%]
+
+======================== FAILURES ==================================
+___________________ test_always_fails ______________________________
+
+    def test_always_fails():
+>       assert False
+E       assert False
+
+test_with_pytest.py:5: AssertionError
+============== 1 failed, 1 passed in 0.07s =========================
+
+===========================================================================================================================
+
+def test_uppercase():
+    assert "loud noises".upper() == "LOUD NOISES"
+
+def test_reversed():
+    assert list(reversed([1, 2, 3, 4])) == [4, 3, 2, 1]
+
+def test_some_primes():
+    assert 37 in {
+        num
+        for num in range(1, 50)
+        if num != 1 and not any([num % div == 0 for div in range(2, num)])
+    }
+
+===========================================================================================================================
+
+def format_data_for_display(people):
+    ...  # Implement this!
+
+def test_format_data_for_display():
+    people = [
+        {
+            "given_name": "Alfonsa",
+            "family_name": "Ruiz",
+            "title": "Senior Software Engineer",
+        },
+        {
+            "given_name": "Sayid",
+            "family_name": "Khan",
+            "title": "Project Manager",
+        },
+    ]
+
+    assert format_data_for_display(people) == [
+        "Alfonsa Ruiz: Senior Software Engineer",
+        "Sayid Khan: Project Manager",
+    ]
+
+===========================================================================================================================
+
+def format_data_for_excel(people):
+    ... # Implement this!
+
+def test_format_data_for_excel():
+    people = [
+        {
+            "given_name": "Alfonsa",
+            "family_name": "Ruiz",
+            "title": "Senior Software Engineer",
+        },
+        {
+            "given_name": "Sayid",
+            "family_name": "Khan",
+            "title": "Project Manager",
+        },
+    ]
+
+    assert format_data_for_excel(people) == """given,family,title
+Alfonsa,Ruiz,Senior Software Engineer
+Sayid,Khan,Project Manager
+"""
+
+===========================================================================================================================
+
+import pytest
+
+@pytest.fixture
+def example_people_data():
+    return [
+        {
+            "given_name": "Alfonsa",
+            "family_name": "Ruiz",
+            "title": "Senior Software Engineer",
+        },
+        {
+            "given_name": "Sayid",
+            "family_name": "Khan",
+            "title": "Project Manager",
+        },
+    ]
+
+===========================================================================================================================
+
+def test_format_data_for_display(example_people_data):
+    assert format_data_for_display(example_people_data) == [
+        "Alfonsa Ruiz: Senior Software Engineer",
+        "Sayid Khan: Project Manager",
+    ]
+
+def test_format_data_for_excel(example_people_data):
+    assert format_data_for_excel(example_people_data) == """given,family,title
+Alfonsa,Ruiz,Senior Software Engineer
+Sayid,Khan,Project Manager
+"""
+
+===========================================================================================================================
+
+# conftest.py
+
+import pytest
+import requests
+
+@pytest.fixture(autouse=True)
+def disable_network_calls(monkeypatch):
+    def stunted_get():
+        raise RuntimeError("Network access not allowed during testing!")
+    monkeypatch.setattr(requests, "get", lambda *args, **kwargs: stunted_get())
