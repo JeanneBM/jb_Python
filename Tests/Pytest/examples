@@ -1,3 +1,6 @@
+
+This means that we only run 2 tests if we do not pass --all:
+
 # content of test_compute.py
 
 
