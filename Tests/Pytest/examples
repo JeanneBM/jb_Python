@@ -44,3 +44,12 @@ def test_squares(test_input, expected):
 
 ==========================================================================================================================
 
+"pytest: reading from stdin while output is captured!  Consider using `-s`."
+
+def test_prompt(capsys, monkeypatch):
+    monkeypatch.setattr('path.to.yourmodule.input', lambda: 'no')
+    val = prompt_to_activate(bear=..., printer=...)
+    assert not val
+    
+==========================================================================================================================
+
