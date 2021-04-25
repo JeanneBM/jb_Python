@@ -20,3 +20,54 @@ assert "Python" in driver.title
 
 ==================================================================================================================================================================
 
+import unittest
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+
+class TestRegistrationPage(unittest.TestCase):
+    def setUp(self):
+        self.driver = webdriver.Firefox()
+
+    def tearDown(self):
+        self.driver.quit()
+
+    def test_form_posts_to_admin_page(self):
+        self.driver.get('http://localhost:5000/register_user')  # Assuming default Flask port
+
+        # Retrieve input elements
+        name_input = self.driver.find_element_by_name('name')
+        username_input = self.driver.find_element_by_name('username')
+        email_input = self.driver.find_element_by_name('email')
+        password_input = self.driver.find_element_by_name('password')
+
+        # Populate inputs with dummy text
+        name_input.send_keys('Alice Cooper')
+        username_input.send_keys('acoop')
+        email_input.sendkeys('acoop@schoolsoutforever.com')
+        password_input.sendkeys('rockonbaby')
+
+        # Find submit button and submit form by sending an "Enter" keypress
+        submit_button = self.driver.find_element_by_class_name('login-button')
+        submit_button.send_keys(Keys.ENTER)
+
+        # Check if redirect worked. If you don't redirect from the form page the just use the driver.get method above with the target url instead
+        admin_url = self.driver.current_url
+        self.assertEqual(admin_url, 'http://localhost:5000/manage_admin')
+
+        # Get table header elements and extract their text values
+        table_cells = self.driver.find_elements_by_tag_name('th')
+        table_contents = []
+        for cell in table_cells:
+            table_contents.append(cell.text)
+
+        # Check if dummy text made it into the table contents
+        self.assertIn('Alice Cooper', table_contents)
+        self.assertIn('acoop', table_contents)
+        self.assertIn('acoop@schoolsoutforever.com', table_contents)
+        self.assertIn('rockonbaby', table_contents)
+
+# Tell unit tests to run when you run the script
+if __name__ == '__main__':
+    unittest.main()
+    
+==================================================================================================================================================================
