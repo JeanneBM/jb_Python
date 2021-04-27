@@ -53,3 +53,26 @@ def test_prompt(capsys, monkeypatch):
     
 ==========================================================================================================================
 
+@app.route('/')                                                                 
+def home():                                                                                                                  
+    return render_template(                                                     
+        'home.html',                                                            
+        greeting:"hello"                                       
+    )     
+    
+------------------------------------------------------------------------------------------------------
+
+from flask.ext.testing import TestCase
+
+class MyTest(TestCase):
+
+    def create_app(self):
+        return myflaskapp
+
+    def test_greeting(self):
+        self.app.get('/')
+        self.assert_template_used('hello.html')
+        self.assert_context("greeting", "hello")
+        
+==========================================================================================================================
+
