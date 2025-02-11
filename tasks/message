@@ -1,0 +1,27 @@
+'''
+Prepare Dockerfile based on ubuntu image of your choice and:
+* install python >= 3.6
+* install below python packages
+  - PyYaml
+  - pytest
+* write a python script that reads env variable "NAME" and writes to a file "Hello [NAME], [DATE]" e.g. Hello Marcin, Tue 20 Oct 12:15:46 CEST 2020
+* date format is not relevant
+* script should be placed in a folder /script/ in the container filesystem
+* make sure that output file persists after container removal
+* make sure script runs at container start-up
+'''
+
+import os
+from datetime import datetime
+
+name = os.getEnv("NAME", "User")
+date_str = datetime.now().strftime("%a %d %b %H:%M:%S %Z %Y")
+
+message = f"Hello {name}, {date_str}\n"
+print(message)
+
+output_path = "/script/output.txt"
+with open(output_path, "a") as file:
+    file.write(message)
+
+
