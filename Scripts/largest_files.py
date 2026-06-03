@@ -1,3 +1,5 @@
+#Get-ChildItem C:\ -Recurse -File -ErrorAction SilentlyContinue | Sort-Object Length -Descending | Select-Object -First 30 @{Name="SizeGB";Expression={[math]::Round($_.Length/1GB,2)}}, FullName
+
 import os
 from pathlib import Path
 
